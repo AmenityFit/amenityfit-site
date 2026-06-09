@@ -984,7 +984,7 @@
     <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
   </a>
   <span class="nav-wordmark-center">AmenityFit</span>
-  <a href="#apply" class="nav-cta">Apply for Your Building</a>
+  <a href="#apply" class="nav-cta" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
   <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -997,7 +997,7 @@
   <a href="#app-experience" onclick="event.preventDefault();scrollToSection('app-experience')">App</a>
   <a href="#manager" onclick="event.preventDefault();scrollToSection('manager')">For Managers</a>
   <a href="#pricing" onclick="event.preventDefault();scrollToSection('pricing')">Pricing</a>
-  <a href="#apply" class="mobile-cta" onclick="event.preventDefault();scrollToSection('apply')">Apply for Your Building</a>
+  <a href="#apply" class="mobile-cta" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
 </div>
 
 <!-- HERO -->
@@ -1023,7 +1023,7 @@
         </h1>
         <p class="hero-sub">Personalized 30-day programs, a Fitness Assistant built by real coaching intelligence, and progress tracking built into your building.</p>
         <div class="hero-actions">
-          <a href="#apply" class="btn-primary">Apply for Your Building</a>
+          <a href="#apply" class="btn-primary" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
           <button class="btn-watch" onclick="openVideoModal()">
             <div class="watch-play-icon">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -1666,7 +1666,7 @@
       <div class="footer-links">
         <a href="privacy.html">Privacy Policy</a>
         <a href="terms.html">Terms of Service</a>
-        <a href="#pricing">Pricing</a>
+        <a href="#pricing" onclick="event.preventDefault();scrollToSection('pricing')">Pricing</a>
         <a href="#apply">Apply</a>
       </div>
     </div>
