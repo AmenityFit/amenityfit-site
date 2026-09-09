@@ -397,7 +397,7 @@
       position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(10,10,26,0.94) 0%, rgba(10,10,26,0.45) 55%, rgba(10,10,26,0.08) 100%);
     }
-    .problem-panel-content { position: absolute; left: 24px; right: 24px; top: 48%; z-index: 2; }
+    .problem-panel-content { position: absolute; left: 24px; right: 24px; bottom: 20px; z-index: 2; }
     .problem-num {
       font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
       color: var(--accent); margin-bottom: 6px; font-family: var(--ff-body);
@@ -841,6 +841,14 @@
        it's a CTA to a review call, not a price point. */
     .tier-pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .tier-pill.tier-custom { grid-column: 1 / -1; }
+    .currency-select-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 4px; }
+    .currency-select {
+      font-size: 13px; padding: 4px 26px 4px 8px; border-radius: 6px;
+      border: 1px solid #2a3140; background-color: #151a24; color: #fff;
+      -webkit-appearance: none; appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%238a94a6'/></svg>");
+      background-repeat: no-repeat; background-position: right 8px center;
+    }
     .tier-pill {
       padding: 10px 6px; border-radius: 7px;
       border: 1px solid var(--border); text-align: center; transition: all 0.2s; cursor: pointer;
@@ -1015,6 +1023,9 @@
       .smoothie-img-wrap { height: 200px; }
       .assistant-grid { grid-template-columns: 1fr; gap: 36px; }
       .wearables-grid { grid-template-columns: 1fr; gap: 36px; }
+      .activity-photo-pair { grid-template-columns: 1fr; gap: 14px; }
+      .currency-select-row { flex-direction: column; align-items: flex-end; gap: 4px; }
+      .currency-select { width: 100%; }
       .watch-showcase { order: -1; }
       .watch-row-top { grid-template-columns: 1fr 1fr; gap: 10px; }
       .watch-img-wrap { aspect-ratio: 1/0.85; }
@@ -1103,6 +1114,7 @@
   <a href="#features" onclick="event.preventDefault();scrollToSection('features')">Features</a>
   <a href="#app-experience" onclick="event.preventDefault();scrollToSection('app-experience')">App</a>
   <a href="#manager" onclick="event.preventDefault();scrollToSection('manager')">For Managers</a>
+  <a href="#wearables" onclick="event.preventDefault();scrollToSection('wearables')">Activity</a>
   <a href="#pricing" onclick="event.preventDefault();scrollToSection('pricing')">Pricing</a>
   <a href="#apply" class="mobile-cta" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
 </div>
@@ -1676,9 +1688,9 @@
         <span class="calc-top-label">Building size</span>
         <span class="calc-unit-display" id="unit-display">100 units</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:4px;">
+      <div class="currency-select-row">
         <label for="currency-select" style="font-size:12px;color:#8a94a6;">Display currency</label>
-        <select id="currency-select" onchange="changeCurrency(this.value)" style="font-size:13px;padding:4px 8px;border-radius:6px;border:1px solid #2a3140;background:#151a24;color:#fff;">
+        <select id="currency-select" class="currency-select" onchange="changeCurrency(this.value)">
           <option value="USD">USD ($)</option>
           <option value="CAD">CAD (CA$)</option>
           <option value="GBP">GBP (£)</option>
