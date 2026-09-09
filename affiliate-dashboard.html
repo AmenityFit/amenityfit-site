@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiliate Dashboard | AmenityFit</title>
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto,w_64/Logo_rkq0cv" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#1E5FBE;--accent:#4A90D9;--text:#1A1A2E;--muted:#5a5a72;--border:#e2e4ea;--subtle:#f7f8fa;--success:#16A34A;--warn:#F59E0B;--ff-display:'Cormorant Garamond',Georgia,serif;--ff-body:'DM Sans',system-ui,sans-serif; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--ff-body);color:var(--text);background:var(--subtle);-webkit-font-smoothing:antialiased;min-height:100vh;}
+    nav{position:sticky;top:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 clamp(20px,5vw,60px);height:68px;display:flex;align-items:center;justify-content:space-between;z-index:100;}
+    nav .nav-lockup{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    nav img{height:34px;}
+    nav .nav-lockup span{font-family:var(--ff-display);font-size:19px;font-weight:600;color:var(--text);}
+    nav .signout-btn{font-size:13px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--ff-body);}
+    nav .signout-btn:hover{color:var(--text);border-color:var(--muted);}
+
+    .container{max-width:900px;margin:0 auto;padding:clamp(28px,5vw,48px) 20px;}
+    .loading-screen{text-align:center;padding:80px 20px;color:var(--muted);}
+
+    h1{font-family:var(--ff-display);font-size:clamp(26px,4vw,32px);font-weight:600;margin-bottom:6px;}
+    p.sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:28px;}
+
+    .checklist-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px;}
+    .checklist-card h2{font-size:15px;font-weight:700;margin-bottom:14px;}
+    .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;}
+    .checklist-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+    .checklist-check.done{background:var(--success);border-color:var(--success);}
+    .checklist-check svg{display:none;}
+    .checklist-check.done svg{display:block;}
+    .checklist-text strong{font-size:14px;display:block;}
+    .checklist-text span{font-size:12px;color:var(--muted);}
+    .checklist-item.done .checklist-text strong{color:var(--muted);text-decoration:line-through;}
+
+    .referral-card{background:linear-gradient(135deg,#0d0d1a,#151a2e);color:#fff;border-radius:14px;padding:24px 28px;margin-bottom:24px;}
+    .referral-card .label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .referral-link-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .referral-link-box{flex:1;min-width:200px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:12px 16px;font-size:14px;font-family:monospace;word-break:break-all;}
+    .copy-btn{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--ff-body);white-space:nowrap;}
+    .copy-btn:hover{background:#174fa8;}
+    .referral-code-line{font-size:13px;color:rgba(255,255,255,0.6);margin-top:12px;}
+    .referral-code-line strong{color:#fff;letter-spacing:1px;}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+    .stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+    .stat-card .stat-val{font-family:var(--ff-display);font-size:28px;font-weight:600;}
+    .stat-card .stat-label{font-size:12px;color:var(--muted);margin-top:2px;}
+
+    .estimator-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px;}
+    .estimator-card h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+    .estimator-card p.sub{margin-bottom:16px;}
+    .estimator-input-row{display:flex;gap:12px;align-items:center;margin-bottom:16px;}
+    .estimator-input-row input[type="range"]{flex:1;}
+    .estimator-input-row .unit-display{font-family:var(--ff-display);font-size:20px;font-weight:600;min-width:110px;text-align:right;}
+    .estimator-result{background:var(--subtle);border-radius:10px;padding:16px 20px;display:flex;justify-content:space-around;text-align:center;}
+    .estimator-result div strong{display:block;font-family:var(--ff-display);font-size:22px;color:var(--primary);}
+    .estimator-result div span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+
+    .referrals-section h2{font-size:15px;font-weight:700;margin-bottom:14px;}
+    .referral-row{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+    .referral-row .rr-name{font-size:14px;font-weight:700;}
+    .referral-row .rr-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+    .status-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:4px 10px;border-radius:99px;flex-shrink:0;}
+    .status-pending{background:#FEF3C7;color:#92400E;}
+    .status-in_negotiation{background:#DBEAFE;color:#1E40AF;}
+    .status-closed{background:#DCFCE7;color:#166534;}
+    .status-lost{background:#FEE2E2;color:#991B1B;}
+    .empty-referrals{background:#fff;border:1px dashed var(--border);border-radius:12px;padding:28px 20px;text-align:center;color:var(--muted);font-size:14px;}
+
+    @media (max-width:640px){
+      .stats-grid{grid-template-columns:1fr;}
+      .referral-link-row{flex-direction:column;align-items:stretch;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-lockup">
+    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
+    <span>AmenityFit</span>
+  </a>
+  <button class="signout-btn" onclick="handleSignOut()">Sign Out</button>
+</nav>
+
+<div class="loading-screen" id="loading-screen">Loading your dashboard...</div>
+
+<div class="container" id="dashboard-content" style="display:none;">
+  <h1 id="welcome-heading">Welcome back.</h1>
+  <p class="sub">Track your referrals, earnings, and everything in between.</p>
+
+  <div class="checklist-card" id="checklist-card">
+    <h2>Getting started</h2>
+    <div class="checklist-item" id="check-copy">
+      <div class="checklist-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="checklist-text"><strong>Copy your referral link</strong><span>It's right below, ready to share.</span></div>
+    </div>
+    <div class="checklist-item" id="check-share">
+      <div class="checklist-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="checklist-text"><strong>Share it with your first building</strong><span>Send it to a property manager or building owner in your network.</span></div>
+    </div>
+    <div class="checklist-item" id="check-track">
+      <div class="checklist-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="checklist-text"><strong>Track your first referral</strong><span>It'll show up below the moment they apply.</span></div>
+    </div>
+  </div>
+
+  <div class="referral-card">
+    <div class="label">Your Referral Link</div>
+    <div class="referral-link-row">
+      <div class="referral-link-box" id="referral-link-text">Loading...</div>
+      <button class="copy-btn" onclick="copyReferralLink()" id="copy-btn">Copy Link</button>
+    </div>
+    <div class="referral-code-line">Referral code: <strong id="referral-code-text">...</strong></div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="stat-mrr">$0</div><div class="stat-label">Current MRR</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Referrals</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-closed">0</div><div class="stat-label">Buildings Closed</div></div>
+  </div>
+
+  <div class="estimator-card">
+    <h2>Earnings estimator</h2>
+    <p class="sub">See what a building could earn you before you pitch it.</p>
+    <div class="estimator-input-row">
+      <input type="range" id="est-slider" min="1" max="1000" value="100" oninput="updateEstimator(this.value)" />
+      <div class="unit-display" id="est-units">100 units</div>
+    </div>
+    <div class="estimator-result">
+      <div><strong id="est-monthly">$149.85</strong><span>Monthly</span></div>
+      <div><strong id="est-annual">$1,798.20</strong><span>Over 12 Months</span></div>
+    </div>
+  </div>
+
+  <div class="referrals-section">
+    <h2>Your referrals</h2>
+    <div id="referrals-list"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDghfD0PC8aj7hsHUflUI6tJW9QRE2n3zo",
+    authDomain: "amenityfit-31276.firebaseapp.com",
+    projectId: "amenityfit-31276",
+    storageBucket: "amenityfit-31276.firebasestorage.app",
+    messagingSenderId: "286921968049",
+    appId: "1:286921968049:web:91974135fed034b1221590",
+    measurementId: "G-4TNLEVZ25E"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Same tier ladder as the server (getTierLabel in the Cloud Functions
+  // codebase) - kept in sync manually since this is a display-only
+  // estimate, not what actually gets billed.
+  const TIER_MONTHLY_VALUES = [
+    { max: 50, value: 599 },
+    { max: 100, value: 999 },
+    { max: 200, value: 1499 },
+    { max: 300, value: 1999 },
+    { max: 500, value: 2799 },
+    { max: 1000, value: 3999 },
+  ];
+  function estimateMonthlyValue(units) {
+    for (const t of TIER_MONTHLY_VALUES) {
+      if (units <= t.max) return t.value;
+    }
+    return null; // over 1000 units - Custom tier, no fixed estimate
+  }
+
+  window.updateEstimator = function(units) {
+    units = parseInt(units);
+    document.getElementById('est-units').textContent = units + ' units';
+    const monthlyValue = estimateMonthlyValue(units);
+    const monthlyEl = document.getElementById('est-monthly');
+    const annualEl = document.getElementById('est-annual');
+    if (monthlyValue === null) {
+      monthlyEl.textContent = 'Custom';
+      annualEl.textContent = 'Custom';
+    } else {
+      const commission = monthlyValue * 0.15;
+      monthlyEl.textContent = '$' + commission.toFixed(2);
+      annualEl.textContent = '$' + (commission * 12).toFixed(2);
+    }
+  };
+  updateEstimator(100);
+
+  window.copyReferralLink = function() {
+    const text = document.getElementById('referral-link-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = original; }, 1500);
+      markChecklistDone('check-copy');
+    });
+  };
+
+  window.handleSignOut = async function() {
+    await signOut(auth);
+    window.location.href = 'affiliate-login.html';
+  };
+
+  function markChecklistDone(id) {
+    const el = document.getElementById(id);
+    if (el && !el.classList.contains('done')) {
+      el.classList.add('done');
+      el.querySelector('.checklist-check').classList.add('done');
+    }
+  }
+
+  function renderReferrals(referrals) {
+    const list = document.getElementById('referrals-list');
+    if (referrals.length === 0) {
+      list.innerHTML = '<div class="empty-referrals">No referrals yet. Share your link above to get your first one tracked.</div>';
+      return;
+    }
+    markChecklistDone('check-track');
+
+    const statusLabels = { pending: 'Pending', in_negotiation: 'In Negotiation', closed: 'Closed', lost: 'Lost' };
+    list.innerHTML = referrals.map(r => {
+      const statusClass = 'status-' + (r.status || 'pending');
+      const statusLabel = statusLabels[r.status] || 'Pending';
+      let meta = (r.units || '?') + ' units';
+      if (r.status === 'closed' && r.commissionMonthly) {
+        meta += ' &middot; $' + r.commissionMonthly.toFixed(2) + '/mo';
+        if (r.payoutEndDate) {
+          const endDate = r.payoutEndDate.toDate ? r.payoutEndDate.toDate() : new Date(r.payoutEndDate);
+          meta += ' &middot; through ' + endDate.toLocaleDateString();
+        }
+      }
+      return `<div class="referral-row">
+        <div><div class="rr-name">${r.buildingName || 'Unnamed Building'}</div><div class="rr-meta">${meta}</div></div>
+        <div class="status-badge ${statusClass}">${statusLabel}</div>
+      </div>`;
+    }).join('');
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = 'affiliate-login.html';
+      return;
+    }
+
+    try {
+      const affDoc = await getDoc(doc(db, 'affiliates', user.uid));
+      if (!affDoc.exists()) {
+        document.getElementById('loading-screen').textContent = 'No affiliate account found for this login. Contact us if this seems wrong.';
+        return;
+      }
+      const affiliate = affDoc.data();
+
+      document.getElementById('welcome-heading').textContent = 'Welcome back, ' + (affiliate.name ? affiliate.name.split(' ')[0] : 'there') + '.';
+      const link = 'https://amenityfit.app/?ref=' + affiliate.referralCode;
+      document.getElementById('referral-link-text').textContent = link;
+      document.getElementById('referral-code-text').textContent = affiliate.referralCode || '';
+
+      const refSnap = await getDocs(query(collection(db, 'affiliateReferrals'), where('affiliateUid', '==', user.uid)));
+      const referrals = refSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      const closedReferrals = referrals.filter(r => r.status === 'closed');
+      const mrr = closedReferrals.reduce((sum, r) => sum + (r.commissionMonthly || 0), 0);
+      document.getElementById('stat-mrr').textContent = '$' + mrr.toFixed(2);
+      document.getElementById('stat-total').textContent = referrals.length;
+      document.getElementById('stat-closed').textContent = closedReferrals.length;
+
+      renderReferrals(referrals);
+
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('dashboard-content').style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      document.getElementById('loading-screen').textContent = 'Something went wrong loading your dashboard. Please refresh, or contact us if this keeps happening.';
+    }
+  });
+</script>
+</body>
+</html>
