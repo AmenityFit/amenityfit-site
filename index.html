@@ -133,14 +133,19 @@
       -webkit-backdrop-filter: blur(20px) saturate(1.4);
       border-bottom-color: rgba(226,228,234,0.5);
     }
-    .nav-logo-icon { display: flex; align-items: center; }
+    .nav-logo-icon { display: flex; align-items: center; visibility: hidden; }
     .nav-logo-icon img { height: 34px; }
-    .nav-wordmark-center {
+    .nav-logo-lockup {
       position: absolute; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-lockup img { height: 34px; }
+    .nav-wordmark-center {
       font-family: var(--ff-display); font-size: 22px; font-weight: 600;
       color: #fff; letter-spacing: 0.02em; line-height: 1;
       transition: color 0.4s;
-      white-space: nowrap; pointer-events: none;
+      white-space: nowrap;
     }
     #nav.scrolled .nav-wordmark-center { color: var(--text); }
     .nav-cta {
@@ -379,7 +384,6 @@
     .problem-panel {
       position: relative; overflow: hidden;
       height: clamp(260px,36vh,380px);
-      display: flex; flex-direction: column; justify-content: flex-end;
       padding: 20px 24px;
       cursor: default;
     }
@@ -393,7 +397,7 @@
       position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(10,10,26,0.94) 0%, rgba(10,10,26,0.45) 55%, rgba(10,10,26,0.08) 100%);
     }
-    .problem-panel-content { position: relative; z-index: 2; }
+    .problem-panel-content { position: absolute; left: 24px; right: 24px; top: 48%; z-index: 2; }
     .problem-num {
       font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
       color: var(--accent); margin-bottom: 6px; font-family: var(--ff-body);
@@ -690,6 +694,101 @@
     .wearable-feature:last-child { border-bottom: none; padding-bottom: 0; }
     .wearable-feature h4 { font-family: var(--ff-display); font-size: 17px; font-weight: 600; color: #fff; margin-bottom: 3px; }
     .wearable-feature p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.55; font-weight: 300; }
+    /* Real, deliberate divider between Activity and Wearables inside one
+       shared dark section - reads as one continuous tracking-and-recovery
+       story, not two chopped-up features, while still occupying only the
+       single dark slot the site's alternating light/dark rhythm expects. */
+    .feature-divider { height: 1px; background: rgba(255,255,255,0.1); margin: clamp(56px,8vh,88px) 0; }
+    /* Activity share card mockup - built from the real card's actual
+       structure (distance, pace, time, heart rate, location), not a stock
+       photo, since the real output IS what a resident would post anyway -
+       nothing proprietary about showing it. Deliberately partial: enough
+       to feel real and exciting, not the full card, which stays an
+       in-app-only experience. */
+    .activity-card-mock {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 28px 26px 24px;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+    .activity-card-mock-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+    .activity-card-mock-title { font-family: var(--ff-display); font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .activity-card-mock-sub { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 300; }
+    .activity-card-mock-badge { background: rgba(74,144,217,0.18); border: 1px solid rgba(74,144,217,0.4); color: var(--accent); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 99px; }
+    .activity-card-mock-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; margin-bottom: 20px; }
+    .activity-card-mock-stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 4px; }
+    .activity-card-mock-stat-value { font-family: var(--ff-display); font-size: 24px; font-weight: 600; color: #fff; }
+    .activity-card-mock-map { height: 100px; border-radius: 12px; background: linear-gradient(135deg, rgba(74,144,217,0.25), rgba(74,144,217,0.05)); position: relative; overflow: hidden; margin-bottom: 16px; }
+    .activity-card-mock-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .activity-card-mock-location { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 300; text-align: center; }
+    /* Real photo + Minimal sticker overlay, matching the actual app's
+       treatment exactly - same text-shadow values, same logo white-filter
+       technique - not a generic illustration. Landscape to match the
+       watch photos already used in this same showcase grid. */
+    /* Real fix - previous version used "Minimal" mode's treatment (one
+       giant stat, nothing else). The real screenshots this is matching
+       actually show "Classic" mode: a vertical stat stack, first stat
+       larger (58px) than the rest (28px) - see renderStatOverlay's own
+       "Classic" branch. Sized larger per direct feedback - was too small
+       relative to the section. */
+    .activity-photo-card {
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+      aspect-ratio: 4/3;
+      border-radius: 20px;
+      overflow: hidden;
+      background-image: url('https://res.cloudinary.com/dk5g9itw8/image/upload/v1779490973/Squoosh_3_ybyzrz.webp');
+      background-size: cover;
+      background-position: center;
+      margin: 0 auto;
+    }
+    .activity-photo-overlay {
+      position: absolute; left: 28px; right: 28px; bottom: 26px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+    }
+    .activity-photo-title {
+      color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
+      font-size: 14px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .activity-photo-stat-row { display: flex; align-items: baseline; gap: 9px; }
+    .activity-photo-stat-hero {
+      color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
+      font-size: 64px; font-weight: 900; line-height: 1; letter-spacing: -1.5;
+    }
+    .activity-photo-stat-secondary {
+      color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
+      font-size: 30px; font-weight: 900; line-height: 1; letter-spacing: -0.3;
+    }
+    .activity-photo-stat-label {
+      color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.85;
+    }
+    .activity-photo-logo-row { display: flex; align-items: center; gap: 7px; margin-top: 2px; }
+    .activity-photo-logo-row img { width: 22px; height: 22px; object-fit: contain; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.65)); }
+    /* Second card: real outdoor run, paired side by side with Stretching
+       the same way Wearables already pairs its two watch photos. Route
+       line is a deliberately realistic, organic GPS-style path (real
+       turns, not a straight diagonal) sitting in the photo's open sky
+       area - matches the real app's actual Route Focus treatment, not a
+       generic illustration. */
+    .activity-photo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .activity-photo-pair .activity-photo-card { aspect-ratio: 0.62; }
+    .activity-photo-route-svg { position: absolute; top: 20px; left: 30px; right: 60px; height: 160px; }
+    .activity-photo-stat-grid {
+      display: grid; grid-template-columns: repeat(3, auto); gap: 10px 20px;
+    }
+    .activity-photo-stat-grid-value {
+      color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
+      font-size: 20px; font-weight: 900; line-height: 1.1;
+    }
+    .activity-photo-stat-grid-label {
+      color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
+      font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.8; margin-top: 2px;
+    }
+    .activity-photo-logo-row span { color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9); font-size: 13px; font-weight: 900; letter-spacing: 0.06em; opacity: 1; }
 
     /* PRICING */
     #pricing { background: var(--subtle); scroll-margin-top: 0px; }
@@ -736,15 +835,20 @@
     .custom-input-inner input[type="number"]:focus { border-color: var(--accent); }
     .custom-input-inner .btn-primary { padding: 10px 20px; font-size: 13px; }
     .custom-result { font-size: 13px; color: var(--muted); margin-top: 8px; font-weight: 300; }
-    .tier-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    /* 6 real priced tiers in a clean 3-column grid (2 tight rows,
+       no orphaned cells). Custom has no price, so it's pulled out of
+       the grid math and spans the full width as its own row below -
+       it's a CTA to a review call, not a price point. */
+    .tier-pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .tier-pill.tier-custom { grid-column: 1 / -1; }
     .tier-pill {
-      flex: 1; min-width: 100px; padding: 10px 8px; border-radius: 7px;
+      padding: 10px 6px; border-radius: 7px;
       border: 1px solid var(--border); text-align: center; transition: all 0.2s; cursor: pointer;
     }
     .tier-pill:hover { border-color: var(--accent); background: rgba(74,144,217,0.06); }
     .tier-pill.active { border-color: var(--primary); background: rgba(30,95,190,0.05); }
-    .tier-pill strong { display: block; font-family: var(--ff-display); font-size: 15px; font-weight: 600; color: var(--text); }
-    .tier-pill span { font-size: 11px; color: var(--muted); font-weight: 300; }
+    .tier-pill strong { display: block; font-family: var(--ff-display); font-size: 14px; font-weight: 600; color: var(--text); }
+    .tier-pill span { font-size: 10px; color: var(--muted); font-weight: 300; line-height: 1.3; display: block; }
 
     /* CREDIBILITY */
     #credibility { background: var(--bg); }
@@ -877,7 +981,7 @@
       .lead { font-size: 14px; }
       #nav { height: 58px; padding: 0 18px; background: rgba(13,13,26,0.95) !important; }
       #nav.scrolled { background: rgba(255,255,255,0.98) !important; }
-      .nav-logo-icon img { height: 28px; }
+      .nav-logo-icon img, .nav-logo-lockup img { height: 28px; }
       .nav-wordmark-center { font-size: 18px; }
       .nav-cta { font-size: 12px; padding: 8px 14px; }
       #hero { min-height: 100svh; }
@@ -980,10 +1084,13 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo-icon">
-    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
+  <a href="#" class="nav-logo-icon" aria-hidden="true" tabindex="-1">
+    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
   </a>
-  <span class="nav-wordmark-center">AmenityFit</span>
+  <a href="#" class="nav-logo-lockup">
+    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
+    <span class="nav-wordmark-center">AmenityFit</span>
+  </a>
   <a href="#apply" class="nav-cta" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
   <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -1128,7 +1235,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
         <h3>Progress Tracking</h3>
-        <p>Residents track workouts completed, streaks, level-ups, and cycle history. Body measurements and weight logged over time so they can see exactly what is changing. Visible results drive retention and referrals.</p>
+        <p>Residents track workouts completed, streaks, level-ups, and cycle history. Every run, ride, or walk syncs automatically alongside body measurements and weight logged over time, so they see exactly what is changing. Visible results drive retention and referrals.</p>
       </div>
     </div>
   </div>
@@ -1200,7 +1307,7 @@
             <span class="dash-building-label">Building Manager</span>
             <span class="dash-building-name">One Manhattan Square</span>
           </div>
-          <span style="font-size:11px;color:rgba(255,255,255,0.3);font-weight:300;">July 2026</span>
+          <span style="font-size:11px;color:rgba(255,255,255,0.3);font-weight:300;">October 2026</span>
         </div>
         <div class="dash-tabs" id="dash-tabs">
           <div class="dash-tab active" data-tab="overview" onclick="switchTab('overview')">Overview</div>
@@ -1227,7 +1334,7 @@
             </div>
           </div>
           <div>
-            <div class="dash-section-label">Engagement &mdash; July 2026</div>
+            <div class="dash-section-label">Engagement &mdash; October 2026</div>
             <div class="dash-stat-3">
               <div class="dash-stat-card">
                 <div class="dash-stat-val orange" data-count="1247">0</div>
@@ -1299,7 +1406,7 @@
         <!-- REPORT TAB -->
         <div class="dash-panel" id="panel-report">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <div style="font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3)">Monthly Amenity Report &mdash; July 2026</div>
+            <div style="font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3)">Monthly Amenity Report &mdash; October 2026</div>
             <div class="dash-report-badge">PDF</div>
           </div>
           <div class="report-row"><span class="report-row-label">Residents Invited</span><span class="report-row-val">815</span></div>
@@ -1440,8 +1547,72 @@
 </section>
 
 <!-- WEARABLES -->
+<!-- ACTIVITY -->
 <section id="wearables">
   <div class="container">
+    <div class="wearables-grid" style="grid-template-columns: 0.85fr 1.15fr; gap: 40px;">
+      <div class="wearable-content">
+        <div class="reveal">
+          <div class="section-label light">Activity</div>
+          <h2 class="light">Every workout, tracked and <em>shareable.</em></h2>
+          <p class="lead light" style="margin-top:14px;margin-bottom:20px">Not just lifting. Runs, rides, hikes, swims, whatever the day calls for. AmenityFit tracks the whole picture and turns it into something worth showing off.</p>
+        </div>
+        <div class="wearable-feature reveal reveal-d1">
+          <h4>One card, every stat</h4>
+          <p>Distance, pace, route, heart rate, and time. Pulled together automatically into a single card, ready to post in one tap.</p>
+        </div>
+        <div class="wearable-feature reveal reveal-d2">
+          <h4>Every activity, its own moment</h4>
+          <p>Meditation, stretching, pilates, yoga. Each one gets its own reflection prompt, not a generic one-size-fits-all check-in.</p>
+        </div>
+      </div>
+      <div class="watch-showcase">
+        <div class="activity-photo-pair">
+          <div class="activity-photo-card reveal">
+            <div class="activity-photo-overlay">
+              <div class="activity-photo-title" style="display:flex;align-items:center;gap:8px;">
+                <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/v1788947665/stretching_anmgsa.png" alt="" style="width:20px;height:20px;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.65));" />
+                Stretching
+              </div>
+              <div class="activity-photo-stat-row">
+                <span class="activity-photo-stat-hero">1:38</span>
+                <span class="activity-photo-stat-label">Time</span>
+              </div>
+              <div class="activity-photo-logo-row">
+                <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
+                <span>AMENITYFIT</span>
+              </div>
+            </div>
+          </div>
+          <div class="activity-photo-card reveal" style="background-image:url('https://res.cloudinary.com/dk5g9itw8/image/upload/v1788948291/e5e40c8f-3bdf-45c2-8bc8-2bf72fcdd105_nmzkd7.jpg');">
+            <img src="route-final.png"
+              alt=""
+              style="position:absolute; top:28px; left:70px; width:60px; height:auto; transform:rotate(-38deg); filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));" />
+            <div class="activity-photo-overlay">
+              <div class="activity-photo-title" style="display:flex;align-items:center;gap:8px;">
+                <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/v1788947666/running_rsqtkg.png" alt="" style="width:20px;height:20px;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.65));" />
+                Outdoor Run
+              </div>
+              <div class="activity-photo-stat-grid" style="gap:8px 14px;">
+                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">3.1 mi</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Distance</div></div>
+                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">8:09/mi</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Pace</div></div>
+                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">25:16</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Time</div></div>
+                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">18 ft</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Elev Gain</div></div>
+                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">~380</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Calories</div></div>
+                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">156 bpm</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Heart Rate</div></div>
+              </div>
+              <div class="activity-photo-logo-row">
+                <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
+                <span>AMENITYFIT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-divider"></div>
+
     <div class="wearables-grid">
       <div class="wearable-content">
         <div class="reveal">
@@ -1450,31 +1621,26 @@
           <p class="lead light" style="margin-top:14px;margin-bottom:20px">AmenityFit connects to residents' wearables and uses real recovery data to automatically adjust workout intensity in the background. No manual input. No guesswork.</p>
         </div>
         <div class="wearable-feature reveal reveal-d1">
+          <h4>Real recovery data, pulled automatically</h4>
+          <p>Sleep quality, strain, recovery score, and resting heart rate sync the moment they are available. No logging, no manual entry.</p>
+        </div>
+        <div class="wearable-feature reveal reveal-d2">
           <h4>Recovery-adjusted intensity</h4>
           <p>When recovery is low, the program pulls back automatically. When it is strong, full intensity loads. The workout adapts to the person on that specific day.</p>
         </div>
-        <div class="wearable-feature reveal reveal-d2">
+        <div class="wearable-feature reveal reveal-d3">
           <h4>Fitness Assistant context</h4>
           <p>The coaching assistant reads recovery, strain, and sleep data to give more informed guidance. Residents get advice that reflects how their body actually feels.</p>
         </div>
-        <div class="wearable-feature reveal reveal-d3">
-          <h4>Whoop, Apple Watch, and Fitbit</h4>
-          <p>All three integrations supported. Residents connect in one tap from their profile and the platform handles the rest.</p>
+        <div class="wearable-feature reveal reveal-d4">
+          <h4>Whoop and Apple Watch</h4>
+          <p>Both integrations supported. Residents connect in one tap from their profile and the platform handles the rest.</p>
         </div>
       </div>
       <div class="watch-showcase" id="watch-trio">
-        <div class="watch-row-top">
+        <div class="watch-row-top" style="min-height:340px;">
           <div class="watch-card" id="watch-1">
-            <div class="watch-img-wrap">
-              <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-23_at_12.48.33_PM_qn5tnu" alt="Whoop" />
-            </div>
-            <div class="watch-card-info">
-              <span class="watch-card-name">Whoop</span>
-              <div class="watch-live"><div class="live-dot"></div>Live</div>
-            </div>
-          </div>
-          <div class="watch-card" id="watch-2">
-            <div class="watch-img-wrap">
+            <div class="watch-img-wrap" style="aspect-ratio:0.78;">
               <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-22_at_8.57.53_PM_o2mbgb" alt="Apple Watch" />
             </div>
             <div class="watch-card-info">
@@ -1482,14 +1648,14 @@
               <div class="watch-live"><div class="live-dot"></div>Live</div>
             </div>
           </div>
-        </div>
-        <div class="watch-card-wide" id="watch-3">
-          <div class="watch-img-wide">
-            <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_800/Screen_Shot_2026-05-23_at_12.46.31_PM_ihd27y" alt="Fitbit" />
-          </div>
-          <div class="watch-card-info">
-            <span class="watch-card-name">Fitbit</span>
-            <div class="watch-live"><div class="live-dot"></div>Live</div>
+          <div class="watch-card" id="watch-2">
+            <div class="watch-img-wrap" style="aspect-ratio:0.78;">
+              <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-23_at_12.48.33_PM_qn5tnu" alt="Whoop" />
+            </div>
+            <div class="watch-card-info">
+              <span class="watch-card-name">Whoop</span>
+              <div class="watch-live"><div class="live-dot"></div>Live</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1510,11 +1676,23 @@
         <span class="calc-top-label">Building size</span>
         <span class="calc-unit-display" id="unit-display">100 units</span>
       </div>
-      <input type="range" id="unit-slider" min="1" max="300" value="100" oninput="updateCalc(this.value)" onchange="updateCalc(this.value)" />
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:4px;">
+        <label for="currency-select" style="font-size:12px;color:#8a94a6;">Display currency</label>
+        <select id="currency-select" onchange="changeCurrency(this.value)" style="font-size:13px;padding:4px 8px;border-radius:6px;border:1px solid #2a3140;background:#151a24;color:#fff;">
+          <option value="USD">USD ($)</option>
+          <option value="CAD">CAD (CA$)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="AUD">AUD (AU$)</option>
+          <option value="JPY">JPY (¥)</option>
+        </select>
+      </div>
+      <div id="fx-note" style="font-size:11px;color:#5c6577;text-align:right;margin-bottom:8px;">Approximate conversion &middot; billed in USD</div>
+      <input type="range" id="unit-slider" min="1" max="1000" value="100" oninput="updateCalc(this.value)" onchange="updateCalc(this.value)" />
       <div class="calc-result" id="calc-result">
         <div class="calc-price-col">
           <div class="calc-freq">Monthly</div>
-          <div class="calc-price" id="monthly-price"><sup>$</sup><span id="monthly-val">999</span></div>
+          <div class="calc-price" id="monthly-price"><span id="monthly-val">$999</span></div>
         </div>
         <div class="calc-annual-col">
           <div class="calc-annual-label">Billed annually</div>
@@ -1530,10 +1708,13 @@
         <div class="custom-result" id="custom-result"></div>
       </div>
       <div class="tier-pills" id="tier-pills">
-        <div class="tier-pill" id="tp1" onclick="selectTierPill(25)"><strong>$599/mo</strong><span>Up to 50 units</span></div>
-        <div class="tier-pill active" id="tp2" onclick="selectTierPill(75)"><strong>$999/mo</strong><span>51 to 100 units</span></div>
-        <div class="tier-pill" id="tp3" onclick="selectTierPill(150)"><strong>$1,499/mo</strong><span>101 to 200 units</span></div>
-        <div class="tier-pill" id="tp4" onclick="selectTierPill(250)"><strong>Custom</strong><span>200+ units</span></div>
+        <div class="tier-pill" id="tp1" onclick="selectTierPill(25)"><strong class="tier-price" data-usd="599">$599/mo</strong><span>Up to 50 units</span></div>
+        <div class="tier-pill active" id="tp2" onclick="selectTierPill(75)"><strong class="tier-price" data-usd="999">$999/mo</strong><span>51 to 100 units</span></div>
+        <div class="tier-pill" id="tp3" onclick="selectTierPill(150)"><strong class="tier-price" data-usd="1499">$1,499/mo</strong><span>Scale &middot; 101 to 200 units</span></div>
+        <div class="tier-pill" id="tp4" onclick="selectTierPill(250)"><strong class="tier-price" data-usd="1999">$1,999/mo</strong><span>Pro &middot; 201 to 300 units</span></div>
+        <div class="tier-pill" id="tp5" onclick="selectTierPill(400)"><strong class="tier-price" data-usd="2799">$2,799/mo</strong><span>Enterprise &middot; 301 to 500 units</span></div>
+        <div class="tier-pill" id="tp6" onclick="selectTierPill(750)"><strong class="tier-price" data-usd="3999">$3,999/mo</strong><span>Enterprise+ &middot; 501 to 1,000 units</span></div>
+        <div class="tier-pill tier-custom" id="tp7" onclick="selectTierPill(1001)"><strong>Custom</strong><span>1,000+ units</span></div>
       </div>
     </div>
   </div>
@@ -1721,27 +1902,16 @@
   let dashAutoTimer = null;
   const dashTabs = ['overview', 'equipment', 'report'];
   let dashCurrentIdx = 0;
-  const DASH_INTERVAL = 4000;
+  const DASH_INTERVAL = 7000;
   let dashPaused = false;
 
-  function setupDashHold() {
-    const dash = document.querySelector('.manager-dashboard');
-    if (!dash) return;
-    const pause = () => { dashPaused = true; };
-    const resume = () => {
-      dashPaused = false;
-      clearTimeout(window._dashResumeTimer);
-      startDashAuto();
-    };
-    dash.addEventListener('mousedown', pause);
-    dash.addEventListener('touchstart', pause, { passive: true });
-    dash.addEventListener('mouseup', resume);
-    dash.addEventListener('mouseleave', resume);
-    dash.addEventListener('touchend', resume);
-  }
-
   function switchTab(tabId, resetAuto = true) {
-    dashPaused = true;
+    // Real fix: this was unconditional before, meaning the auto-cycle's
+    // own internal calls (resetAuto=false) also set dashPaused=true - the
+    // very first automatic tick paused itself permanently, which is why
+    // it always died after one step even before tonight's other fix.
+    // Only a genuine click (resetAuto=true) should ever pause the cycle.
+    if (resetAuto) dashPaused = true;
     document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
     const tabEl = document.querySelector(`[data-tab="${tabId}"]`);
@@ -1753,9 +1923,15 @@
       panelEl.querySelectorAll('[data-count]').forEach(animateCount);
     }
     if (resetAuto) {
-      startDashAuto();
+      // Real fix: a genuine tap from the person means they've taken manual
+      // control - permanently stop auto-advancing for this visit, not
+      // resume after a timeout. Auto-advance's own internal calls pass
+      // resetAuto=false and never hit this branch, so the continuous loop
+      // keeps working exactly as before for anyone who never taps.
+      clearInterval(dashAutoTimer);
       clearTimeout(window._dashResumeTimer);
-      window._dashResumeTimer = setTimeout(() => { dashPaused = false; startDashAuto(); }, 8000);
+      const fill = document.getElementById('dash-progress');
+      if (fill) { fill.style.transition = 'none'; fill.style.width = '0%'; }
     }
   }
 
@@ -1782,8 +1958,6 @@
       }));
     }, DASH_INTERVAL);
   }
-
-  setupDashHold();
 
   const dashObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -1852,12 +2026,46 @@
   window.addEventListener('resize', () => { if (window.innerWidth > 768) closeMobileMenu(); });
 
   const tiers = [
-    { max: 50,  monthly: 599,  id: 'tp1' },
-    { max: 100, monthly: 999,  id: 'tp2' },
-    { max: 200, monthly: 1499, id: 'tp3' },
-    { max: Infinity, monthly: null, id: 'tp4' }
+    { max: 50,   monthly: 599,  id: 'tp1' },
+    { max: 100,  monthly: 999,  id: 'tp2' },
+    { max: 200,  monthly: 1499, id: 'tp3' },
+    { max: 300,  monthly: 1999, id: 'tp4' },
+    { max: 500,  monthly: 2799, id: 'tp5' },
+    { max: 1000, monthly: 3999, id: 'tp6' },
+    { max: Infinity, monthly: null, id: 'tp7' }
   ];
   let _lastTierMonthly = null;
+
+  // Display-only conversion for international visitors. Real billing
+  // always happens in USD through Stripe - these rates are approximate
+  // and clearly labeled as such, not a live feed.
+  const currencyRates = {
+    USD: { rate: 1,     symbol: '$'   },
+    CAD: { rate: 1.38,  symbol: 'CA$' },
+    GBP: { rate: 0.79,  symbol: '£' },
+    EUR: { rate: 0.92,  symbol: '€' },
+    AUD: { rate: 1.52,  symbol: 'AU$' },
+    JPY: { rate: 149,   symbol: '¥' }
+  };
+  let currentCurrency = 'USD';
+
+  function formatCurrency(usdAmount) {
+    const c = currencyRates[currentCurrency];
+    const converted = Math.round(usdAmount * c.rate);
+    return c.symbol + converted.toLocaleString();
+  }
+
+  function changeCurrency(code) {
+    currentCurrency = code;
+    document.querySelectorAll('.tier-price').forEach(function(el) {
+      const usd = parseInt(el.getAttribute('data-usd'));
+      if (usd) el.textContent = formatCurrency(usd) + '/mo';
+    });
+    const slider = document.getElementById('unit-slider');
+    if (slider) { _lastTierMonthly = null; updateCalc(slider.value); }
+    const customUnits = document.getElementById('custom-units');
+    if (customUnits && customUnits.value) calcCustom();
+  }
   function selectTierPill(units) {
     var slider = document.getElementById('unit-slider');
     if (slider) { slider.value = units; }
@@ -1867,7 +2075,7 @@
   function updateCalc(val) {
     val = parseInt(val);
     if (isNaN(val) || val < 1) val = 1;
-    if (val > 300) val = 300;
+    if (val > 100000) val = 100000;
     document.getElementById('unit-display').textContent = val + ' units';
     let tier = null;
     for (let i = 0; i < tiers.length; i++) {
@@ -1895,10 +2103,10 @@
       if (tier.monthly !== _lastTierMonthly) {
         _lastTierMonthly = tier.monthly;
         const mEl = document.getElementById('monthly-val');
-        if (mEl) mEl.textContent = tier.monthly.toLocaleString();
+        if (mEl) mEl.textContent = formatCurrency(tier.monthly);
         const annual = tier.monthly * 10;
         const annEl = document.getElementById('annual-price');
-        if (annEl) annEl.textContent = '$' + annual.toLocaleString();
+        if (annEl) annEl.textContent = formatCurrency(annual);
         const saveEl = document.getElementById('save-badge');
         if (saveEl) saveEl.textContent = 'Save ~15%';
       }
@@ -1914,7 +2122,7 @@
     else if (units <= 1000) { base = 3999; label = '501 to 1,000 units'; }
     else { base = null; label = 'enterprise portfolio'; }
     if (base) {
-      res.innerHTML = `Estimated for ${units} units (${label}): <strong>$${base.toLocaleString()}/mo</strong> &middot; <strong>$${(base*10).toLocaleString()}/yr</strong> billed annually. Final pricing confirmed after review.`;
+      res.innerHTML = `Estimated for ${units} units (${label}): <strong>${formatCurrency(base)}/mo</strong> &middot; <strong>${formatCurrency(base*10)}/yr</strong> billed annually. Final pricing confirmed after review.`;
     } else {
       res.innerHTML = `For a portfolio of ${units}+ units, pricing is determined after a review call. Apply below and we will follow up within 2 business days.`;
     }
