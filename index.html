@@ -1024,7 +1024,7 @@
       .assistant-grid { grid-template-columns: 1fr; gap: 36px; }
       .wearables-grid { grid-template-columns: 1fr; gap: 36px; }
       .activity-photo-pair { grid-template-columns: 1fr; gap: 14px; }
-      .activity-photo-pair .activity-photo-card { aspect-ratio: 0.85; }
+      .activity-photo-pair .activity-photo-card { aspect-ratio: auto; min-height: 480px; }
       .activity-photo-stat-grid { grid-template-columns: repeat(2, auto); }
       .currency-select-row { flex-direction: column; align-items: flex-end; gap: 4px; }
       .currency-select { width: 100%; }
@@ -1097,10 +1097,10 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo-icon" aria-hidden="true" tabindex="-1">
+  <a href="#" class="nav-logo-icon" aria-hidden="true" tabindex="-1" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'});">
     <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
   </a>
-  <a href="#" class="nav-logo-lockup">
+  <a href="#" class="nav-logo-lockup" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'});">
     <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
     <span class="nav-wordmark-center">AmenityFit</span>
   </a>
