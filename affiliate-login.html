@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiliate Login | AmenityFit</title>
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto,w_64/Logo_rkq0cv" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#1E5FBE;--accent:#4A90D9;--text:#1A1A2E;--muted:#5a5a72;--border:#e2e4ea;--subtle:#f7f8fa;--ff-display:'Cormorant Garamond',Georgia,serif;--ff-body:'DM Sans',system-ui,sans-serif; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--ff-body);color:var(--text);background:var(--subtle);-webkit-font-smoothing:antialiased;min-height:100vh;}
+    nav{position:sticky;top:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 clamp(20px,5vw,60px);height:68px;display:flex;align-items:center;justify-content:space-between;z-index:100;}
+    nav .nav-lockup{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    nav img{height:34px;}
+    nav .nav-lockup span{font-family:var(--ff-display);font-size:19px;font-weight:600;color:var(--text);}
+    nav a.back{font-size:14px;color:var(--muted);text-decoration:none;}
+    nav a.back:hover{color:var(--text);}
+
+    .wrap{max-width:420px;margin:0 auto;padding:clamp(48px,10vw,88px) 20px;}
+    .card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:clamp(28px,5vw,36px);}
+    .label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+    h1{font-family:var(--ff-display);font-size:28px;font-weight:600;margin-bottom:8px;}
+    p.sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:24px;line-height:1.6;}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+    .form-group label{font-size:12px;font-weight:600;color:var(--text);}
+    .form-group input{
+      font-family:var(--ff-body);font-size:14px;padding:12px 14px;border-radius:8px;
+      border:1px solid var(--border);background:#fff;color:var(--text);width:100%;
+    }
+    .form-group input:focus{outline:none;border-color:var(--primary);}
+    .submit-btn{
+      width:100%;background:var(--primary);color:#fff;border:none;border-radius:8px;
+      padding:14px;font-size:15px;font-weight:600;font-family:var(--ff-body);cursor:pointer;
+      transition:background 0.2s;margin-top:6px;
+    }
+    .submit-btn:hover{background:#174fa8;}
+    .submit-btn:disabled{opacity:0.6;cursor:default;}
+    .error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:16px;display:none;}
+    .error-msg.show{display:block;}
+    .forgot-link{display:block;text-align:center;font-size:13px;color:var(--muted);text-decoration:none;margin-top:18px;}
+    .forgot-link:hover{color:var(--primary);}
+    .loading-msg{text-align:center;color:var(--muted);font-size:14px;padding:20px 0;}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-lockup">
+    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
+    <span>AmenityFit</span>
+  </a>
+  <a href="index.html" class="back">&larr; Back to site</a>
+</nav>
+
+<div class="wrap">
+  <div class="card">
+
+    <!-- First-time password setup (from approval email link) -->
+    <div id="setpw-view" style="display:none;">
+      <div class="label">Affiliate Account</div>
+      <h1>Set your password</h1>
+      <p class="sub" id="setpw-email-line">Setting up access for your account.</p>
+      <div class="error-msg" id="setpw-error"></div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="setpw-password" placeholder="At least 8 characters" />
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" id="setpw-confirm" placeholder="Re-enter your password" />
+      </div>
+      <button class="submit-btn" id="setpw-btn" onclick="handleSetPassword()">Set Password &amp; Sign In</button>
+    </div>
+
+    <!-- Normal login -->
+    <div id="login-view" style="display:none;">
+      <div class="label">Affiliate Login</div>
+      <h1>Welcome back</h1>
+      <p class="sub">Sign in to track your referrals and earnings.</p>
+      <div class="error-msg" id="login-error"></div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@email.com" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Your password" />
+      </div>
+      <button class="submit-btn" id="login-btn" onclick="handleLogin()">Sign In</button>
+      <a href="#" class="forgot-link" onclick="event.preventDefault();handleForgotPassword();">Forgot your password?</a>
+    </div>
+
+    <!-- Loading state while we check the URL for a reset link -->
+    <div id="loading-view" class="loading-msg">Loading...</div>
+
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import {
+    getAuth, signInWithEmailAndPassword, verifyPasswordResetCode,
+    confirmPasswordReset, sendPasswordResetEmail
+  } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDghfD0PC8aj7hsHUflUI6tJW9QRE2n3zo",
+    authDomain: "amenityfit-31276.firebaseapp.com",
+    projectId: "amenityfit-31276",
+    storageBucket: "amenityfit-31276.firebasestorage.app",
+    messagingSenderId: "286921968049",
+    appId: "1:286921968049:web:91974135fed034b1221590",
+    measurementId: "G-4TNLEVZ25E"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get('mode');
+  const oobCode = params.get('oobCode');
+
+  const setpwView = document.getElementById('setpw-view');
+  const loginView = document.getElementById('login-view');
+  const loadingView = document.getElementById('loading-view');
+
+  async function init() {
+    if (mode === 'resetPassword' && oobCode) {
+      try {
+        const email = await verifyPasswordResetCode(auth, oobCode);
+        document.getElementById('setpw-email-line').textContent = `Setting a password for ${email}.`;
+        loadingView.style.display = 'none';
+        setpwView.style.display = 'block';
+      } catch (err) {
+        // Link expired or already used - fall back to normal login with
+        // a clear explanation rather than a dead end.
+        loadingView.style.display = 'none';
+        loginView.style.display = 'block';
+        const errEl = document.getElementById('login-error');
+        errEl.textContent = 'That setup link has expired or was already used. If you already set your password, sign in below. Otherwise use "Forgot your password?" to get a new link.';
+        errEl.classList.add('show');
+      }
+    } else {
+      loadingView.style.display = 'none';
+      loginView.style.display = 'block';
+    }
+  }
+  init();
+
+  window.handleSetPassword = async function() {
+    const btn = document.getElementById('setpw-btn');
+    const pw = document.getElementById('setpw-password').value;
+    const confirm = document.getElementById('setpw-confirm').value;
+    const errEl = document.getElementById('setpw-error');
+    errEl.classList.remove('show');
+
+    if (pw.length < 8) {
+      errEl.textContent = 'Password must be at least 8 characters.';
+      errEl.classList.add('show');
+      return;
+    }
+    if (pw !== confirm) {
+      errEl.textContent = 'Passwords do not match.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Setting up...';
+    try {
+      const email = await verifyPasswordResetCode(auth, oobCode);
+      await confirmPasswordReset(auth, oobCode, pw);
+      await signInWithEmailAndPassword(auth, email, pw);
+      window.location.href = 'affiliate-dashboard.html';
+    } catch (err) {
+      errEl.textContent = 'Something went wrong: ' + (err.message || 'please try again.');
+      errEl.classList.add('show');
+      btn.disabled = false; btn.textContent = 'Set Password & Sign In';
+    }
+  };
+
+  window.handleLogin = async function() {
+    const btn = document.getElementById('login-btn');
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errEl = document.getElementById('login-error');
+    errEl.classList.remove('show');
+
+    if (!email || !password) {
+      errEl.textContent = 'Please enter your email and password.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Signing in...';
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = 'affiliate-dashboard.html';
+    } catch (err) {
+      errEl.textContent = 'Incorrect email or password. Please try again.';
+      errEl.classList.add('show');
+      btn.disabled = false; btn.textContent = 'Sign In';
+    }
+  };
+
+  window.handleForgotPassword = async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const errEl = document.getElementById('login-error');
+    errEl.classList.remove('show');
+    if (!email) {
+      errEl.textContent = 'Enter your email above first, then click "Forgot your password?"';
+      errEl.classList.add('show');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      errEl.style.background = '#F0FDF4';
+      errEl.style.borderColor = '#BBF7D0';
+      errEl.style.color = '#166534';
+      errEl.textContent = 'If that email has an account, a reset link has been sent.';
+      errEl.classList.add('show');
+    } catch (err) {
+      errEl.textContent = 'If that email has an account, a reset link has been sent.';
+      errEl.classList.add('show');
+    }
+  };
+</script>
+</body>
+</html>
