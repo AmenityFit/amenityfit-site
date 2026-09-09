@@ -1774,8 +1774,8 @@
         <div class="apply-form-wrap" id="apply-form-wrap">
           <div style="display:flex;flex-direction:column;gap:9px;">
             <div class="form-row">
-              <div class="form-group"><label>First Name</label><input type="text" id="f-first" placeholder="Jane" /></div>
-              <div class="form-group"><label>Last Name</label><input type="text" id="f-last" placeholder="Smith" /></div>
+              <div class="form-group"><label>First Name</label><input type="text" id="f-first" placeholder="Jane" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
+              <div class="form-group"><label>Last Name</label><input type="text" id="f-last" placeholder="Smith" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
             </div>
             <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="jane@building.com" /></div>
             <div class="form-group"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="+1 (212) 555-0100" /></div>
