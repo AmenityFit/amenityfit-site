@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiliate Program | AmenityFit</title>
+  <meta name="description" content="Earn recurring commission bringing AmenityFit to new residential buildings. Apply to become an official AmenityFit affiliate." />
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto,w_64/Logo_rkq0cv" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#1E5FBE;--accent:#4A90D9;--text:#1A1A2E;--muted:#5a5a72;--border:#e2e4ea;--subtle:#f7f8fa;--ff-display:'Cormorant Garamond',Georgia,serif;--ff-body:'DM Sans',system-ui,sans-serif; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--ff-body);color:var(--text);background:#fff;-webkit-font-smoothing:antialiased;}
+    nav{position:sticky;top:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 clamp(20px,5vw,60px);height:68px;display:flex;align-items:center;justify-content:space-between;z-index:100;}
+    nav .nav-lockup{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    nav img{height:34px;}
+    nav .nav-lockup span{font-family:var(--ff-display);font-size:19px;font-weight:600;color:var(--text);}
+    nav a.back{font-size:14px;color:var(--muted);text-decoration:none;}
+    nav a.back:hover{color:var(--text);}
+
+    .container{max-width:1100px;margin:0 auto;padding:0 clamp(20px,5vw,60px);}
+
+    .hero{background:#0d0d1a;color:#fff;padding:clamp(56px,9vw,96px) 0 clamp(48px,7vw,72px);}
+    .hero .label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+    .hero h1{font-family:var(--ff-display);font-size:clamp(38px,6vw,62px);font-weight:600;line-height:1.08;max-width:720px;margin-bottom:20px;}
+    .hero h1 em{font-style:italic;color:#7db3ec;font-weight:500;}
+    .hero p.lead{font-size:16px;font-weight:300;color:rgba(255,255,255,0.75);line-height:1.65;max-width:560px;margin-bottom:32px;}
+    .hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:680px;}
+    .hero-fact strong{display:block;font-family:var(--ff-display);font-size:28px;font-weight:600;color:#fff;margin-bottom:4px;}
+    .hero-fact span{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.4;display:block;}
+
+    .how{padding:clamp(48px,7vw,72px) 0;}
+    .how h2{font-family:var(--ff-display);font-size:clamp(26px,3.5vw,32px);font-weight:600;margin-bottom:32px;}
+    .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+    .how-step .num{font-family:var(--ff-display);font-size:32px;font-weight:600;color:var(--accent);margin-bottom:10px;}
+    .how-step h3{font-size:16px;font-weight:600;margin-bottom:8px;}
+    .how-step p{font-size:14px;color:var(--muted);font-weight:300;line-height:1.65;}
+
+    .details{background:var(--subtle);padding:clamp(48px,7vw,72px) 0;}
+    .details h2{font-family:var(--ff-display);font-size:clamp(26px,3.5vw,32px);font-weight:600;margin-bottom:28px;}
+    .details ul{list-style:none;display:flex;flex-direction:column;gap:16px;max-width:640px;}
+    .details li{font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;padding-left:26px;position:relative;}
+    .details li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--primary);}
+    .details li strong{color:var(--text);font-weight:600;}
+
+    .apply{padding:clamp(48px,7vw,80px) 0;}
+    .apply h2{font-family:var(--ff-display);font-size:clamp(26px,3.5vw,32px);font-weight:600;margin-bottom:8px;}
+    .apply p.sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:32px;max-width:560px;}
+    .form-wrap{background:#fff;border:1px solid var(--border);border-radius:12px;padding:clamp(20px,4vw,32px);max-width:640px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .form-group label{font-size:12px;font-weight:600;color:var(--text);}
+    .form-group input,.form-group select,.form-group textarea{
+      font-family:var(--ff-body);font-size:14px;padding:11px 13px;border-radius:7px;
+      border:1px solid var(--border);background:#fff;color:var(--text);width:100%;
+    }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);}
+    .form-group textarea{min-height:80px;resize:vertical;font-family:var(--ff-body);}
+    .checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;}
+    .checkbox-row input[type="checkbox"]{margin-top:3px;width:16px;height:16px;flex-shrink:0;}
+    .checkbox-row label{font-size:13px;color:var(--muted);font-weight:300;line-height:1.5;}
+    .other-country-wrap.show{display:flex !important;}
+    .form-submit{
+      width:100%;background:var(--primary);color:#fff;border:none;border-radius:8px;
+      padding:14px;font-size:15px;font-weight:600;font-family:var(--ff-body);cursor:pointer;
+      transition:background 0.2s;margin-top:6px;
+    }
+    .form-submit:hover{background:#174fa8;}
+    .form-submit:disabled{opacity:0.6;cursor:default;}
+    .form-success{display:none;text-align:center;padding:40px 20px;}
+    .form-success.show{display:block;}
+    .form-success .success-icon{width:52px;height:52px;border-radius:50%;background:rgba(74,222,128,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+    .form-success h3{font-family:var(--ff-display);font-size:22px;font-weight:600;margin-bottom:8px;}
+    .form-success p{font-size:14px;color:var(--muted);font-weight:300;}
+
+    footer{border-top:1px solid var(--border);padding:32px clamp(20px,5vw,60px);text-align:center;}
+    footer p{font-size:13px;color:var(--muted);font-weight:300;}
+    footer a{color:var(--primary);text-decoration:none;}
+
+    @media (max-width:768px){
+      .hero-facts{grid-template-columns:1fr;gap:16px;}
+      .how-grid{grid-template-columns:1fr;gap:28px;}
+      .form-row{grid-template-columns:1fr;}
+      nav .nav-lockup span{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-lockup">
+    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
+    <span>AmenityFit</span>
+  </a>
+  <a href="index.html" class="back">&larr; Back to site</a>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="label">Affiliate Program</div>
+    <h1>Bring us a building.<br />Get paid <em>for a year.</em></h1>
+    <p class="lead">Earn recurring commission for every residential building you connect us with that signs on. No cold calling required on our end, no sales team to manage. Just a warm introduction.</p>
+    <div class="hero-facts">
+      <div class="hero-fact"><strong>15%</strong><span>of the building's monthly contract value</span></div>
+      <div class="hero-fact"><strong>12 months</strong><span>paid per building you refer</span></div>
+      <div class="hero-fact"><strong>Worldwide</strong><span>open to applicants anywhere</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="container">
+    <h2>How it works</h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="num">01</div>
+        <h3>Apply</h3>
+        <p>Tell us a bit about yourself and where you plan to source buildings. We review every application personally.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">02</div>
+        <h3>Get approved</h3>
+        <p>Once approved, you'll get your own referral code and a dashboard to track every building you bring in.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">03</div>
+        <h3>Get paid automatically</h3>
+        <p>When a building you referred signs, you start earning 15% of their monthly contract value, paid out for 12 months, deposited directly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" style="background:var(--subtle);">
+  <div class="container">
+    <h2>Once you're approved</h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <h3>Your own referral link</h3>
+        <p>A unique code tied to you. When you refer a building, make sure they mention your code when they apply. That's what officially credits the referral to you. If a building applies without it, we have no way to know it came from you, and it's treated as an unprompted signup with no commission owed.</p>
+      </div>
+      <div class="how-step">
+        <h3>A dashboard that tracks everything</h3>
+        <p>See the real time status of every building you've referred: pending, in negotiation, or closed. No guessing, no waiting on an email to find out where things stand.</p>
+      </div>
+      <div class="how-step">
+        <h3>Your earnings, always visible</h3>
+        <p>Your dashboard shows your current monthly recurring earnings and exactly when each building's 12 month payout window started and when it ends.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="details">
+  <div class="container">
+    <h2>The details</h2>
+    <ul>
+      <li><strong>15% of monthly contract value,</strong> paid for 12 months from the date each building signs. Staggered independently per building, not on one shared clock.</li>
+      <li><strong>Single tier only.</strong> You earn on buildings you personally refer, never on other affiliates you bring into the program. No pyramid structure, ever.</li>
+      <li><strong>Paid in USD</strong> via automated payout, regardless of where you're located.</li>
+      <li><strong>Open internationally.</strong> Property managers, cold callers, and industry connections anywhere are welcome to apply.</li>
+      <li><strong>Guaranteed for the full term.</strong> Once a building signs, your 12-month payout is secured even if that building later cancels early.</li>
+      <li><strong>Disclosure required.</strong> When you refer a building, you're required to let them know you may earn a commission if they sign, in line with FTC guidelines. We'll give you simple, pre-approved language to use so this is never awkward.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="apply">
+  <div class="container">
+    <h2>Apply to become an affiliate</h2>
+    <p class="sub">Takes about 2 minutes. We personally review every application and follow up by email.</p>
+
+    <div class="form-wrap" id="af-form-wrap">
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="af-first" placeholder="Alex" /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="af-last" placeholder="Rivera" /></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="af-email" placeholder="alex@email.com" /></div>
+      <div class="form-group"><label>Phone Number <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="tel" id="af-phone" placeholder="+1 (212) 555-0100" /></div>
+      <div class="form-group">
+        <label>Country / Target Market</label>
+        <select id="af-country" onchange="handleCountryChange(this.value)">
+          <option value="" disabled selected>Select one</option>
+          <option>United States</option>
+          <option>Canada</option>
+          <option>United Kingdom</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group other-country-wrap" id="af-other-country-wrap" style="display:none;">
+        <label>Please specify</label>
+        <input type="text" id="af-other-country" placeholder="e.g. Estonia, Finland" />
+      </div>
+      <div class="form-group">
+        <label>How did you hear about AmenityFit's affiliate program?</label>
+        <select id="af-heard">
+          <option value="" disabled selected>Select one</option>
+          <option>Referred by someone</option>
+          <option>Social media</option>
+          <option>Direct outreach from AmenityFit</option>
+          <option>Search engine</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Tell us about your network <span style="font-weight:300;color:var(--muted);">(optional)</span></label><textarea id="af-notes" placeholder="Any context on how you plan to source buildings."></textarea></div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="af-age" />
+        <label for="af-age">I confirm I am 18 years of age or older.</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="af-eligible" />
+        <label for="af-eligible">I confirm I am not located in a country restricted from receiving payments from a U.S. business.</label>
+      </div>
+
+      <button class="form-submit" id="af-form-btn" onclick="submitApp()">Submit Application</button>
+    </div>
+
+    <div class="form-success" id="af-form-success">
+      <div class="success-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Application received.</h3>
+      <p>We personally review every application. You'll hear from us by email within a few business days. If approved, you'll get your referral link and dashboard access right away.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Fitmakesenz LLC &middot; <a href="index.html">amenityfit.app</a> &middot; <a href="privacy.html">Privacy Policy</a> &middot; <a href="terms.html">Terms of Service</a></p>
+  </div>
+</footer>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  const firebaseConfig = {
+    apiKey: "AIzaSyDghfD0PC8aj7hsHUflUI6tJW9QRE2n3zo",
+    authDomain: "amenityfit-31276.firebaseapp.com",
+    projectId: "amenityfit-31276",
+    storageBucket: "amenityfit-31276.firebasestorage.app",
+    messagingSenderId: "286921968049",
+    appId: "1:286921968049:web:91974135fed034b1221590",
+    measurementId: "G-4TNLEVZ25E"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.__submitAffiliateApplication = async function(data) {
+    try {
+      await addDoc(collection(db, 'affiliateApplications'), {
+        ...data,
+        contactName: (data.firstName || '') + ' ' + (data.lastName || ''),
+        submittedAt: serverTimestamp(),
+        source: 'amenityfit.app/affiliate',
+        status: 'pending'
+      });
+      await addDoc(collection(db, 'emailTriggers'), {
+        to: 'itmakesenzfitness@gmail.com',
+        message: {
+          subject: 'New Affiliate Application: ' + (data.firstName || '') + ' ' + (data.lastName || ''),
+          html:
+            '<h2>New Affiliate Application</h2>' +
+            '<p><strong>Name:</strong> ' + (data.firstName || '') + ' ' + (data.lastName || '') + '</p>' +
+            '<p><strong>Email:</strong> ' + (data.email || '') + '</p>' +
+            '<p><strong>Phone:</strong> ' + (data.phone || 'Not provided') + '</p>' +
+            '<p><strong>Country / Target Market:</strong> ' + (data.country || '') + '</p>' +
+            '<p><strong>How they heard about us:</strong> ' + (data.heard || '') + '</p>' +
+            '<p><strong>Notes:</strong> ' + (data.notes || 'None') + '</p>' +
+            '<p><strong>Confirmed 18+:</strong> ' + (data.age18 ? 'Yes' : 'No') + '</p>' +
+            '<p><strong>Confirmed payment-eligible country:</strong> ' + (data.eligible ? 'Yes' : 'No') + '</p>'
+        }
+      });
+      await addDoc(collection(db, 'emailTriggers'), {
+        to: data.email,
+        message: {
+          subject: 'We received your AmenityFit affiliate application',
+          html:
+            '<p>Hi ' + (data.firstName || '') + ',</p>' +
+            '<p>We received your application to become an AmenityFit affiliate. We personally review every application, and you will hear from us by email within a few business days.</p>' +
+            '<p>If you are approved, we will send you a unique referral link and dashboard access so you can start tracking referrals and earnings right away.</p>' +
+            '<p>Feel free to reply to this email with any questions.</p>' +
+            '<p>The AmenityFit Team</p>' +
+            '<p style="font-size:11px;color:#999;margin-top:24px;">AmenityFit &middot; amenityfit.app</p>'
+        }
+      });
+      return { success: true };
+    } catch(err) { return { success: false, error: err.message }; }
+  };
+
+  function handleCountryChange(val) {
+    const wrap = document.getElementById('af-other-country-wrap');
+    wrap.classList.toggle('show', val === 'Other');
+  }
+
+  async function submitApp() {
+    const btn = document.getElementById('af-form-btn');
+    const first = document.getElementById('af-first').value.trim();
+    const email = document.getElementById('af-email').value.trim();
+    const countrySelect = document.getElementById('af-country').value;
+    const otherCountry = document.getElementById('af-other-country').value.trim();
+    const country = countrySelect === 'Other' ? otherCountry : countrySelect;
+    const heard = document.getElementById('af-heard').value;
+    const age18 = document.getElementById('af-age').checked;
+    const eligible = document.getElementById('af-eligible').checked;
+
+    if (!first || !email || !country || !heard) { alert('Please fill in the required fields.'); return; }
+    if (!age18 || !eligible) { alert('Please confirm both checkboxes to continue.'); return; }
+
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    const result = await window.__submitAffiliateApplication({
+      firstName: first,
+      lastName: document.getElementById('af-last').value.trim(),
+      email, country, heard,
+      phone: document.getElementById('af-phone').value.trim(),
+      notes: document.getElementById('af-notes').value.trim(),
+      age18, eligible
+    });
+    if (result.success) {
+      document.getElementById('af-form-wrap').style.display = 'none';
+      const s = document.getElementById('af-form-success');
+      s.classList.add('show');
+    } else {
+      btn.disabled = false; btn.textContent = 'Submit Application';
+      alert('There was an issue submitting. Please try again.');
+    }
+  }
+  window.submitApp = submitApp;
+  window.handleCountryChange = handleCountryChange;
+</script>
+</body>
+</html>
