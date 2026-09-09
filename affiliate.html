@@ -258,34 +258,14 @@
         source: 'amenityfit.app/affiliate',
         status: 'pending'
       });
-      await addDoc(collection(db, 'emailTriggers'), {
-        to: 'itmakesenzfitness@gmail.com',
-        message: {
-          subject: 'New Affiliate Application: ' + (data.firstName || '') + ' ' + (data.lastName || ''),
-          html:
-            '<h2>New Affiliate Application</h2>' +
-            '<p><strong>Name:</strong> ' + (data.firstName || '') + ' ' + (data.lastName || '') + '</p>' +
-            '<p><strong>Email:</strong> ' + (data.email || '') + '</p>' +
-            '<p><strong>Phone:</strong> ' + (data.phone || 'Not provided') + '</p>' +
-            '<p><strong>Country / Target Market:</strong> ' + (data.country || '') + '</p>' +
-            '<p><strong>How they heard about us:</strong> ' + (data.heard || '') + '</p>' +
-            '<p><strong>Notes:</strong> ' + (data.notes || 'None') + '</p>' +
-            '<p><strong>Confirmed 18+:</strong> ' + (data.age18 ? 'Yes' : 'No') + '</p>' +
-            '<p><strong>Confirmed payment-eligible country:</strong> ' + (data.eligible ? 'Yes' : 'No') + '</p>'
-        }
-      });
-      await addDoc(collection(db, 'emailTriggers'), {
-        to: data.email,
-        message: {
-          subject: 'We received your AmenityFit affiliate application',
-          html:
-            '<p>Hi ' + (data.firstName || '') + ',</p>' +
-            '<p>We received your application to become an AmenityFit affiliate. We personally review every application, and you will hear from us by email within a few business days.</p>' +
-            '<p>If you are approved, we will send you a unique referral link and dashboard access so you can start tracking referrals and earnings right away.</p>' +
-            '<p>Feel free to reply to this email with any questions.</p>' +
-            '<p>The AmenityFit Team</p>' +
-            '<p style="font-size:11px;color:#999;margin-top:24px;">AmenityFit &middot; amenityfit.app</p>'
-        }
+      // Emails now sent server-side via a Cloud Function instead of
+      // writing directly into the open emailTriggers collection - closes
+      // the abuse vector where any script could previously write an
+      // arbitrary to/subject/html and have it sent from this domain.
+      await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/sendAffiliateApplicationEmails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
       });
       return { success: true };
     } catch(err) { return { success: false, error: err.message }; }

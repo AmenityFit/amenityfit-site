@@ -61,35 +61,14 @@
           source: 'amenityfit.app',
           status: 'pending'
         });
-        // Trigger email notification via Firebase Extension
-        await addDoc(collection(db, 'emailTriggers'), {
-          to: 'itmakesenzfitness@gmail.com',
-          message: {
-            subject: 'New AmenityFit Application — ' + (data.buildingName || 'Unknown Building'),
-            html:
-              '<h2>New Building Application</h2>' +
-              '<p><strong>Name:</strong> ' + (data.firstName || '') + ' ' + (data.lastName || '') + '</p>' +
-              '<p><strong>Email:</strong> ' + (data.email || '') + '</p>' +
-              '<p><strong>Building:</strong> ' + (data.buildingName || '') + '</p>' +
-              '<p><strong>City:</strong> ' + (data.city || '') + '</p>' +
-              '<p><strong>Units:</strong> ' + (data.units || '') + '</p>' +
-              '<p><strong>Phone:</strong> ' + (data.phone || 'Not provided') + '</p>' +
-              '<p><strong>Role:</strong> ' + (data.role || '') + '</p>' +
-              '<p><strong>Notes:</strong> ' + (data.notes || 'None') + '</p>'
-          }
-        });
-        // Confirmation email back to applicant
-        await addDoc(collection(db, 'emailTriggers'), {
-          to: data.email,
-          message: {
-            subject: 'We received your AmenityFit application',
-            html:
-              '<p>Hi ' + (data.firstName || '') + ',</p>' +
-              '<p>We received your application for <strong>' + (data.buildingName || '') + '</strong>. Someone from our team will be in touch within 2 business days.</p>' +
-              '<p>Feel free to reply to this email with any questions.</p>' +
-              '<p>— The AmenityFit Team</p>' +
-              '<p style="font-size:11px;color:#999;margin-top:24px;">AmenityFit · amenityfit.app</p>'
-          }
+        // Emails now sent server-side via a Cloud Function instead of
+        // writing directly into the open emailTriggers collection - closes
+        // the abuse vector where any script could previously write an
+        // arbitrary to/subject/html and have it sent from this domain.
+        await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/sendBuildingApplicationEmails', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
         return { success: true };
       } catch(err) { return { success: false, error: err.message }; }
