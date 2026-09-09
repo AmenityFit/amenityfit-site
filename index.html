@@ -133,8 +133,13 @@
       -webkit-backdrop-filter: blur(20px) saturate(1.4);
       border-bottom-color: rgba(226,228,234,0.5);
     }
-    .nav-logo-icon { display: flex; align-items: center; visibility: hidden; }
-    .nav-logo-icon img { height: 34px; }
+    .nav-logo-icon {
+      display: flex; align-items: center;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.8); text-decoration: none;
+      transition: color 0.4s;
+    }
+    #nav.scrolled .nav-logo-icon { color: var(--muted); }
     .nav-logo-lockup {
       position: absolute; left: 50%; transform: translateX(-50%);
       display: flex; align-items: center; gap: 10px;
@@ -1097,9 +1102,7 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo-icon" aria-hidden="true" tabindex="-1" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'});">
-    <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
-  </a>
+  <a href="affiliate.html" class="nav-logo-icon">Affiliates</a>
   <a href="#" class="nav-logo-lockup" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'});">
     <img src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
     <span class="nav-wordmark-center">AmenityFit</span>
