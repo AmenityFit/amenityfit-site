@@ -756,7 +756,7 @@
     .activity-photo-stat-row { display: flex; align-items: baseline; gap: 9px; }
     .activity-photo-stat-hero {
       color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
-      font-size: 64px; font-weight: 900; line-height: 1; letter-spacing: -1.5;
+      font-size: clamp(38px, 9vw, 64px); font-weight: 900; line-height: 1; letter-spacing: -1.5;
     }
     .activity-photo-stat-secondary {
       color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.9);
@@ -1024,6 +1024,8 @@
       .assistant-grid { grid-template-columns: 1fr; gap: 36px; }
       .wearables-grid { grid-template-columns: 1fr; gap: 36px; }
       .activity-photo-pair { grid-template-columns: 1fr; gap: 14px; }
+      .activity-photo-pair .activity-photo-card { aspect-ratio: 0.85; }
+      .activity-photo-stat-grid { grid-template-columns: repeat(2, auto); }
       .currency-select-row { flex-direction: column; align-items: flex-end; gap: 4px; }
       .currency-select { width: 100%; }
       .watch-showcase { order: -1; }
@@ -1916,6 +1918,7 @@
   let dashCurrentIdx = 0;
   const DASH_INTERVAL = 7000;
   let dashPaused = false;
+  let dashInView = false;
 
   function switchTab(tabId, resetAuto = true) {
     // Real fix: this was unconditional before, meaning the auto-cycle's
@@ -1960,7 +1963,7 @@
       });
     });
     dashAutoTimer = setInterval(() => {
-      if (dashPaused) return;
+      if (dashPaused || !dashInView) return;
       dashCurrentIdx = (dashCurrentIdx + 1) % dashTabs.length;
       switchTab(dashTabs[dashCurrentIdx], false);
       const f = document.getElementById('dash-progress');
@@ -1971,12 +1974,16 @@
     }, DASH_INTERVAL);
   }
 
+  let dashCounted = false;
   const dashObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
+      dashInView = e.isIntersecting;
       if (e.isIntersecting) {
-        e.target.querySelectorAll('[data-count]').forEach(animateCount);
-        startDashAuto();
-        dashObs.unobserve(e.target);
+        if (!dashCounted) {
+          e.target.querySelectorAll('[data-count]').forEach(animateCount);
+          dashCounted = true;
+        }
+        if (!dashAutoTimer) startDashAuto();
       }
     });
   }, { threshold: 0.3 });
