@@ -196,6 +196,10 @@
         <input type="text" id="af-other-country" placeholder="e.g. United Arab Emirates, Singapore" />
       </div>
       <div class="form-group">
+        <label>City / Metro Area</label>
+        <input type="text" id="af-city" placeholder="Your city or metro area" />
+      </div>
+      <div class="form-group">
         <label>How did you hear about AmenityFit's affiliate program?</label>
         <select id="af-heard">
           <option value="" disabled selected>Select one</option>
@@ -273,9 +277,20 @@
     } catch(err) { return { success: false, error: err.message }; }
   };
 
+  const CITY_PLACEHOLDERS = {
+    "United States": "e.g. New York City, Miami, Los Angeles, Chicago",
+    "Canada": "e.g. Toronto",
+    "United Kingdom": "e.g. London, Manchester, Birmingham",
+    "Australia": "e.g. Sydney, Melbourne",
+    "Japan": "e.g. Tokyo",
+    "Other": "Your nearest major city"
+  };
+
   function handleCountryChange(val) {
     const wrap = document.getElementById('af-other-country-wrap');
     wrap.classList.toggle('show', val === 'Other');
+    const cityInput = document.getElementById('af-city');
+    if (cityInput) cityInput.placeholder = CITY_PLACEHOLDERS[val] || "Your city or metro area";
   }
 
   async function submitApp() {
@@ -285,18 +300,19 @@
     const countrySelect = document.getElementById('af-country').value;
     const otherCountry = document.getElementById('af-other-country').value.trim();
     const country = countrySelect === 'Other' ? otherCountry : countrySelect;
+    const city = document.getElementById('af-city').value.trim();
     const heard = document.getElementById('af-heard').value;
     const age18 = document.getElementById('af-age').checked;
     const eligible = document.getElementById('af-eligible').checked;
 
-    if (!first || !email || !country || !heard) { alert('Please fill in the required fields.'); return; }
+    if (!first || !email || !country || !city || !heard) { alert('Please fill in the required fields.'); return; }
     if (!age18 || !eligible) { alert('Please confirm both checkboxes to continue.'); return; }
 
     btn.disabled = true; btn.textContent = 'Submitting...';
     const result = await window.__submitAffiliateApplication({
       firstName: first,
       lastName: document.getElementById('af-last').value.trim(),
-      email, country, heard,
+      email, country, city, heard,
       phone: document.getElementById('af-phone').value.trim(),
       notes: document.getElementById('af-notes').value.trim(),
       age18, eligible
