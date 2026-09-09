@@ -650,7 +650,7 @@
     #wearables { background: var(--text); }
     .wearables-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 40px; align-items: center; }
     .watch-showcase { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
-    .watch-row-top { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .watch-row-top { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 340px; }
     .watch-card {
       background: #0a0a14; border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px; overflow: hidden;
@@ -1029,7 +1029,7 @@
       .currency-select-row { flex-direction: column; align-items: flex-end; gap: 4px; }
       .currency-select { width: 100%; }
       .watch-showcase { order: -1; }
-      .watch-row-top { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .watch-row-top { grid-template-columns: 1fr 1fr; gap: 10px; min-height: 0; align-items: start; }
       .watch-img-wrap { aspect-ratio: 0.75; }
       .watch-img-wide { height: 130px; }
       .pricing-head { margin-bottom: 24px; }
@@ -1652,9 +1652,9 @@
         </div>
       </div>
       <div class="watch-showcase" id="watch-trio">
-        <div class="watch-row-top" style="min-height:340px;">
+        <div class="watch-row-top">
           <div class="watch-card" id="watch-1">
-            <div class="watch-img-wrap" style="aspect-ratio:0.78;">
+            <div class="watch-img-wrap">
               <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-22_at_8.57.53_PM_o2mbgb" alt="Apple Watch" />
             </div>
             <div class="watch-card-info">
@@ -1663,7 +1663,7 @@
             </div>
           </div>
           <div class="watch-card" id="watch-2">
-            <div class="watch-img-wrap" style="aspect-ratio:0.78;">
+            <div class="watch-img-wrap">
               <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-23_at_12.48.33_PM_qn5tnu" alt="Whoop" />
             </div>
             <div class="watch-card-info">
