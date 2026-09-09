@@ -1799,6 +1799,7 @@
               <label>Please specify your role</label>
               <input type="text" id="f-other-role" placeholder="Your role" />
             </div>
+            <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="f-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
             <div class="form-group"><label>Anything else?</label><textarea id="f-notes" placeholder="Optional. Any context about your building or timing."></textarea></div>
             <button class="form-submit" id="form-btn" onclick="submitApp()">Submit Application</button>
           </div>
@@ -2183,7 +2184,8 @@
       email, buildingName: building, city: document.getElementById('f-city').value.trim(),
       units: parseInt(units) || 0, role: role === 'Other' ? otherRole || 'Other' : role,
       phone: document.getElementById('f-phone').value.trim(),
-      notes: document.getElementById('f-notes').value.trim()
+      notes: document.getElementById('f-notes').value.trim(),
+      referralCode: document.getElementById('f-referral').value.trim().toUpperCase()
     });
     if (result.success) {
       document.getElementById('apply-form-wrap').style.display = 'none';
@@ -2194,6 +2196,18 @@
       alert('There was an issue submitting. Please try again.');
     }
   }
+
+  // Auto-fill the referral code from a shared affiliate link, e.g.
+  // amenityfit.app/?ref=ABC123 - saves a prospect from having to be told
+  // a code verbally and typing it in manually.
+  (function prefillReferralCode() {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      const field = document.getElementById('f-referral');
+      if (field) field.value = ref.trim().toUpperCase();
+    }
+  })();
 </script>
 </body>
 </html>
