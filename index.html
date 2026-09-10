@@ -2177,7 +2177,8 @@
     const units = document.getElementById('f-units').value.trim();
     const role = document.getElementById('f-role').value;
     const otherRole = document.getElementById('f-other-role').value.trim();
-    if (!first || !email || !building || !units) { alert('Please fill in the required fields.'); return; }
+    const city = document.getElementById('f-city').value.trim();
+    if (!first || !email || !building || !units || !city) { alert('Please fill in the required fields.'); return; }
     btn.disabled = true; btn.textContent = 'Submitting...';
     const result = await window.__submitApplication({
       firstName: first, lastName: document.getElementById('f-last').value.trim(),
