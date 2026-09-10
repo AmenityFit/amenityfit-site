@@ -90,6 +90,14 @@
       --ff-display: 'Cormorant Garamond', Georgia, serif;
       --ff-body: 'DM Sans', system-ui, sans-serif;
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      /* Hotel/hospitality palette - a cool graphite/platinum silver,
+         distinct from the residential blue, so the hotel-mode forms read
+         as a deliberately different, tailored experience rather than the
+         residential product with a different label swapped in. */
+      --hotel-primary: #5B6470;
+      --hotel-accent: #98A2B3;
+      --hotel-subtle: #F5F6F8;
+      --hotel-border: #DDE1E7;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -899,6 +907,26 @@
     .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .idx-error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:16px;display:none;}
     .idx-error-msg.show{display:block;}
+
+    /* Application mode selector - one upfront choice, four clear paths */
+    .mode-selector{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+    .mode-card{border:1.5px solid var(--border);border-radius:14px;padding:22px 14px;text-align:center;cursor:pointer;transition:all 0.2s var(--ease-out);background:var(--white);}
+    .mode-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,95,190,0.08);}
+    .mode-card.active{border-color:var(--primary);background:linear-gradient(135deg,rgba(30,95,190,0.05),rgba(74,144,217,0.05));box-shadow:0 4px 16px rgba(30,95,190,0.12);}
+    .mode-card.hotel-mode:hover{border-color:var(--hotel-accent);box-shadow:0 8px 24px rgba(91,100,112,0.10);}
+    .mode-card.hotel-mode.active{border-color:var(--hotel-primary);background:linear-gradient(135deg,rgba(91,100,112,0.06),rgba(152,162,179,0.06));box-shadow:0 4px 16px rgba(91,100,112,0.14);}
+    .mode-card-icon{font-size:22px;margin-bottom:9px;}
+    .mode-card-title{font-family:var(--ff-display);font-size:17px;font-weight:600;color:var(--text);margin-bottom:3px;}
+    .mode-card-sub{font-size:11px;color:var(--muted);letter-spacing:0.2px;}
+    @media (max-width:700px){.mode-selector{grid-template-columns:repeat(2,1fr);}}
+
+    /* Hotel theme overrides - applied to the hotel-mode form containers only */
+    .hotel-theme .form-group input:focus,
+    .hotel-theme .form-group select:focus,
+    .hotel-theme .form-group textarea:focus{border-color:var(--hotel-accent) !important;}
+    .hotel-theme .form-submit{background:var(--hotel-primary) !important;}
+    .hotel-theme .form-submit:hover{background:#4A525D !important;}
+    .hotel-theme .idx-error-msg.show{border-color:var(--hotel-border);}
     .form-success { display: none; text-align: center; padding: 40px 20px; }
     .form-success.show { display: block; }
     .success-icon {
@@ -1773,6 +1801,29 @@
         </div>
       </div>
       <div class="reveal reveal-d2">
+        <div class="mode-selector" id="mode-selector">
+          <div class="mode-card active" id="mode-card-single-building" onclick="selectApplyMode('single-building')">
+            <div class="mode-card-icon">&#127968;</div>
+            <div class="mode-card-title">Single Building</div>
+            <div class="mode-card-sub">One residential property</div>
+          </div>
+          <div class="mode-card" id="mode-card-portfolio-building" onclick="selectApplyMode('portfolio-building')">
+            <div class="mode-card-icon">&#127970;</div>
+            <div class="mode-card-title">Building Portfolio</div>
+            <div class="mode-card-sub">Multiple properties</div>
+          </div>
+          <div class="mode-card hotel-mode" id="mode-card-single-hotel" onclick="selectApplyMode('single-hotel')">
+            <div class="mode-card-icon">&#127976;</div>
+            <div class="mode-card-title">Single Hotel</div>
+            <div class="mode-card-sub">One property</div>
+          </div>
+          <div class="mode-card hotel-mode" id="mode-card-portfolio-hotel" onclick="selectApplyMode('portfolio-hotel')">
+            <div class="mode-card-icon">&#11088;</div>
+            <div class="mode-card-title">Hotel Portfolio</div>
+            <div class="mode-card-sub">A chain or brand</div>
+          </div>
+        </div>
+
         <div class="apply-form-wrap" id="apply-form-wrap">
           <div class="idx-error-msg" id="idx-error"></div>
           <div style="display:flex;flex-direction:column;gap:9px;">
