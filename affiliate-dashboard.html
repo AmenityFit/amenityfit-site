@@ -47,6 +47,10 @@
 
     .af-error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:20px;display:none;}
     .af-error-msg.show{display:block;}
+    .rr-progress-track{width:100%;max-width:220px;height:4px;background:#E5E7EB;border-radius:99px;margin-top:8px;overflow:hidden;}
+    .rr-progress-fill{height:100%;background:var(--primary);border-radius:99px;}
+    .rr-progress-label{font-size:11px;color:var(--muted);margin-top:5px;}
+    .rr-ending-soon{font-size:11px;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:2px 8px;display:inline-block;margin-top:6px;font-weight:600;}
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
     .stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
     .stat-card .stat-val{font-family:var(--ff-display);font-size:28px;font-weight:600;}
@@ -289,15 +293,26 @@
       const statusClass = 'status-' + (r.status || 'pending');
       const statusLabel = statusLabels[r.status] || 'Pending';
       let meta = (r.units || '?') + ' units';
+      let extra = '';
       if (!isInformal && r.status === 'closed' && r.commissionMonthly) {
         meta += ' &middot; $' + r.commissionMonthly.toFixed(2) + '/mo';
         if (r.payoutEndDate) {
           const endDate = r.payoutEndDate.toDate ? r.payoutEndDate.toDate() : new Date(r.payoutEndDate);
-          meta += ' &middot; through ' + endDate.toLocaleDateString();
+          const now = new Date();
+          const totalMs = 365 * 24 * 60 * 60 * 1000;
+          const remainingMs = endDate - now;
+          const pct = Math.max(0, Math.min(100, ((totalMs - remainingMs) / totalMs) * 100));
+          const monthYear = endDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+          const daysLeft = Math.ceil(remainingMs / (24 * 60 * 60 * 1000));
+          extra = `<div class="rr-progress-track"><div class="rr-progress-fill" style="width:${pct}%"></div></div>` +
+            `<div class="rr-progress-label">Paying through ${monthYear}</div>`;
+          if (daysLeft <= 60 && daysLeft > 0) {
+            extra += `<div class="rr-ending-soon">&#9888; Ending soon - ${daysLeft} days left</div>`;
+          }
         }
       }
       return `<div class="referral-row">
-        <div><div class="rr-name">${r.buildingName || 'Unnamed Building'}</div><div class="rr-meta">${meta}</div></div>
+        <div style="flex:1;"><div class="rr-name">${r.buildingName || 'Unnamed Building'}</div><div class="rr-meta">${meta}</div>${extra}</div>
         <div class="status-badge ${statusClass}">${statusLabel}</div>
       </div>`;
     }).join('');
@@ -334,7 +349,17 @@
       const referrals = refSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
       const closedReferrals = referrals.filter(r => r.status === 'closed');
-      const mrr = closedReferrals.reduce((sum, r) => sum + (r.commissionMonthly || 0), 0);
+      // MRR only counts commissions still inside their active 12-month
+      // payout window - "closed" is a lifetime achievement (used for the
+      // Buildings Closed and Closing Rate stats below), but Current MRR
+      // specifically means what's still actually being paid right now.
+      const now = new Date();
+      const activeCommissionReferrals = closedReferrals.filter(r => {
+        if (!r.payoutEndDate) return true;
+        const endDate = r.payoutEndDate.toDate ? r.payoutEndDate.toDate() : new Date(r.payoutEndDate);
+        return endDate > now;
+      });
+      const mrr = activeCommissionReferrals.reduce((sum, r) => sum + (r.commissionMonthly || 0), 0);
       lastMrrUsd = mrr;
       document.getElementById('stat-mrr').textContent = formatCurrency(mrr);
       document.getElementById('stat-total').textContent = referrals.length;
