@@ -214,7 +214,11 @@
       return;
     }
     try {
-      await sendPasswordResetEmail(auth, email);
+      // Same handleCodeInApp:true fix as the admin-generated approval
+      // link - skips Firebase's own hosted action page (which has hit
+      // both an authorized-domains issue and an API key referrer
+      // restriction) and sends the reset link straight to this page.
+      await sendPasswordResetEmail(auth, email, { url: 'https://amenityfit.app/affiliate-login.html', handleCodeInApp: true });
       errEl.style.background = '#F0FDF4';
       errEl.style.borderColor = '#BBF7D0';
       errEl.style.color = '#166534';
