@@ -47,7 +47,7 @@
 
     .af-error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:20px;display:none;}
     .af-error-msg.show{display:block;}
-    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
     .stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
     .stat-card .stat-val{font-family:var(--ff-display);font-size:28px;font-weight:600;}
     .stat-card .stat-label{font-size:12px;color:var(--muted);margin-top:2px;}
@@ -78,7 +78,7 @@
     .empty-referrals{background:#fff;border:1px dashed var(--border);border-radius:12px;padding:28px 20px;text-align:center;color:var(--muted);font-size:14px;}
 
     @media (max-width:640px){
-      .stats-grid{grid-template-columns:1fr;}
+      .stats-grid{grid-template-columns:repeat(2,1fr);}
       .referral-link-row{flex-direction:column;align-items:stretch;}
     }
   </style>
@@ -97,7 +97,7 @@
 
 <div class="container" id="dashboard-content" style="display:none;">
   <h1 id="welcome-heading">Welcome back.</h1>
-  <p class="sub">Track your referrals, earnings, and everything in between.</p>
+  <p class="sub" id="welcome-sub">Track your referrals, earnings, and everything in between.</p>
 
   <div class="checklist-card" id="checklist-card">
     <h2>Getting started</h2>
@@ -128,10 +128,11 @@
     You're tracking referrals as an informal contributor. This is for your own visibility only and isn't a compensation or contractual arrangement.
   </div>
 
-  <div class="stats-grid">
+  <div class="stats-grid" id="stats-grid">
     <div class="stat-card" id="mrr-stat-card"><div class="stat-val" id="stat-mrr">$0</div><div class="stat-label">Current MRR</div></div>
     <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Referrals</div></div>
     <div class="stat-card"><div class="stat-val" id="stat-closed">0</div><div class="stat-label">Buildings Closed</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-closing-pct">0%</div><div class="stat-label">Closing Rate</div></div>
   </div>
 
   <div class="estimator-card" id="estimator-card">
@@ -319,6 +320,8 @@
         document.getElementById('informal-banner').classList.add('show');
         document.getElementById('mrr-stat-card').style.display = 'none';
         document.getElementById('estimator-card').style.display = 'none';
+        document.getElementById('welcome-sub').textContent = 'Track your referrals and everything in between.';
+        document.getElementById('stats-grid').style.gridTemplateColumns = 'repeat(3,1fr)';
       }
 
       document.getElementById('welcome-heading').textContent = 'Welcome, ' + (affiliate.name ? affiliate.name.split(' ')[0] : 'there') + '.';
@@ -335,6 +338,8 @@
       document.getElementById('stat-mrr').textContent = formatCurrency(mrr);
       document.getElementById('stat-total').textContent = referrals.length;
       document.getElementById('stat-closed').textContent = closedReferrals.length;
+      const closingPct = referrals.length > 0 ? Math.round((closedReferrals.length / referrals.length) * 100) : 0;
+      document.getElementById('stat-closing-pct').textContent = closingPct + '%';
 
       renderReferrals(referrals);
 
