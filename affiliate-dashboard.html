@@ -45,6 +45,8 @@
     .referral-code-line{font-size:13px;color:rgba(255,255,255,0.6);margin-top:12px;}
     .referral-code-line strong{color:#fff;letter-spacing:1px;}
 
+    .af-error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:20px;display:none;}
+    .af-error-msg.show{display:block;}
     .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
     .stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
     .stat-card .stat-val{font-family:var(--ff-display);font-size:28px;font-weight:600;}
@@ -122,13 +124,17 @@
     <div class="referral-code-line">Referral code: <strong id="referral-code-text">...</strong></div>
   </div>
 
+  <div class="af-error-msg" id="informal-banner" style="background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF;">
+    You're tracking referrals as an informal contributor. This is for your own visibility only and isn't a compensation or contractual arrangement.
+  </div>
+
   <div class="stats-grid">
-    <div class="stat-card"><div class="stat-val" id="stat-mrr">$0</div><div class="stat-label">Current MRR</div></div>
+    <div class="stat-card" id="mrr-stat-card"><div class="stat-val" id="stat-mrr">$0</div><div class="stat-label">Current MRR</div></div>
     <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Referrals</div></div>
     <div class="stat-card"><div class="stat-val" id="stat-closed">0</div><div class="stat-label">Buildings Closed</div></div>
   </div>
 
-  <div class="estimator-card">
+  <div class="estimator-card" id="estimator-card">
     <div class="currency-row">
       <div>
         <h2>Earnings estimator</h2>
@@ -212,6 +218,7 @@
   let currentCurrency = 'USD';
   let lastEstimatorUnits = 100;
   let lastMrrUsd = 0;
+  let isInformal = false;
 
   function formatCurrency(usdAmount) {
     const c = currencyRates[currentCurrency];
@@ -280,7 +287,7 @@
       const statusClass = 'status-' + (r.status || 'pending');
       const statusLabel = statusLabels[r.status] || 'Pending';
       let meta = (r.units || '?') + ' units';
-      if (r.status === 'closed' && r.commissionMonthly) {
+      if (!isInformal && r.status === 'closed' && r.commissionMonthly) {
         meta += ' &middot; $' + r.commissionMonthly.toFixed(2) + '/mo';
         if (r.payoutEndDate) {
           const endDate = r.payoutEndDate.toDate ? r.payoutEndDate.toDate() : new Date(r.payoutEndDate);
@@ -307,6 +314,12 @@
         return;
       }
       const affiliate = affDoc.data();
+      isInformal = affiliate.tier === 'informal';
+      if (isInformal) {
+        document.getElementById('informal-banner').classList.add('show');
+        document.getElementById('mrr-stat-card').style.display = 'none';
+        document.getElementById('estimator-card').style.display = 'none';
+      }
 
       document.getElementById('welcome-heading').textContent = 'Welcome, ' + (affiliate.name ? affiliate.name.split(' ')[0] : 'there') + '.';
       const link = 'https://amenityfit.app/?ref=' + affiliate.referralCode;
