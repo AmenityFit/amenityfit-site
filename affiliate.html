@@ -67,6 +67,8 @@
       padding:14px;font-size:15px;font-weight:600;font-family:var(--ff-body);cursor:pointer;
       transition:background 0.2s;margin-top:6px;
     }
+    .af-error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:16px;display:none;}
+    .af-error-msg.show{display:block;}
     .form-submit:hover{background:#174fa8;}
     .form-submit:disabled{opacity:0.6;cursor:default;}
     .form-success{display:none;text-align:center;padding:40px 20px;}
@@ -173,12 +175,13 @@
     <p class="sub">Takes about 2 minutes. We personally review every application and follow up by email.</p>
 
     <div class="form-wrap" id="af-form-wrap">
+      <div class="af-error-msg" id="af-error"></div>
       <div class="form-row">
         <div class="form-group"><label>First Name</label><input type="text" id="af-first" placeholder="Alex" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
         <div class="form-group"><label>Last Name</label><input type="text" id="af-last" placeholder="Rivera" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
       </div>
       <div class="form-group"><label>Email</label><input type="email" id="af-email" placeholder="alex@email.com" /></div>
-      <div class="form-group"><label>Phone Number <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="tel" id="af-phone" placeholder="+1 (212) 555-0100" /></div>
+      <div class="form-group"><label>Phone Number <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="tel" id="af-phone" placeholder="+1 (305) 555-0184" /></div>
       <div class="form-group">
         <label>Country / Target Market</label>
         <select id="af-country" onchange="handleCountryChange(this.value)">
@@ -221,7 +224,7 @@
         <label for="af-eligible">I confirm I am not located in a country restricted from receiving payments from a U.S. business.</label>
       </div>
 
-      <button class="form-submit" id="af-form-btn" onclick="submitApp()">Submit Application</button>
+      <button type="button" class="form-submit" id="af-form-btn" onclick="submitApp()">Submit Application</button>
     </div>
 
     <div class="form-success" id="af-form-success">
@@ -295,6 +298,8 @@
 
   async function submitApp() {
     const btn = document.getElementById('af-form-btn');
+    const errEl = document.getElementById('af-error');
+    errEl.classList.remove('show');
     const first = document.getElementById('af-first').value.trim();
     const email = document.getElementById('af-email').value.trim();
     const countrySelect = document.getElementById('af-country').value;
@@ -305,8 +310,18 @@
     const age18 = document.getElementById('af-age').checked;
     const eligible = document.getElementById('af-eligible').checked;
 
-    if (!first || !email || !country || !city || !heard) { alert('Please fill in the required fields.'); return; }
-    if (!age18 || !eligible) { alert('Please confirm both checkboxes to continue.'); return; }
+    if (!first || !email || !country || !city || !heard) {
+      errEl.textContent = 'Please fill in the required fields.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (!age18 || !eligible) {
+      errEl.textContent = 'Please confirm both checkboxes to continue.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
 
     btn.disabled = true; btn.textContent = 'Submitting...';
     const result = await window.__submitAffiliateApplication({
@@ -323,7 +338,9 @@
       s.classList.add('show');
     } else {
       btn.disabled = false; btn.textContent = 'Submit Application';
-      alert('There was an issue submitting. Please try again.');
+      errEl.textContent = 'There was an issue submitting. Please try again.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
   window.submitApp = submitApp;

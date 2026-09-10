@@ -53,6 +53,10 @@
     .estimator-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px;}
     .estimator-card h2{font-size:15px;font-weight:700;margin-bottom:4px;}
     .estimator-card p.sub{margin-bottom:16px;}
+    .currency-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+    .currency-row label{font-size:12px;color:var(--muted);}
+    .currency-row select{font-size:13px;padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--text);font-family:var(--ff-body);}
+    .currency-note{font-size:11px;color:var(--muted);margin-top:10px;text-align:center;}
     .estimator-input-row{display:flex;gap:12px;align-items:center;margin-bottom:16px;}
     .estimator-input-row input[type="range"]{flex:1;}
     .estimator-input-row .unit-display{font-family:var(--ff-display);font-size:20px;font-weight:600;min-width:110px;text-align:right;}
@@ -125,8 +129,23 @@
   </div>
 
   <div class="estimator-card">
-    <h2>Earnings estimator</h2>
-    <p class="sub">See what a building could earn you before you pitch it.</p>
+    <div class="currency-row">
+      <div>
+        <h2>Earnings estimator</h2>
+        <p class="sub" style="margin-bottom:0;">See what a building could earn you before you pitch it.</p>
+      </div>
+      <div>
+        <label for="currency-select">Display currency</label>
+        <select id="currency-select" onchange="changeCurrency(this.value)">
+          <option value="USD">USD ($)</option>
+          <option value="CAD">CAD (CA$)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="AUD">AUD (AU$)</option>
+          <option value="JPY">JPY (¥)</option>
+        </select>
+      </div>
+    </div>
     <div class="estimator-input-row">
       <input type="range" id="est-slider" min="1" max="1000" value="100" oninput="updateEstimator(this.value)" />
       <div class="unit-display" id="est-units">100 units</div>
@@ -135,6 +154,7 @@
       <div><strong id="est-monthly">$149.85</strong><span>Monthly</span></div>
       <div><strong id="est-annual">$1,798.20</strong><span>Over 12 Months</span></div>
     </div>
+    <p class="currency-note">Approximate conversion. You're always paid in USD, regardless of display currency.</p>
   </div>
 
   <div class="referrals-section">
@@ -179,8 +199,35 @@
     return null; // over 1000 units - Custom tier, no fixed estimate
   }
 
+  // Same rates as the main site's pricing calculator - display-only, the
+  // affiliate is always paid the real amount in USD via Stripe Connect.
+  const currencyRates = {
+    USD: { rate: 1,     symbol: '$'   },
+    CAD: { rate: 1.38,  symbol: 'CA$' },
+    GBP: { rate: 0.79,  symbol: '£' },
+    EUR: { rate: 0.92,  symbol: '€' },
+    AUD: { rate: 1.52,  symbol: 'AU$' },
+    JPY: { rate: 149,   symbol: '¥' }
+  };
+  let currentCurrency = 'USD';
+  let lastEstimatorUnits = 100;
+  let lastMrrUsd = 0;
+
+  function formatCurrency(usdAmount) {
+    const c = currencyRates[currentCurrency];
+    const converted = usdAmount * c.rate;
+    return c.symbol + converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  window.changeCurrency = function(code) {
+    currentCurrency = code;
+    updateEstimator(lastEstimatorUnits);
+    document.getElementById('stat-mrr').textContent = formatCurrency(lastMrrUsd);
+  };
+
   window.updateEstimator = function(units) {
     units = parseInt(units);
+    lastEstimatorUnits = units;
     document.getElementById('est-units').textContent = units + ' units';
     const monthlyValue = estimateMonthlyValue(units);
     const monthlyEl = document.getElementById('est-monthly');
@@ -190,8 +237,8 @@
       annualEl.textContent = 'Custom';
     } else {
       const commission = monthlyValue * 0.15;
-      monthlyEl.textContent = '$' + commission.toFixed(2);
-      annualEl.textContent = '$' + (commission * 12).toFixed(2);
+      monthlyEl.textContent = formatCurrency(commission);
+      annualEl.textContent = formatCurrency(commission * 12);
     }
   };
   updateEstimator(100);
@@ -261,7 +308,7 @@
       }
       const affiliate = affDoc.data();
 
-      document.getElementById('welcome-heading').textContent = 'Welcome back, ' + (affiliate.name ? affiliate.name.split(' ')[0] : 'there') + '.';
+      document.getElementById('welcome-heading').textContent = 'Welcome, ' + (affiliate.name ? affiliate.name.split(' ')[0] : 'there') + '.';
       const link = 'https://amenityfit.app/?ref=' + affiliate.referralCode;
       document.getElementById('referral-link-text').textContent = link;
       document.getElementById('referral-code-text').textContent = affiliate.referralCode || '';
@@ -271,7 +318,8 @@
 
       const closedReferrals = referrals.filter(r => r.status === 'closed');
       const mrr = closedReferrals.reduce((sum, r) => sum + (r.commissionMonthly || 0), 0);
-      document.getElementById('stat-mrr').textContent = '$' + mrr.toFixed(2);
+      lastMrrUsd = mrr;
+      document.getElementById('stat-mrr').textContent = formatCurrency(mrr);
       document.getElementById('stat-total').textContent = referrals.length;
       document.getElementById('stat-closed').textContent = closedReferrals.length;
 
