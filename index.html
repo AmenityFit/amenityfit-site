@@ -897,6 +897,8 @@
     }
     .form-submit:hover { background: #174fa8; transform: translateY(-1px); }
     .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .idx-error-msg{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;border-radius:8px;padding:11px 14px;margin-bottom:16px;display:none;}
+    .idx-error-msg.show{display:block;}
     .form-success { display: none; text-align: center; padding: 40px 20px; }
     .form-success.show { display: block; }
     .success-icon {
@@ -1772,6 +1774,7 @@
       </div>
       <div class="reveal reveal-d2">
         <div class="apply-form-wrap" id="apply-form-wrap">
+          <div class="idx-error-msg" id="idx-error"></div>
           <div style="display:flex;flex-direction:column;gap:9px;">
             <div class="form-row">
               <div class="form-group"><label>First Name</label><input type="text" id="f-first" placeholder="Jane" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
@@ -1801,7 +1804,7 @@
             </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="f-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
             <div class="form-group"><label>Anything else?</label><textarea id="f-notes" placeholder="Optional. Any context about your building or timing."></textarea></div>
-            <button class="form-submit" id="form-btn" onclick="submitApp()">Submit Application</button>
+            <button type="button" class="form-submit" id="form-btn" onclick="submitApp()">Submit Application</button>
           </div>
         </div>
         <div class="form-success" id="form-success">
@@ -2178,7 +2181,14 @@
     const role = document.getElementById('f-role').value;
     const otherRole = document.getElementById('f-other-role').value.trim();
     const city = document.getElementById('f-city').value.trim();
-    if (!first || !email || !building || !units || !city) { alert('Please fill in the required fields.'); return; }
+    const errEl = document.getElementById('idx-error');
+    errEl.classList.remove('show');
+    if (!first || !email || !building || !units || !city) {
+      errEl.textContent = 'Please fill in the required fields.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     btn.disabled = true; btn.textContent = 'Submitting...';
     const result = await window.__submitApplication({
       firstName: first, lastName: document.getElementById('f-last').value.trim(),
@@ -2194,7 +2204,10 @@
       s.classList.add('show'); s.style.display = 'block';
     } else {
       btn.disabled = false; btn.textContent = 'Submit Application';
-      alert('There was an issue submitting. Please try again.');
+      const errEl2 = document.getElementById('idx-error');
+      errEl2.textContent = 'There was an issue submitting. Please try again.';
+      errEl2.classList.add('show');
+      errEl2.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
