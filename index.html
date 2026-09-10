@@ -1897,6 +1897,56 @@
             <button type="button" class="form-submit" id="h-form-btn" onclick="submitHotelApp()">Submit Application</button>
           </div>
         </div>
+
+        <!-- BUILDING PORTFOLIO -->
+        <div class="apply-form-wrap" id="apply-form-wrap-portfolio-building" style="display:none;">
+          <div class="idx-error-msg" id="idx-error-pb"></div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div class="form-row">
+              <div class="form-group"><label>First Name</label><input type="text" id="pb-first" placeholder="Jane" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
+              <div class="form-group"><label>Last Name</label><input type="text" id="pb-last" placeholder="Smith" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
+            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="pb-email" placeholder="jane@pmcompany.com" /></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" id="pb-phone" placeholder="+1 (212) 555-0100" /></div>
+            <div class="form-group"><label>Company Name</label><input type="text" id="pb-company" placeholder="e.g. AKAM Associates" /></div>
+            <div class="form-group"><label>PM Executive Email <span style="font-weight:300;color:var(--muted);">(receives monthly portfolio report)</span></label><input type="email" id="pb-exec-email" placeholder="e.g. jsmith@akamassociates.com" /></div>
+            <div class="form-group"><label>Approximate Number of Properties</label><input type="number" id="pb-count" placeholder="8" min="2" /></div>
+            <div class="form-group">
+              <label>Building List <span style="font-weight:300;color:var(--muted);">(CSV)</span></label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--accent);">Building Name, Address, Units, Manager Email</span>. <a href="data:text/csv;charset=utf-8,Building%20Name%2CAddress%2CUnits%2CManager%20Email" download="amenityfit-building-list-template.csv" style="color:var(--accent);">Download template</a></p>
+              <input type="file" accept=".csv" id="pb-csv" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--subtle);font-size:13px;" />
+              <p id="pb-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
+            </div>
+            <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="pb-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
+            <div class="form-group"><label>Anything else?</label><textarea id="pb-notes" placeholder="Optional. Any context about your portfolio or timing."></textarea></div>
+            <button type="button" class="form-submit" id="pb-form-btn" onclick="submitPortfolioApp('building')">Submit Application</button>
+          </div>
+        </div>
+
+        <!-- HOTEL PORTFOLIO -->
+        <div class="apply-form-wrap hotel-theme" id="apply-form-wrap-portfolio-hotel" style="display:none;">
+          <div class="idx-error-msg" id="idx-error-ph"></div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div class="form-row">
+              <div class="form-group"><label>First Name</label><input type="text" id="ph-first" placeholder="Jane" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
+              <div class="form-group"><label>Last Name</label><input type="text" id="ph-last" placeholder="Smith" onblur="this.value = this.value.trim().split(' ').filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')" /></div>
+            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="ph-email" placeholder="jane@hotelbrand.com" /></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" id="ph-phone" placeholder="+1 (212) 555-0100" /></div>
+            <div class="form-group"><label>Chain / Brand Name</label><input type="text" id="ph-company" placeholder="e.g. Marriott Select Portfolio Group" /></div>
+            <div class="form-group"><label>Executive Email <span style="font-weight:300;color:var(--muted);">(receives monthly portfolio report)</span></label><input type="email" id="ph-exec-email" placeholder="e.g. jsmith@hotelbrand.com" /></div>
+            <div class="form-group"><label>Approximate Number of Properties</label><input type="number" id="ph-count" placeholder="8" min="2" /></div>
+            <div class="form-group">
+              <label>Property List <span style="font-weight:300;color:var(--muted);">(CSV)</span></label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--hotel-primary);">Hotel Name, Address, Rooms, Manager Email</span>. <a href="data:text/csv;charset=utf-8,Hotel%20Name%2CAddress%2CRooms%2CManager%20Email" download="amenityfit-hotel-list-template.csv" style="color:var(--hotel-primary);">Download template</a></p>
+              <input type="file" accept=".csv" id="ph-csv" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--hotel-border);background:var(--hotel-subtle);font-size:13px;" />
+              <p id="ph-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
+            </div>
+            <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="ph-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
+            <div class="form-group"><label>Anything else?</label><textarea id="ph-notes" placeholder="Optional. Any context about your portfolio or timing."></textarea></div>
+            <button type="button" class="form-submit" id="ph-form-btn" onclick="submitPortfolioApp('hotel')">Submit Application</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
