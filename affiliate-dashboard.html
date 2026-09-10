@@ -302,11 +302,17 @@
           const totalMs = 365 * 24 * 60 * 60 * 1000;
           const remainingMs = endDate - now;
           const pct = Math.max(0, Math.min(100, ((totalMs - remainingMs) / totalMs) * 100));
-          const monthYear = endDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
           const daysLeft = Math.ceil(remainingMs / (24 * 60 * 60 * 1000));
+          const isEndingSoon = daysLeft <= 60 && daysLeft > 0;
+          // Month/year is enough when it's far off - once it's actually
+          // close, swap in the exact date, since that's precisely when
+          // someone would want to know the real cutoff, not a range.
+          const dateLabel = isEndingSoon
+            ? endDate.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })
+            : endDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
           extra = `<div class="rr-progress-track"><div class="rr-progress-fill" style="width:${pct}%"></div></div>` +
-            `<div class="rr-progress-label">Paying through ${monthYear}</div>`;
-          if (daysLeft <= 60 && daysLeft > 0) {
+            `<div class="rr-progress-label">Paying through ${dateLabel}</div>`;
+          if (isEndingSoon) {
             extra += `<div class="rr-ending-soon">&#9888; Ending soon - ${daysLeft} days left</div>`;
           }
         }
