@@ -158,8 +158,12 @@
       </div>
     </div>
     <div class="estimator-input-row">
-      <input type="range" id="est-slider" min="1" max="1000" value="100" oninput="updateEstimator(this.value)" />
-      <div class="unit-display" id="est-units">100 units</div>
+      <input type="range" id="est-slider" min="1" max="1000" value="100" oninput="syncEstimatorFromSlider(this.value)" />
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input type="number" id="est-units-input" min="1" max="100000" value="100" oninput="syncEstimatorFromInput(this.value)"
+          style="width:76px;padding:7px 9px;border-radius:8px;border:1.5px solid var(--border);font-size:14px;font-family:var(--ff-body);text-align:right;color:var(--text);" />
+        <span style="font-size:13px;color:var(--muted);">units</span>
+      </div>
     </div>
     <div class="estimator-result">
       <div><strong id="est-monthly">$149.85</strong><span>Monthly</span></div>
@@ -238,9 +242,8 @@
   };
 
   window.updateEstimator = function(units) {
-    units = parseInt(units);
+    units = parseInt(units) || 0;
     lastEstimatorUnits = units;
-    document.getElementById('est-units').textContent = units + ' units';
     const monthlyValue = estimateMonthlyValue(units);
     const monthlyEl = document.getElementById('est-monthly');
     const annualEl = document.getElementById('est-annual');
@@ -252,6 +255,21 @@
       monthlyEl.textContent = formatCurrency(commission);
       annualEl.textContent = formatCurrency(commission * 12);
     }
+  };
+
+  // Slider and number input stay in sync both ways. The slider caps out
+  // at 1000 units visually (its usable drag range), but someone can still
+  // type a larger real number directly - the slider just shows maxed out
+  // in that case while the typed number remains the true value used for
+  // the actual calculation.
+  window.syncEstimatorFromSlider = function(val) {
+    document.getElementById('est-units-input').value = val;
+    updateEstimator(val);
+  };
+  window.syncEstimatorFromInput = function(val) {
+    const num = parseInt(val) || 0;
+    document.getElementById('est-slider').value = Math.min(num, 1000);
+    updateEstimator(num);
   };
   updateEstimator(100);
 
