@@ -2305,6 +2305,74 @@
     wrap.classList.toggle('show', val === 'Other');
   }
 
+  window.selectApplyMode = function(mode) {
+    const modes = {
+      'single-building': 'apply-form-wrap',
+      'single-hotel': 'apply-form-wrap-hotel',
+      'portfolio-building': 'apply-form-wrap-portfolio-building',
+      'portfolio-hotel': 'apply-form-wrap-portfolio-hotel',
+    };
+    Object.values(modes).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    const target = document.getElementById(modes[mode]);
+    if (target) target.style.display = 'block';
+
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    const cardMap = {
+      'single-building': 'mode-card-single-building',
+      'single-hotel': 'mode-card-single-hotel',
+      'portfolio-building': 'mode-card-portfolio-building',
+      'portfolio-hotel': 'mode-card-portfolio-hotel',
+    };
+    const activeCard = document.getElementById(cardMap[mode]);
+    if (activeCard) activeCard.classList.add('active');
+  };
+
+  async function submitHotelApp() {
+    const btn = document.getElementById('h-form-btn');
+    const errEl = document.getElementById('idx-error-hotel');
+    errEl.classList.remove('show');
+    const first = document.getElementById('h-first').value.trim();
+    const email = document.getElementById('h-email').value.trim();
+    const hotel = document.getElementById('h-hotel').value.trim();
+    const rooms = document.getElementById('h-rooms').value.trim();
+    const city = document.getElementById('h-city').value.trim();
+    const role = document.getElementById('h-role').value;
+    if (!first || !email || !hotel || !rooms || !city) {
+      errEl.textContent = 'Please fill in the required fields.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    const result = await window.__submitApplication({
+      firstName: first,
+      lastName: document.getElementById('h-last').value.trim(),
+      email,
+      buildingName: hotel,
+      city,
+      units: parseInt(rooms) || 0,
+      role,
+      phone: document.getElementById('h-phone').value.trim(),
+      notes: document.getElementById('h-notes').value.trim(),
+      referralCode: document.getElementById('h-referral').value.trim().toUpperCase(),
+      propertyType: 'hotel',
+    });
+    if (result.success) {
+      document.getElementById('apply-form-wrap-hotel').style.display = 'none';
+      document.getElementById('mode-selector').style.display = 'none';
+      const s = document.getElementById('form-success');
+      s.classList.add('show'); s.style.display = 'block';
+    } else {
+      btn.disabled = false; btn.textContent = 'Submit Application';
+      errEl.textContent = 'There was an issue submitting. Please try again.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
   async function submitApp() {
     const btn = document.getElementById('form-btn');
     const first = document.getElementById('f-first').value.trim();
@@ -2329,10 +2397,12 @@
       units: parseInt(units) || 0, role: role === 'Other' ? otherRole || 'Other' : role,
       phone: document.getElementById('f-phone').value.trim(),
       notes: document.getElementById('f-notes').value.trim(),
-      referralCode: document.getElementById('f-referral').value.trim().toUpperCase()
+      referralCode: document.getElementById('f-referral').value.trim().toUpperCase(),
+      propertyType: 'building'
     });
     if (result.success) {
       document.getElementById('apply-form-wrap').style.display = 'none';
+      document.getElementById('mode-selector').style.display = 'none';
       const s = document.getElementById('form-success');
       s.classList.add('show'); s.style.display = 'block';
     } else {
