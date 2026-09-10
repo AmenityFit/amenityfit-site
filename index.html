@@ -2373,6 +2373,80 @@
     }
   }
 
+  window.__submitPortfolioApplication = async function(data) {
+    try {
+      await addDoc(collection(db, 'portfolioApplications'), {
+        ...data,
+        contactName: (data.firstName || '') + ' ' + (data.lastName || ''),
+        submittedAt: serverTimestamp(),
+        source: 'amenityfit.app',
+        status: 'pending'
+      });
+      await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/sendPortfolioApplicationEmails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return { success: true };
+    } catch (err) { return { success: false, error: err.message }; }
+  };
+
+  function readCsvFile(fileInputId) {
+    return new Promise((resolve) => {
+      const input = document.getElementById(fileInputId);
+      const file = input.files[0];
+      if (!file) { resolve(null); return; }
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsText(file);
+    });
+  }
+
+  async function submitPortfolioApp(type) {
+    const prefix = type === 'hotel' ? 'ph' : 'pb';
+    const btn = document.getElementById(prefix + '-form-btn');
+    const errEl = document.getElementById('idx-error-' + prefix);
+    errEl.classList.remove('show');
+    const first = document.getElementById(prefix + '-first').value.trim();
+    const email = document.getElementById(prefix + '-email').value.trim();
+    const company = document.getElementById(prefix + '-company').value.trim();
+    const execEmail = document.getElementById(prefix + '-exec-email').value.trim();
+    const count = document.getElementById(prefix + '-count').value.trim();
+    if (!first || !email || !company || !execEmail || !count) {
+      errEl.textContent = 'Please fill in the required fields.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    const csvText = await readCsvFile(prefix + '-csv');
+    const result = await window.__submitPortfolioApplication({
+      firstName: first,
+      lastName: document.getElementById(prefix + '-last').value.trim(),
+      email,
+      phone: document.getElementById(prefix + '-phone').value.trim(),
+      companyName: company,
+      execEmail,
+      propertyCount: parseInt(count) || 0,
+      csvText: csvText || '',
+      referralCode: document.getElementById(prefix + '-referral').value.trim().toUpperCase(),
+      notes: document.getElementById(prefix + '-notes').value.trim(),
+      propertyType: type,
+    });
+    if (result.success) {
+      document.getElementById('apply-form-wrap-portfolio-' + type).style.display = 'none';
+      document.getElementById('mode-selector').style.display = 'none';
+      const s = document.getElementById('form-success');
+      s.classList.add('show'); s.style.display = 'block';
+    } else {
+      btn.disabled = false; btn.textContent = 'Submit Application';
+      errEl.textContent = 'There was an issue submitting. Please try again.';
+      errEl.classList.add('show');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
   async function submitApp() {
     const btn = document.getElementById('form-btn');
     const first = document.getElementById('f-first').value.trim();
