@@ -2161,15 +2161,24 @@
         window.scrollTo({ top, behavior: 'smooth' });
       }, 50);
     };
-    // Wait for webfonts to finish swapping in before measuring position -
-    // on a first page load the serif/sans fonts can still be loading,
-    // which reflows the page after the scroll already landed, throwing
-    // off the target position. Once fonts are cached this resolves instantly.
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(doScroll);
-    } else {
-      doScroll();
-    }
+    // Wait for webfonts AND any still-loading images above the fold
+    // (e.g. the app-screenshot images, which aren't lazy) before
+    // measuring position - on a cold load these are still resolving,
+    // which reflows the page after the scroll already landed, leaving
+    // it short. Race against a timeout so a lazy image far below the
+    // fold that hasn't started loading yet can never hang this.
+    const pendingImgs = Array.from(document.images).filter(img => !img.complete);
+    const imgsSettled = pendingImgs.length
+      ? Promise.race([
+          Promise.all(pendingImgs.map(img => new Promise(res => {
+            img.addEventListener('load', res, { once: true });
+            img.addEventListener('error', res, { once: true });
+          }))),
+          new Promise(res => setTimeout(res, 1200))
+        ])
+      : Promise.resolve();
+    const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    Promise.all([fontsReady, imgsSettled]).then(doScroll);
   }
 
   function toggleMobileMenu() {
