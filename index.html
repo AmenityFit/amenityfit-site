@@ -2151,6 +2151,15 @@
 
   function scrollToSection(id) {
     closeMobileMenu();
+    // Force this section's scroll-reveal elements to their final state
+    // instantly, skipping the fade/slide-in animation - otherwise a
+    // direct jump here (vs. scrolling past it naturally) lands while
+    // that 0.7s reveal is still mid-animation, so the content keeps
+    // settling into place after the scroll already finished.
+    const targetSection = document.getElementById(id);
+    if (targetSection) {
+      targetSection.querySelectorAll('.reveal, .reveal-scale').forEach(el => el.classList.add('visible'));
+    }
     const doScroll = () => {
       setTimeout(() => {
         const el = document.getElementById(id);
