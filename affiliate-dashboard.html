@@ -51,6 +51,7 @@
     .rr-progress-fill{height:100%;background:var(--primary);border-radius:99px;}
     .rr-progress-label{font-size:11px;color:var(--muted);margin-top:5px;}
     .rr-ending-soon{font-size:11px;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:2px 8px;display:inline-block;margin-top:6px;font-weight:600;}
+    .rr-payout-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;}
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
     .stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
     .stat-card .stat-val{font-family:var(--ff-display);font-size:28px;font-weight:600;}
@@ -368,6 +369,17 @@
           if (isEndingSoon) {
             extra += `<div class="rr-ending-soon">&#9888; Ending soon - ${daysLeft} days left</div>`;
           }
+        }
+        // Next payout timing - shown separately from the 12-month
+        // payout window above, since that's about when commission stops
+        // altogether, this is about when the next check actually lands.
+        const monthsPaid = r.monthsPaid || 0;
+        if (r.nextPayoutEstimate) {
+          const nextDate = r.nextPayoutEstimate.toDate ? r.nextPayoutEstimate.toDate() : new Date(r.nextPayoutEstimate);
+          const dateLabel = nextDate.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+          extra += `<div class="rr-payout-note">Next payout on or around ${dateLabel}</div>`;
+        } else if (monthsPaid === 0) {
+          extra += `<div class="rr-payout-note">Your first payout typically arrives within 1 to 2 weeks after your payout account is verified and this building's first payment is received.</div>`;
         }
       }
       return `<div class="referral-row">
