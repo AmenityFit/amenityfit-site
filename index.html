@@ -2160,34 +2160,53 @@
     if (targetSection) {
       targetSection.querySelectorAll('.reveal, .reveal-scale').forEach(el => el.classList.add('visible'));
     }
-    const doScroll = () => {
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const navH = document.getElementById('nav').offsetHeight;
-        const extra = id === 'pricing' ? -30 : (id === 'apply' ? 6 : 0);
-        const top = el.getBoundingClientRect().top + window.pageYOffset - navH - extra;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }, 50);
+    // Measure the exact top of this section's own eyebrow label
+    // (".section-label", e.g. "APPLY") when present - this is the
+    // literal top edge we want just under the nav, so no fudge-factor
+    // offset is needed at all. Falls back to the section itself for
+    // ids that don't have one.
+    const getTargetTop = () => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const label = el.querySelector('.section-label');
+      const measureEl = label || el;
+      const navH = document.getElementById('nav').offsetHeight;
+      const extra = id === 'pricing' ? -30 : 0;
+      return measureEl.getBoundingClientRect().top + window.pageYOffset - navH - extra;
     };
-    // Wait for webfonts AND any still-loading images above the fold
-    // (e.g. the app-screenshot images, which aren't lazy) before
-    // measuring position - on a cold load these are still resolving,
-    // which reflows the page after the scroll already landed, leaving
-    // it short. Race against a timeout so a lazy image far below the
-    // fold that hasn't started loading yet can never hang this.
-    const pendingImgs = Array.from(document.images).filter(img => !img.complete);
-    const imgsSettled = pendingImgs.length
-      ? Promise.race([
-          Promise.all(pendingImgs.map(img => new Promise(res => {
-            img.addEventListener('load', res, { once: true });
-            img.addEventListener('error', res, { once: true });
-          }))),
-          new Promise(res => setTimeout(res, 1200))
-        ])
-      : Promise.resolve();
+    // Poll the target position until it's stable (two identical reads
+    // in a row) instead of guessing how long images/fonts take to
+    // settle - this self-corrects regardless of connection speed,
+    // rather than racing a fixed timeout that can lose on a slow load.
+    const waitForStablePosition = (callback) => {
+      let lastTop = null;
+      let stableCount = 0;
+      const maxChecks = 40; // ~2s ceiling at 50ms intervals
+      let checks = 0;
+      const poll = () => {
+        const top = getTargetTop();
+        checks++;
+        if (top !== null && top === lastTop) {
+          stableCount++;
+        } else {
+          stableCount = 0;
+        }
+        lastTop = top;
+        if (stableCount >= 2 || checks >= maxChecks) {
+          callback(top);
+        } else {
+          setTimeout(poll, 50);
+        }
+      };
+      poll();
+    };
     const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-    Promise.all([fontsReady, imgsSettled]).then(doScroll);
+    fontsReady.then(() => {
+      waitForStablePosition((top) => {
+        if (top === null) return;
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+    });
   }
 
   function toggleMobileMenu() {
