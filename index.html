@@ -113,6 +113,13 @@
       transition: background 0.4s var(--ease-out), backdrop-filter 0.4s, border-color 0.4s;
       border-bottom: 1px solid transparent;
       background: transparent;
+      /* Force iOS Safari to build this element's compositing layer
+         (needed because of backdrop-filter below) immediately on
+         load, rather than on-demand the first time .scrolled is
+         toggled - building it mid-scroll during a fast programmatic
+         jump was causing the nav to render blank for a moment. */
+      will-change: background, backdrop-filter, border-color;
+      transform: translateZ(0);
     }
     #nav.scrolled {
       background: rgba(255,255,255,0.88);
