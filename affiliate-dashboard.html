@@ -319,7 +319,7 @@
       window.location.href = data.url;
     } catch (err) {
       console.error(err);
-      alert('Something went wrong starting the payout connection. Please try again.');
+      alert(err.message || 'Something went wrong starting the payout connection. Please try again.');
       btn.disabled = false;
       btn.textContent = originalText;
     }
