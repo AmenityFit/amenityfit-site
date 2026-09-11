@@ -113,13 +113,6 @@
       transition: background 0.4s var(--ease-out), backdrop-filter 0.4s, border-color 0.4s;
       border-bottom: 1px solid transparent;
       background: transparent;
-      /* Force iOS Safari to build this element's compositing layer
-         (needed because of backdrop-filter below) immediately on
-         load, rather than on-demand the first time .scrolled is
-         toggled - building it mid-scroll during a fast programmatic
-         jump was causing the nav to render blank for a moment. */
-      will-change: background, backdrop-filter, border-color;
-      transform: translateZ(0);
     }
     #nav.scrolled {
       background: rgba(255,255,255,0.88);
@@ -1027,7 +1020,13 @@
       h2 { font-size: clamp(26px,7vw,38px); }
       .lead { font-size: 14px; }
       #nav { height: 58px; padding: 0 18px; background: rgba(13,13,26,0.95) !important; }
-      #nav.scrolled { background: rgba(255,255,255,0.98) !important; }
+      /* backdrop-filter is one of the most expensive things iOS Safari
+         renders and a known trigger for fixed-position elements going
+         blank during a scroll - mobile already forces a solid opaque
+         background here regardless of scroll state, so the blur is
+         pure overhead with no visual benefit. Dropping it removes the
+         compositing work that was likely behind the nav disappearing. */
+      #nav.scrolled { background: rgba(255,255,255,0.98) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
       .nav-logo-icon img, .nav-logo-lockup img { height: 28px; }
       .nav-wordmark-center { font-size: 18px; }
       .nav-cta { font-size: 12px; padding: 8px 14px; }
@@ -1961,7 +1960,7 @@
             <div class="form-group">
               <label>Property List <span style="font-weight:300;color:var(--muted);">(CSV)</span></label>
               <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--hotel-accent);">Hotel Name, Address, Rooms, Manager Email</span>. <a href="data:text/csv;charset=utf-8,Hotel%20Name%2CAddress%2CRooms%2CManager%20Email" download="amenityfit-hotel-list-template.csv" style="color:var(--hotel-accent);">Download template</a></p>
-              <input type="file" accept=".csv" id="ph-csv" class="file-input" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--hotel-border);background:var(--white);font-size:13px;" />
+              <input type="file" accept=".csv" id="ph-csv" class="file-input" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);font-size:13px;" />
               <p id="ph-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
             </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="ph-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
