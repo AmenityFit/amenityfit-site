@@ -2168,11 +2168,9 @@
     const getTargetTop = () => {
       const el = document.getElementById(id);
       if (!el) return null;
-      const label = el.querySelector('.section-label');
-      const measureEl = label || el;
       const navH = document.getElementById('nav').offsetHeight;
       const extra = id === 'pricing' ? -30 : 0;
-      return measureEl.getBoundingClientRect().top + window.pageYOffset - navH - extra;
+      return el.getBoundingClientRect().top + window.pageYOffset - navH - extra;
     };
     // Poll the target position until it's stable (two identical reads
     // in a row) instead of guessing how long images/fonts take to
