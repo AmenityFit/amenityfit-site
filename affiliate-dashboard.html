@@ -119,6 +119,14 @@
     </div>
   </div>
 
+  <div class="checklist-card" id="connect-card" style="display:none;">
+    <h2>Payout Account</h2>
+    <p id="connect-not-started" style="font-size:13px;color:var(--muted);margin-bottom:14px;display:none;">Connect a bank account with Stripe to receive your commission payouts. This takes a few minutes and is handled entirely by Stripe, not AmenityFit directly.</p>
+    <p id="connect-pending" style="font-size:13px;color:var(--muted);margin-bottom:14px;display:none;">Your Stripe account is set up but still finishing verification. This can take a little time, check back soon.</p>
+    <p id="connect-done" style="font-size:13px;color:var(--success);margin-bottom:14px;display:none;">Your payout account is connected and verified. Commission payouts are sent here automatically.</p>
+    <button class="copy-btn" id="connect-btn" onclick="handleConnectPayout()" style="display:none;">Connect Bank Account</button>
+  </div>
+
   <div class="referral-card">
     <div class="label">Your Referral Link</div>
     <div class="referral-link-row">
@@ -290,6 +298,33 @@
     window.location.href = 'affiliate-login.html';
   };
 
+  window.handleConnectPayout = async function() {
+    const btn = document.getElementById('connect-btn');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+    try {
+      const user = auth.currentUser;
+      if (!user) { window.location.href = 'affiliate-login.html'; return; }
+      const idToken = await user.getIdToken();
+      const resp = await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/createAffiliateOnboardingLink', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.url) {
+        throw new Error(data.error || 'Failed to start Stripe onboarding.');
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong starting the payout connection. Please try again.');
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  };
+
   function markChecklistDone(id) {
     const el = document.getElementById(id);
     if (el && !el.classList.contains('done')) {
@@ -362,6 +397,20 @@
         document.getElementById('estimator-card').style.display = 'none';
         document.getElementById('welcome-sub').textContent = 'Track your referrals and everything in between.';
         document.getElementById('stats-grid').style.gridTemplateColumns = 'repeat(3,1fr)';
+      } else {
+        // Only official (paid) affiliates ever see this card - informal
+        // referrers are unpaid by design and have no payout account.
+        document.getElementById('connect-card').style.display = 'block';
+        if (affiliate.payoutEligible) {
+          document.getElementById('connect-done').style.display = 'block';
+        } else if (affiliate.stripeConnectAccountId) {
+          document.getElementById('connect-pending').style.display = 'block';
+          document.getElementById('connect-btn').style.display = 'inline-block';
+          document.getElementById('connect-btn').textContent = 'Finish Connecting';
+        } else {
+          document.getElementById('connect-not-started').style.display = 'block';
+          document.getElementById('connect-btn').style.display = 'inline-block';
+        }
       }
 
       document.getElementById('welcome-heading').textContent = 'Welcome, ' + (affiliate.name ? affiliate.name.split(' ')[0] : 'there') + '.';
