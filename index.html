@@ -2169,7 +2169,7 @@
       const el = document.getElementById(id);
       if (!el) return null;
       const navH = document.getElementById('nav').offsetHeight;
-      const extra = id === 'pricing' ? -30 : 0;
+      const extra = id === 'pricing' ? -30 : (id === 'apply' ? -2 : 0);
       return el.getBoundingClientRect().top + window.pageYOffset - navH - extra;
     };
     // Poll the target position until it's stable (two identical reads
