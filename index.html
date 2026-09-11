@@ -97,7 +97,7 @@
       --hotel-primary: #FE6C2D;
       --hotel-accent: #FE6C2D;
       --hotel-subtle: #FFF3ED;
-      --hotel-border: #FFD9C2;
+      --hotel-border: #FFC29B;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -934,6 +934,17 @@
     .hotel-theme .form-submit{background:var(--hotel-primary) !important;}
     .hotel-theme .form-submit:hover{background:#E05A20 !important;}
     .hotel-theme .idx-error-msg.show{border-color:var(--hotel-border);}
+
+    /* File inputs - custom-styled upload button (Safari/iOS supports
+       ::-webkit-file-upload-button) so this matches the rest of the
+       form system instead of the raw OS control. */
+    .file-input{transition:border-color 0.15s;}
+    .file-input::-webkit-file-upload-button{background:var(--primary);color:#fff;border:none;border-radius:6px;padding:8px 14px;margin-right:12px;font-family:var(--ff-body);font-size:12.5px;font-weight:500;cursor:pointer;transition:background 0.15s;}
+    .file-input::-webkit-file-upload-button:hover{background:#174fa8;}
+    .file-input:focus{outline:2px solid var(--primary);outline-offset:2px;}
+    .hotel-theme .file-input::-webkit-file-upload-button{background:var(--hotel-primary);}
+    .hotel-theme .file-input::-webkit-file-upload-button:hover{background:#E05A20;}
+    .hotel-theme .file-input:focus{outline-color:var(--hotel-accent);}
     .form-success { display: none; text-align: center; padding: 40px 20px; }
     .form-success.show { display: block; }
     .success-icon {
@@ -1917,7 +1928,7 @@
             <div class="form-group">
               <label>Building List <span style="font-weight:300;color:var(--muted);">(CSV)</span></label>
               <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--accent);">Building Name, Address, Units, Manager Email</span>. <a href="data:text/csv;charset=utf-8,Building%20Name%2CAddress%2CUnits%2CManager%20Email" download="amenityfit-building-list-template.csv" style="color:var(--accent);">Download template</a></p>
-              <input type="file" accept=".csv" id="pb-csv" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--subtle);font-size:13px;" />
+              <input type="file" accept=".csv" id="pb-csv" class="file-input" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--subtle);font-size:13px;" />
               <p id="pb-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
             </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="pb-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
@@ -1941,8 +1952,8 @@
             <div class="form-group"><label>Approximate Number of Properties</label><input type="number" id="ph-count" placeholder="8" min="2" /></div>
             <div class="form-group">
               <label>Property List <span style="font-weight:300;color:var(--muted);">(CSV)</span></label>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--hotel-primary);">Hotel Name, Address, Rooms, Manager Email</span>. <a href="data:text/csv;charset=utf-8,Hotel%20Name%2CAddress%2CRooms%2CManager%20Email" download="amenityfit-hotel-list-template.csv" style="color:var(--hotel-primary);">Download template</a></p>
-              <input type="file" accept=".csv" id="ph-csv" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--hotel-border);background:var(--hotel-subtle);font-size:13px;" />
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--muted);">Hotel Name, Address, Rooms, Manager Email</span>. <a href="data:text/csv;charset=utf-8,Hotel%20Name%2CAddress%2CRooms%2CManager%20Email" download="amenityfit-hotel-list-template.csv" style="color:var(--hotel-primary);">Download template</a></p>
+              <input type="file" accept=".csv" id="ph-csv" class="file-input" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--hotel-border);background:var(--white);font-size:13px;" />
               <p id="ph-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
             </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="ph-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
