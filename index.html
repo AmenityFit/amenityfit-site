@@ -2188,7 +2188,7 @@
     const waitForStablePosition = (callback) => {
       let lastTop = null;
       let stableCount = 0;
-      const maxChecks = 40; // ~2s ceiling at 50ms intervals
+      const maxChecks = 60; // ~3s ceiling at 50ms intervals
       let checks = 0;
       const poll = () => {
         const top = getTargetTop();
@@ -2199,7 +2199,11 @@
           stableCount = 0;
         }
         lastTop = top;
-        if (stableCount >= 2 || checks >= maxChecks) {
+        // Require 5 identical reads in a row (250ms of no movement),
+        // not just 2 - on the very first tap after a cold load, the
+        // page can hit a brief lull early in loading that looks
+        // "stable" for one check but isn't actually done shifting.
+        if (stableCount >= 5 || checks >= maxChecks) {
           callback(top);
         } else {
           setTimeout(poll, 50);
@@ -2208,7 +2212,15 @@
       poll();
     };
     const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-    fontsReady.then(() => {
+    // On the very first navigation, the page itself may still be
+    // mid-load (images/video below the fold still fetching) - wait
+    // for the full window 'load' event, not just fonts, before we
+    // even start polling. On later taps this resolves instantly
+    // since the page already finished loading.
+    const pageLoaded = document.readyState === 'complete'
+      ? Promise.resolve()
+      : new Promise(res => window.addEventListener('load', res, { once: true }));
+    Promise.all([fontsReady, pageLoaded]).then(() => {
       waitForStablePosition((top) => {
         if (top === null) return;
         window.scrollTo({ top, behavior: 'smooth' });
