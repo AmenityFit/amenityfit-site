@@ -1126,6 +1126,7 @@
   </style>
 </head>
 <body>
+<div id="nav-scroll-sentinel" style="position:absolute;top:40px;left:0;width:1px;height:1px;pointer-events:none;opacity:0;"></div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -2005,11 +2006,27 @@
   document.body.classList.add('js-ready');
 
   const nav = document.getElementById('nav');
-  function handleNavScroll() {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+  // Watch a sentinel element with IntersectionObserver instead of a
+  // scroll-event listener - scroll events can get dropped by the
+  // browser during heavy first-load work (image/video/font decoding),
+  // which was leaving the nav stuck in its transparent hero-overlay
+  // state (white text, no background) over light content, making it
+  // effectively invisible on a first cold load. IntersectionObserver
+  // callbacks aren't subject to that same main-thread contention.
+  const navSentinel = document.getElementById('nav-scroll-sentinel');
+  if (navSentinel && 'IntersectionObserver' in window) {
+    const navObs = new IntersectionObserver(([entry]) => {
+      nav.classList.toggle('scrolled', !entry.isIntersecting);
+    }, { threshold: 0 });
+    navObs.observe(navSentinel);
+  } else {
+    // Fallback for browsers without IntersectionObserver support
+    function handleNavScroll() {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }
+    window.addEventListener('scroll', handleNavScroll, { passive: true });
+    handleNavScroll();
   }
-  window.addEventListener('scroll', handleNavScroll, { passive: true });
-  handleNavScroll();
 
   const vid = document.getElementById('hero-video');
   const unmuteBtn = document.getElementById('unmute-btn');
