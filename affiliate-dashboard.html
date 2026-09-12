@@ -52,7 +52,7 @@
     .rr-progress-label{font-size:11px;color:var(--muted);margin-top:5px;}
     .rr-ending-soon{font-size:11px;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:2px 8px;display:inline-block;margin-top:6px;font-weight:600;}
     .rr-payout-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
     .stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
     .stat-card .stat-val{font-family:var(--ff-display);font-size:28px;font-weight:600;}
     .stat-card .stat-label{font-size:12px;color:var(--muted);margin-top:2px;}
@@ -76,7 +76,19 @@
     .referral-row .rr-name{font-size:14px;font-weight:700;}
     .referral-row .rr-meta{font-size:12px;color:var(--muted);margin-top:2px;}
     .status-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:4px 10px;border-radius:99px;flex-shrink:0;}
+    .rr-filter-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+    .rr-filter-tab{padding:7px 14px;border-radius:99px;border:1px solid var(--border);background:#fff;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit;}
+    .rr-filter-tab.active{background:var(--primary);border-color:var(--primary);color:#fff;}
     .rr-controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+    .rr-notes-history{max-height:110px;overflow-y:auto;margin-bottom:8px;padding-right:4px;}
+    .rr-note-entry{font-size:12px;color:var(--text);padding:5px 0;border-bottom:1px solid var(--border);}
+    .rr-note-entry:last-child{border-bottom:none;}
+    .rr-note-date{color:var(--muted);font-weight:600;margin-right:6px;}
+    .rr-note-empty{font-size:12px;color:var(--muted);margin-bottom:8px;}
+    .rr-priority-row{display:flex;gap:6px;margin-bottom:8px;}
+    .rr-priority-btn{padding:4px 12px;border-radius:99px;border:1px solid var(--border);background:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;cursor:pointer;color:var(--muted);font-family:inherit;}
+    .rr-priority-btn.active-hot{background:#FEF2F2;border-color:#FCA5A5;color:#B91C1C;}
+    .rr-priority-btn.active-cold{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8;}
     .rr-search-input{flex:1;min-width:200px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;font-family:inherit;}
     .rr-sort-select{padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;font-family:inherit;background:#fff;}
     .rr-crm{width:100%;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
@@ -159,6 +171,7 @@
     <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Referrals</div></div>
     <div class="stat-card"><div class="stat-val" id="stat-closed">0</div><div class="stat-label">Buildings Closed</div></div>
     <div class="stat-card"><div class="stat-val" id="stat-closing-pct">0%</div><div class="stat-label">Closing Rate</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-avg-days">-</div><div class="stat-label">Avg Days to Close</div></div>
   </div>
 
   <div class="estimator-card" id="estimator-card">
@@ -196,6 +209,13 @@
 
   <div class="referrals-section">
     <h2>Your referrals</h2>
+    <div class="rr-filter-tabs" id="rr-filter-tabs">
+      <button class="rr-filter-tab active" data-filter="all" onclick="setReferralFilter('all')">All</button>
+      <button class="rr-filter-tab" data-filter="pending" onclick="setReferralFilter('pending')">Pending</button>
+      <button class="rr-filter-tab" data-filter="in_negotiation" onclick="setReferralFilter('in_negotiation')">In Negotiation</button>
+      <button class="rr-filter-tab" data-filter="closed" onclick="setReferralFilter('closed')">Closed</button>
+      <button class="rr-filter-tab" data-filter="lost" onclick="setReferralFilter('lost')">Lost</button>
+    </div>
     <div class="rr-controls">
       <input type="text" id="rr-search" class="rr-search-input" placeholder="Search by building or contact name" oninput="renderFilteredReferrals()" />
       <select id="rr-sort" class="rr-sort-select" onchange="renderFilteredReferrals()">
@@ -413,22 +433,33 @@
         }
       }
 
-      // CRM section - contact info, a note, and a next-follow-up date -
-      // only for leads still actually in play. A closed or lost deal has
-      // nothing left to follow up on.
+      // CRM section - contact info, a priority tag, note history, and a
+      // next-follow-up date - only for leads still actually in play. A
+      // closed or lost deal has nothing left to follow up on.
       let crm = '';
       if (r.status === 'pending' || r.status === 'in_negotiation') {
         const dueDate = r.nextFollowUpDate ? (r.nextFollowUpDate.toDate ? r.nextFollowUpDate.toDate() : new Date(r.nextFollowUpDate)) : null;
         const isOverdue = dueDate && dueDate <= nowForRender;
         const contactBits = [];
-        if (r.contactName) contactBits.push(r.contactName);
-        if (r.contactEmail) contactBits.push(`<a href="mailto:${r.contactEmail}">${r.contactEmail}</a>`);
-        if (r.contactPhone) contactBits.push(`<a href="tel:${r.contactPhone}">${r.contactPhone}</a>`);
+        if (r.contactName) contactBits.push(escapeHtml(r.contactName));
+        if (r.contactEmail) contactBits.push(`<a href="mailto:${r.contactEmail}">${escapeHtml(r.contactEmail)}</a>`);
+        if (r.contactPhone) contactBits.push(`<a href="tel:${r.contactPhone}">${escapeHtml(r.contactPhone)}</a>`);
+
+        const notesHistory = Array.isArray(r.notesHistory) ? r.notesHistory : [];
+        const notesHtml = notesHistory.length
+          ? notesHistory.slice().reverse().map(n => `<div class="rr-note-entry"><span class="rr-note-date">${formatNoteDate(n.createdAt)}</span>${escapeHtml(n.text)}</div>`).join('')
+          : '<div class="rr-note-empty">No notes yet.</div>';
+
         crm = `<div class="rr-crm">
           ${isOverdue ? '<div class="rr-overdue-badge">Follow-up due</div>' : ''}
+          <div class="rr-priority-row">
+            <button class="rr-priority-btn ${r.priority === 'hot' ? 'active-hot' : ''}" onclick="toggleReferralPriority('${r.id}','hot')">Hot</button>
+            <button class="rr-priority-btn ${r.priority === 'cold' ? 'active-cold' : ''}" onclick="toggleReferralPriority('${r.id}','cold')">Cold</button>
+          </div>
           ${contactBits.length ? `<div class="rr-contact">${contactBits.join(' &middot; ')}</div>` : ''}
+          <div class="rr-notes-history" id="notes-${r.id}">${notesHtml}</div>
           <div class="rr-note-row">
-            <textarea class="rr-note-input" id="note-${r.id}" placeholder="Add a note, e.g. left voicemail, following up Friday">${r.note || ''}</textarea>
+            <textarea class="rr-note-input" id="newnote-${r.id}" placeholder="Add a note, e.g. left voicemail, following up Friday"></textarea>
             <input type="date" class="rr-followup-input" id="followup-${r.id}" value="${formatDateForInput(r.nextFollowUpDate)}" />
             <button class="rr-save-btn" id="save-${r.id}" onclick="saveReferralNote('${r.id}')">Save</button>
           </div>
@@ -442,10 +473,31 @@
     }).join('');
   }
 
+  let currentReferralFilter = 'all';
+
+  window.setReferralFilter = function(f) {
+    currentReferralFilter = f;
+    document.querySelectorAll('.rr-filter-tab').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+    window.renderFilteredReferrals();
+  };
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function formatNoteDate(ts) {
+    const d = ts && ts.toDate ? ts.toDate() : new Date(ts);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ': ';
+  }
+
   window.renderFilteredReferrals = function() {
     const q = (document.getElementById('rr-search').value || '').toLowerCase().trim();
     const sortBy = document.getElementById('rr-sort').value;
     let filtered = allReferrals.filter(r => {
+      if (currentReferralFilter !== 'all' && r.status !== currentReferralFilter) return false;
       if (!q) return true;
       return (r.buildingName || '').toLowerCase().includes(q) || (r.contactName || '').toLowerCase().includes(q);
     });
@@ -471,34 +523,63 @@
   window.saveReferralNote = async function(referralId) {
     const btn = document.getElementById('save-' + referralId);
     const originalText = btn.textContent;
+    const newNoteText = document.getElementById('newnote-' + referralId).value.trim();
+    const followupVal = document.getElementById('followup-' + referralId).value;
+    if (!newNoteText && !followupVal) return;
     btn.disabled = true;
     btn.textContent = 'Saving...';
     try {
       const user = auth.currentUser;
       if (!user) { window.location.href = 'affiliate-login.html'; return; }
       const idToken = await user.getIdToken();
-      const note = document.getElementById('note-' + referralId).value;
-      const followupVal = document.getElementById('followup-' + referralId).value;
       const nextFollowUpDate = followupVal || null;
+      const body = { idToken, referralId, nextFollowUpDate };
+      if (newNoteText) body.newNote = newNoteText;
       const resp = await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/updateAffiliateReferralNote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken, referralId, note, nextFollowUpDate }),
+        body: JSON.stringify(body),
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || 'Failed to save.');
       const idx = allReferrals.findIndex(r => r.id === referralId);
       if (idx !== -1) {
-        allReferrals[idx].note = note;
+        if (newNoteText) {
+          if (!Array.isArray(allReferrals[idx].notesHistory)) allReferrals[idx].notesHistory = [];
+          allReferrals[idx].notesHistory.push({ text: newNoteText, createdAt: new Date() });
+        }
         allReferrals[idx].nextFollowUpDate = nextFollowUpDate ? new Date(nextFollowUpDate) : null;
       }
       btn.textContent = 'Saved';
-      setTimeout(() => { window.renderFilteredReferrals(); }, 700);
+      setTimeout(() => { window.renderFilteredReferrals(); }, 500);
     } catch (err) {
       console.error(err);
       alert(err.message || 'Something went wrong saving your note.');
       btn.disabled = false;
       btn.textContent = originalText;
+    }
+  };
+
+  window.toggleReferralPriority = async function(referralId, value) {
+    const current = allReferrals.find(r => r.id === referralId);
+    const newValue = (current && current.priority === value) ? null : value;
+    try {
+      const user = auth.currentUser;
+      if (!user) { window.location.href = 'affiliate-login.html'; return; }
+      const idToken = await user.getIdToken();
+      const resp = await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/updateAffiliateReferralNote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken, referralId, priority: newValue }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || 'Failed to update.');
+      const idx = allReferrals.findIndex(r => r.id === referralId);
+      if (idx !== -1) allReferrals[idx].priority = newValue;
+      window.renderFilteredReferrals();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'Something went wrong updating priority.');
     }
   };
 
@@ -521,7 +602,7 @@
         document.getElementById('mrr-stat-card').style.display = 'none';
         document.getElementById('estimator-card').style.display = 'none';
         document.getElementById('welcome-sub').textContent = 'Track your referrals and everything in between.';
-        document.getElementById('stats-grid').style.gridTemplateColumns = 'repeat(3,1fr)';
+        document.getElementById('stats-grid').style.gridTemplateColumns = 'repeat(4,1fr)';
       } else {
         // Only official (paid) affiliates ever see this card - informal
         // referrers are unpaid by design and have no payout account.
@@ -564,6 +645,16 @@
       document.getElementById('stat-closed').textContent = closedReferrals.length;
       const closingPct = referrals.length > 0 ? Math.round((closedReferrals.length / referrals.length) * 100) : 0;
       document.getElementById('stat-closing-pct').textContent = closingPct + '%';
+
+      const closedWithDates = closedReferrals.filter(r => r.createdAt && r.closeDate);
+      if (closedWithDates.length) {
+        const totalDays = closedWithDates.reduce((sum, r) => {
+          const created = r.createdAt.toDate ? r.createdAt.toDate() : new Date(r.createdAt);
+          const closed = r.closeDate.toDate ? r.closeDate.toDate() : new Date(r.closeDate);
+          return sum + Math.max(0, (closed - created) / (24 * 60 * 60 * 1000));
+        }, 0);
+        document.getElementById('stat-avg-days').textContent = Math.round(totalDays / closedWithDates.length);
+      }
 
       allReferrals = referrals;
       window.renderFilteredReferrals();
