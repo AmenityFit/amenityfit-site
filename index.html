@@ -2571,13 +2571,20 @@
 
   // Auto-fill the referral code from a shared affiliate link, e.g.
   // amenityfit.app/?ref=ABC123 - saves a prospect from having to be told
-  // a code verbally and typing it in manually.
+  // a code verbally and typing it in manually. Fills all four
+  // application types (single building, single hotel, building
+  // portfolio, hotel portfolio), not just whichever one happens to be
+  // selected by default, since the visitor may switch to any of them
+  // before submitting.
   (function prefillReferralCode() {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     if (ref) {
-      const field = document.getElementById('f-referral');
-      if (field) field.value = ref.trim().toUpperCase();
+      const code = ref.trim().toUpperCase();
+      ['f-referral', 'h-referral', 'pb-referral', 'ph-referral'].forEach(id => {
+        const field = document.getElementById(id);
+        if (field) field.value = code;
+      });
     }
   })();
 </script>
