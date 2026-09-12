@@ -76,6 +76,19 @@
     .referral-row .rr-name{font-size:14px;font-weight:700;}
     .referral-row .rr-meta{font-size:12px;color:var(--muted);margin-top:2px;}
     .status-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;padding:4px 10px;border-radius:99px;flex-shrink:0;}
+    .rr-controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+    .rr-search-input{flex:1;min-width:200px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;font-family:inherit;}
+    .rr-sort-select{padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;font-family:inherit;background:#fff;}
+    .rr-crm{width:100%;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+    .rr-contact{font-size:12.5px;color:var(--text);margin-bottom:8px;}
+    .rr-contact a{color:var(--primary);text-decoration:none;margin-right:12px;}
+    .rr-contact a:hover{text-decoration:underline;}
+    .rr-note-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;}
+    .rr-note-input{flex:1;min-width:180px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-size:12.5px;font-family:inherit;resize:vertical;min-height:36px;}
+    .rr-followup-input{padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-size:12.5px;font-family:inherit;}
+    .rr-save-btn{padding:8px 14px;border-radius:8px;border:none;background:var(--primary);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
+    .rr-save-btn:hover{background:#174fa8;}
+    .rr-overdue-badge{font-size:11px;font-weight:700;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:2px 8px;display:inline-block;margin-bottom:8px;}
     .status-pending{background:#FEF3C7;color:#92400E;}
     .status-in_negotiation{background:#DBEAFE;color:#1E40AF;}
     .status-closed{background:#DCFCE7;color:#166534;}
@@ -183,6 +196,14 @@
 
   <div class="referrals-section">
     <h2>Your referrals</h2>
+    <div class="rr-controls">
+      <input type="text" id="rr-search" class="rr-search-input" placeholder="Search by building or contact name" oninput="renderFilteredReferrals()" />
+      <select id="rr-sort" class="rr-sort-select" onchange="renderFilteredReferrals()">
+        <option value="newest">Newest first</option>
+        <option value="overdue">Follow-up due first</option>
+        <option value="az">A to Z</option>
+      </select>
+    </div>
     <div id="referrals-list"></div>
   </div>
 </div>
@@ -334,6 +355,15 @@
     }
   }
 
+  function formatDateForInput(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    if (isNaN(d.getTime())) return '';
+    return d.toISOString().split('T')[0];
+  }
+
+  let allReferrals = [];
+
   function renderReferrals(referrals) {
     const list = document.getElementById('referrals-list');
     if (referrals.length === 0) {
@@ -343,6 +373,7 @@
     markChecklistDone('check-track');
 
     const statusLabels = { pending: 'Pending', in_negotiation: 'In Negotiation', closed: 'Closed', lost: 'Lost' };
+    const nowForRender = new Date();
     list.innerHTML = referrals.map(r => {
       const statusClass = 'status-' + (r.status || 'pending');
       const statusLabel = statusLabels[r.status] || 'Pending';
@@ -352,9 +383,8 @@
         meta += ' &middot; $' + r.commissionMonthly.toFixed(2) + '/mo';
         if (r.payoutEndDate) {
           const endDate = r.payoutEndDate.toDate ? r.payoutEndDate.toDate() : new Date(r.payoutEndDate);
-          const now = new Date();
           const totalMs = 365 * 24 * 60 * 60 * 1000;
-          const remainingMs = endDate - now;
+          const remainingMs = endDate - nowForRender;
           const pct = Math.max(0, Math.min(100, ((totalMs - remainingMs) / totalMs) * 100));
           const daysLeft = Math.ceil(remainingMs / (24 * 60 * 60 * 1000));
           const isEndingSoon = daysLeft <= 60 && daysLeft > 0;
@@ -382,12 +412,95 @@
           extra += `<div class="rr-payout-note">Your first payout typically arrives within 1 to 2 weeks after your payout account is verified and this building's first payment is received.</div>`;
         }
       }
+
+      // CRM section - contact info, a note, and a next-follow-up date -
+      // only for leads still actually in play. A closed or lost deal has
+      // nothing left to follow up on.
+      let crm = '';
+      if (r.status === 'pending' || r.status === 'in_negotiation') {
+        const dueDate = r.nextFollowUpDate ? (r.nextFollowUpDate.toDate ? r.nextFollowUpDate.toDate() : new Date(r.nextFollowUpDate)) : null;
+        const isOverdue = dueDate && dueDate <= nowForRender;
+        const contactBits = [];
+        if (r.contactName) contactBits.push(r.contactName);
+        if (r.contactEmail) contactBits.push(`<a href="mailto:${r.contactEmail}">${r.contactEmail}</a>`);
+        if (r.contactPhone) contactBits.push(`<a href="tel:${r.contactPhone}">${r.contactPhone}</a>`);
+        crm = `<div class="rr-crm">
+          ${isOverdue ? '<div class="rr-overdue-badge">Follow-up due</div>' : ''}
+          ${contactBits.length ? `<div class="rr-contact">${contactBits.join(' &middot; ')}</div>` : ''}
+          <div class="rr-note-row">
+            <textarea class="rr-note-input" id="note-${r.id}" placeholder="Add a note, e.g. left voicemail, following up Friday">${r.note || ''}</textarea>
+            <input type="date" class="rr-followup-input" id="followup-${r.id}" value="${formatDateForInput(r.nextFollowUpDate)}" />
+            <button class="rr-save-btn" id="save-${r.id}" onclick="saveReferralNote('${r.id}')">Save</button>
+          </div>
+        </div>`;
+      }
+
       return `<div class="referral-row">
-        <div style="flex:1;"><div class="rr-name">${r.buildingName || 'Unnamed Building'}</div><div class="rr-meta">${meta}</div>${extra}</div>
+        <div style="flex:1;"><div class="rr-name">${r.buildingName || 'Unnamed Building'}</div><div class="rr-meta">${meta}</div>${extra}${crm}</div>
         <div class="status-badge ${statusClass}">${statusLabel}</div>
       </div>`;
     }).join('');
   }
+
+  window.renderFilteredReferrals = function() {
+    const q = (document.getElementById('rr-search').value || '').toLowerCase().trim();
+    const sortBy = document.getElementById('rr-sort').value;
+    let filtered = allReferrals.filter(r => {
+      if (!q) return true;
+      return (r.buildingName || '').toLowerCase().includes(q) || (r.contactName || '').toLowerCase().includes(q);
+    });
+    const now = new Date();
+    if (sortBy === 'overdue') {
+      filtered = filtered.slice().sort((a, b) => {
+        const aDue = a.nextFollowUpDate ? (a.nextFollowUpDate.toDate ? a.nextFollowUpDate.toDate() : new Date(a.nextFollowUpDate)) : null;
+        const bDue = b.nextFollowUpDate ? (b.nextFollowUpDate.toDate ? b.nextFollowUpDate.toDate() : new Date(b.nextFollowUpDate)) : null;
+        const aOverdue = !!(aDue && aDue <= now);
+        const bOverdue = !!(bDue && bDue <= now);
+        if (aOverdue !== bOverdue) return aOverdue ? -1 : 1;
+        if (aDue && bDue) return aDue - bDue;
+        if (aDue) return -1;
+        if (bDue) return 1;
+        return 0;
+      });
+    } else if (sortBy === 'az') {
+      filtered = filtered.slice().sort((a, b) => (a.buildingName || '').localeCompare(b.buildingName || ''));
+    }
+    renderReferrals(filtered);
+  };
+
+  window.saveReferralNote = async function(referralId) {
+    const btn = document.getElementById('save-' + referralId);
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    try {
+      const user = auth.currentUser;
+      if (!user) { window.location.href = 'affiliate-login.html'; return; }
+      const idToken = await user.getIdToken();
+      const note = document.getElementById('note-' + referralId).value;
+      const followupVal = document.getElementById('followup-' + referralId).value;
+      const nextFollowUpDate = followupVal || null;
+      const resp = await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/updateAffiliateReferralNote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken, referralId, note, nextFollowUpDate }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || 'Failed to save.');
+      const idx = allReferrals.findIndex(r => r.id === referralId);
+      if (idx !== -1) {
+        allReferrals[idx].note = note;
+        allReferrals[idx].nextFollowUpDate = nextFollowUpDate ? new Date(nextFollowUpDate) : null;
+      }
+      btn.textContent = 'Saved';
+      setTimeout(() => { window.renderFilteredReferrals(); }, 700);
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'Something went wrong saving your note.');
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  };
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -452,7 +565,8 @@
       const closingPct = referrals.length > 0 ? Math.round((closedReferrals.length / referrals.length) * 100) : 0;
       document.getElementById('stat-closing-pct').textContent = closingPct + '%';
 
-      renderReferrals(referrals);
+      allReferrals = referrals;
+      window.renderFilteredReferrals();
 
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('dashboard-content').style.display = 'block';
