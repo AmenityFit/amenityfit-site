@@ -1965,6 +1965,15 @@
               <input type="file" accept=".csv" id="ph-csv" class="file-input" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);font-size:13px;" />
               <p id="ph-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
             </div>
+            <div class="form-group">
+              <label>Multi-Year Commitment <span style="font-weight:300;color:var(--muted);">(optional, for portfolios of 3+ properties)</span></label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Committing your full portfolio to a 2 or 3-year term instead of the standard annual term qualifies for additional pricing. Selecting a term below is a binding election that carries directly into your agreement, not a preference to be discussed later.</p>
+              <select id="ph-multiyear" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);font-size:13px;">
+                <option value="">No - standard annual term</option>
+                <option value="2">Yes - 2-year term</option>
+                <option value="3">Yes - 3-year term</option>
+              </select>
+            </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="ph-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
             <div class="form-group"><label>Anything else?</label><textarea id="ph-notes" placeholder="Optional. Any context about your portfolio or timing."></textarea></div>
             <button type="button" class="form-submit" id="ph-form-btn" onclick="submitPortfolioApp('hotel')">Submit Application</button>
@@ -2456,18 +2465,13 @@
 
   window.__submitPortfolioApplication = async function(data) {
     try {
-      await addDoc(collection(db, 'portfolioApplications'), {
-        ...data,
-        contactName: (data.firstName || '') + ' ' + (data.lastName || ''),
-        submittedAt: serverTimestamp(),
-        source: 'amenityfit.app',
-        status: 'pending'
-      });
-      await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/sendPortfolioApplicationEmails', {
+      const resp = await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/sendPortfolioApplicationEmails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+      const result = await resp.json();
+      if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
       return { success: true };
     } catch (err) { return { success: false, error: err.message }; }
   };
@@ -2514,6 +2518,7 @@
       referralCode: document.getElementById(prefix + '-referral').value.trim().toUpperCase(),
       notes: document.getElementById(prefix + '-notes').value.trim(),
       propertyType: type,
+      multiYearTerm: type === 'hotel' ? (document.getElementById('ph-multiyear').value || '') : '',
     });
     if (result.success) {
       document.getElementById('apply-form-wrap-portfolio-' + type).style.display = 'none';
