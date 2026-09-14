@@ -127,6 +127,18 @@
 </nav>
 
 <div class="loading-screen" id="loading-screen">Loading your dashboard...</div>
+<div id="agreement-gate" style="display:none;position:fixed;inset:0;background:#fff;z-index:9999;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;">
+  <div style="max-width:640px;width:100%;">
+    <h2 id="agreement-gate-title" style="font-family:var(--ff-display);font-size:28px;color:var(--text);margin:0 0 8px;">Agreement</h2>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 20px;">Please read and accept before continuing to your dashboard. You'll only need to do this once.</p>
+    <div id="agreement-gate-body" style="border:1px solid var(--border);border-radius:12px;padding:24px;max-height:420px;overflow-y:auto;font-size:13px;line-height:1.7;color:var(--text);background:var(--subtle);margin-bottom:20px;"></div>
+    <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);margin-bottom:20px;cursor:pointer;">
+      <input type="checkbox" id="agreement-gate-checkbox" style="margin-top:2px;" />
+      <span>I have read and agree to the terms above.</span>
+    </label>
+    <button id="agreement-gate-accept-btn" disabled style="width:100%;padding:14px;border-radius:10px;border:none;background:var(--primary);color:#fff;font-size:14px;font-weight:700;cursor:not-allowed;font-family:var(--ff-body);opacity:0.5;">I Agree - Continue</button>
+  </div>
+</div>
 
 <div class="container" id="dashboard-content" style="display:none;">
   <h1 id="welcome-heading">Welcome back.</h1>
@@ -586,6 +598,84 @@
     }
   };
 
+  const OFFICIAL_AGREEMENT_HTML = `
+    <p><strong>OFFICIAL AFFILIATE AGREEMENT</strong> (Paid Referral Program for Residential Buildings and Hotels)</p>
+    <p>Between FITMAKESENZ LLC, a New York limited liability company, d/b/a AmenityFit ("Company"), and you ("Affiliate"). This Agreement, together with any Exhibits, order confirmations, or dashboard-posted commission terms incorporated by reference, constitutes the entire agreement between the parties regarding the subject matter herein.</p>
+    <p><strong>1. Definitions.</strong> "Building" means any residential building, residential portfolio, hotel, or hotel portfolio that executes a Master Services Agreement with Company for the Service. "Referral" means a prospective Building that first contacts or applies to Company using Affiliate's unique referral code. "Qualified Building" means a Referral that Company, in its sole discretion, approves and that subsequently executes a Master Services Agreement with Company. "Commission" means the amounts payable to Affiliate under Section 4, calculated solely on Fees actually collected by Company from a Qualified Building. "Fees" has the meaning given in the applicable Building's Master Services Agreement. "Referral Code" means the unique tracking code or link issued to Affiliate for use in this program.</p>
+    <p><strong>2. Relationship of the Parties.</strong> Affiliate is an independent contractor. Nothing in this Agreement creates an employment, agency, partnership, or joint venture relationship. Affiliate has no authority to bind Company to any obligation, make any representation on Company's behalf, or execute any document on Company's behalf, except as expressly authorized in writing. Affiliate is solely responsible for the manner, means, and timing of its referral activity; Company does not set hours, quotas, or required activity levels, and participation is entirely voluntary. Nothing in this Agreement grants Affiliate exclusivity - Company may operate other referral, affiliate, or sales channels concurrently.</p>
+    <p><strong>3. The Referral Program.</strong> Company shall issue Affiliate a unique Referral Code. A Referral is valid only where a prospective Building identifies or enters Affiliate's Referral Code at the time of initial contact or application; Company shall not retroactively attribute a Building to Affiliate based on a claim made after the Building has independently contacted or applied through another channel. Company retains sole and absolute discretion to accept or reject any Referral, and to approve or decline any Master Services Agreement, for any reason or no reason - no Commission is owed on a Referral Company does not approve. Affiliate shall not submit, and shall not receive Commission for, any Referral in which Affiliate or an immediate family member holds an ownership, management, or other financial interest. Affiliate shall not misrepresent Company, the Service, the Referral Code, or the terms of any Master Services Agreement, and shall not make any pricing, feature, or contractual promise on Company's behalf beyond materials Company expressly provides. In connection with every Referral, Affiliate shall clearly disclose that Affiliate may receive a commission if the Building signs with Company, consistent with FTC endorsement and disclosure guidelines; Company will provide pre-approved disclosure language, and using it satisfies this Section.</p>
+    <p><strong>4. Commission.</strong> For each Qualified Building, Company shall pay Affiliate a Commission equal to fifteen percent (15%) of that Qualified Building's monthly contract value, calculated and paid monthly for a period not to exceed twelve (12) consecutive months, commencing from the Building's Service Start Date. Commission is calculated on the Fees contractually due under the Building's Master Services Agreement for that twelve-month period, regardless of billing frequency - because each Building remains contractually obligated to pay for the full committed term regardless of cancellation, non-use, or reduced adoption, Affiliate's Commission is guaranteed for the full twelve months even where the Building stops using the Service, cancels early, or otherwise stops its own participation, so long as the Building remains contractually obligated to pay and Company continues pursuing collection in the ordinary course. Commission is not guaranteed on any portion of Fees Company is unable to collect despite reasonable efforts due to the Building's genuine insolvency, bankruptcy, dissolution, or comparable non-payment, as distinguished from a Building simply electing to stop using the Service while remaining solvent and contractually obligated. Where a Qualified Building is a hotel portfolio of three or more properties under one Master Services Agreement, Affiliate additionally receives a one-time bonus of $500 for a portfolio of three to nine properties, or $1,500 for ten or more properties. Commission is payable for a maximum of twelve months per Qualified Building and does not extend to any Renewal Term. This program is single-tier only - Affiliate earns Commission solely on Qualified Buildings it personally refers, never on the activity, referrals, or earnings of any other affiliate or referrer, and this Agreement does not create a multi-level or pyramid compensation structure.</p>
+    <p><strong>5. Payment; Stripe Connect.</strong> Company pays Commission through Stripe Connect. Before any Commission becomes payable, Affiliate must complete Stripe's account onboarding, including identity verification and a valid Form W-9 (US persons) or W-8BEN (non-US persons), and must maintain accurate, current payout information. Payout timing is governed by Stripe, not Company - a newly onboarded account is typically subject to an initial verification period of up to fourteen days before its first payout, after which subsequent payouts typically arrive within a few business days of being issued; Company does not control or guarantee Stripe's processing times, and is not liable for delay, failure, or misdirection caused by inaccurate Affiliate information or by Stripe or the receiving bank. Commission is calculated and issued on Company's standard payout schedule, as may be posted in Affiliate's dashboard, and Company may adjust payout frequency upon reasonable notice without affecting the total Commission owed. All Commission is calculated and paid in USD regardless of Affiliate's location; any currency conversion is handled by Stripe or the receiving bank, and Company is not responsible for conversion rates or related fees.</p>
+    <p><strong>6. Taxes.</strong> Affiliate is solely responsible for all taxes, duties, and governmental charges arising from Commission paid, and for any required filings. Company will issue Form 1099-NEC as required by law for US persons, and Affiliate represents that its taxpayer information is accurate and current. Company makes no representation regarding tax treatment in any jurisdiction and recommends Affiliate consult its own tax advisor.</p>
+    <p><strong>7. Term and Termination.</strong> Either party may terminate this Agreement at any time, for any reason or no reason, with or without notice. Company may terminate immediately, without notice, if Affiliate breaches this Agreement, engages in fraud, misrepresentation, or submission of false Referrals, or otherwise violates applicable law. If Company terminates without cause, any Referral already submitted and already in active discussion with Company as of the termination date remains eligible to become a Qualified Building, and to generate Commission, if it executes a Master Services Agreement within ninety days following termination - no tail period applies, and all pending Referrals are immediately forfeited without Commission, where termination is for cause or where Affiliate terminates voluntarily. Upon termination, Affiliate's Referral Code is deactivated, Affiliate must immediately cease all use of Company's name, marks, and materials, and all license rights terminate; confidentiality, tax, IP ownership, affiliate conduct, no-guarantee, indemnification, liability, non-solicitation, dispute resolution, and general provisions survive termination.</p>
+    <p><strong>8. Confidentiality.</strong> Affiliate shall not disclose Company's pricing, contract terms, Building lists, business plans, or other non-public information obtained through this program, except as necessary to perform a legitimate Referral. This obligation survives termination indefinitely with respect to information that remains non-public.</p>
+    <p><strong>9. Intellectual Property; License.</strong> Company owns all right, title, and interest in the AmenityFit name, marks, Software, and related materials. Company grants Affiliate a limited, non-exclusive, non-transferable, revocable license during the term of this Agreement to use Company-provided marketing materials solely to promote the Service to prospective Buildings, and solely in the form provided. Affiliate shall not modify Company's marks, create derivative marketing materials implying a broader affiliation than this referral relationship, or register any domain name, social media handle, or trademark confusingly similar to AmenityFit. Any content Affiliate creates that references Company or the Service does not become Affiliate's intellectual property to the extent it incorporates Company's marks or materials, and Company may request its removal at any time.</p>
+    <p><strong>10. Affiliate Representations and Conduct.</strong> Affiliate represents it has full power and authority to enter into this Agreement, shall comply with all applicable laws in its referral activity (including laws governing unsolicited communications), and shall not engage in spam, harassment, or misleading advertising. Affiliate shall not represent itself as an employee, officer, or authorized spokesperson of Company. Affiliate represents it is at least eighteen years of age and is not located in, or a resident of, any country or territory subject to comprehensive U.S. trade sanctions or that otherwise restricts Affiliate from lawfully receiving payment from a U.S. business.</p>
+    <p><strong>11. No Guarantee; Disclaimer.</strong> Company makes no guarantee that any Referral will be approved, that any approved Referral will execute a Master Services Agreement, or that any Qualified Building will remain active for any period of time - Affiliate's Commission is entirely contingent on Fees actually collected as set forth in Section 4. Except as expressly set forth in this Agreement, the referral program is provided "as is," without warranties of any kind, whether express, implied, or statutory.</p>
+    <p><strong>12. Indemnification.</strong> Affiliate shall indemnify, defend, and hold harmless Company from and against any third-party claims, damages, and reasonable expenses (including attorneys' fees) arising out of Affiliate's misrepresentation, misconduct, breach of this Agreement, or violation of applicable law in connection with its referral activity.</p>
+    <p><strong>13. Limitation of Liability.</strong> In no event shall either party be liable to the other for any indirect, incidental, special, consequential, or punitive damages arising out of or related to this Agreement, even if advised of the possibility of such damages. Except for Affiliate's indemnification obligations or breach of Section 8 or Section 9, Company's total aggregate liability arising out of or related to this Agreement shall not exceed the total Commission actually paid to Affiliate during the twelve months preceding the event giving rise to the claim.</p>
+    <p><strong>14. Non-Solicitation and Non-Circumvention.</strong> Affiliate shall not attempt to circumvent this Agreement by directing a prospective Building to contact Company without using the Referral Code, or by arranging for a Building to be introduced through another party to alter the applicable Commission or attribution. During the term and for twelve months thereafter, Affiliate shall not solicit Company's employees or contractors to leave their engagement.</p>
+    <p><strong>15. Dispute Resolution.</strong> This Agreement is governed by the laws of the State of New York, without regard to conflict of laws principles. Any dispute arising out of or relating to this Agreement shall be resolved by binding arbitration administered in New York, New York, on an individual basis. Affiliate and Company each waive any right to a jury trial and any right to participate in a class, collective, or representative action.</p>
+    <p><strong>16. General Provisions.</strong> This Agreement constitutes the entire agreement between the parties and supersedes all prior discussions on its subject. It may be amended only in writing signed by both parties, or, with respect to Commission rates and program terms of general application, by Company posting updated terms to Affiliate's dashboard with reasonable advance notice, applying prospectively to Referrals submitted after the update's effective date. Company may assign this Agreement, including in connection with a merger, acquisition, or sale of assets; Affiliate may not assign without Company's prior written consent. If any provision is held unenforceable, the remaining provisions remain in full force and effect, and no failure or delay by either party in exercising any right operates as a waiver of that right.</p>
+  `;
+
+  const INFORMAL_ACKNOWLEDGMENT_HTML = `
+    <p><strong>INFORMAL REFERRER ACKNOWLEDGMENT</strong> (Unpaid, Voluntary Referral Participation)</p>
+    <p>Between FITMAKESENZ LLC, a New York limited liability company, d/b/a AmenityFit ("Company"), and you ("Referrer"). Company allows individuals to informally introduce residential buildings or hotels to Company's AmenityFit platform using a personal referral code, without becoming a paid affiliate under Company's separate Official Affiliate Agreement. By accepting a referral code and accessing any associated dashboard, Referrer agrees to the terms below.</p>
+    <p><strong>1. No Compensation.</strong> Referrer's participation is entirely gratuitous. Referrer shall receive no payment, commission, credit, discount, gift, or compensation of any kind for any referral, regardless of whether the referred Building or hotel signs with Company or how much revenue it generates. Referrer has no expectation of, and no entitlement to, any form of payment now or in the future, and this arrangement is fundamentally different from Company's separate, paid Official Affiliate Agreement. Any dashboard or tracking access shown to Referrer will display activity counts only, such as the number of referrals submitted, and will never display or imply any dollar figures, commission amounts, or earnings.</p>
+    <p><strong>2. No Employment Relationship.</strong> This is not an employment, agency, partnership, joint venture, or independent contractor relationship. Referrer is not an employee, agent, or representative of Company for any purpose. Participation is fully voluntary - Company does not assign Referrer any hours, quotas, tasks, deadlines, or required activity level, and Referrer faces no consequence, and no loss of any benefit, for reducing or stopping referral activity at any time. Referrer has no authority to bind Company to any obligation, make any representation on Company's behalf, or execute any document on Company's behalf.</p>
+    <p><strong>3. No Guarantee.</strong> Company makes no guarantee that any referral will be reviewed, accepted, or result in a signed agreement with any Building or hotel. Company retains sole discretion over every such decision.</p>
+    <p><strong>4. Revocation.</strong> Company may deactivate Referrer's referral code and revoke any associated access at any time, for any reason or no reason, without notice. Referrer may stop participating at any time, without notice or obligation to Company.</p>
+    <p><strong>5. Conduct.</strong> Referrer shall not misrepresent Company, the AmenityFit platform, or the terms of any Company agreement to any prospective Building or hotel, and shall not make any pricing, feature, or contractual promise on Company's behalf. Referrer shall not represent itself as an employee, officer, contractor, or authorized spokesperson of Company, and shall not disclose Company's pricing, contract terms, or other non-public business information obtained through this participation.</p>
+    <p><strong>6. Ownership of Referral Data.</strong> Referrer's referral code and any activity data associated with it are and remain the property of Company. Referrer has no ownership interest in the referral code, in any associated data, or in any relationship formed between Company and a referred Building or hotel.</p>
+    <p><strong>7. Liability.</strong> Referrer is not acting as Company's agent or representative when making a referral. Company is not responsible for, and Referrer shall not make, any representation to a prospective Building or hotel beyond confirming that Company offers a fitness amenity platform and directing that party to Company for further information. Referrer releases Company from any claim arising from Referrer's own conduct or statements made in connection with a referral, and shall indemnify Company against any third-party claim arising from Referrer's misrepresentation or misconduct. In no event shall Company be liable to Referrer for any damages of any kind arising out of or related to this Acknowledgment or Referrer's participation, given that no compensation is exchanged under this arrangement.</p>
+    <p><strong>8. General.</strong> This Acknowledgment is governed by the laws of the State of New York, without regard to conflict of laws principles. Company may update these terms at any time by posting updated terms to Referrer's dashboard or by any other reasonable means of notice, and continued participation after such notice constitutes acceptance of the updated terms. If any provision is held unenforceable, the remaining provisions remain in full force and effect. This Acknowledgment constitutes the entire understanding between the parties regarding informal referral participation and supersedes all prior discussions on that subject.</p>
+  `;
+
+  function showAgreementGate(user, affiliate) {
+    document.getElementById('loading-screen').style.display = 'none';
+    const isInf = affiliate.tier === 'informal';
+    document.getElementById('agreement-gate-title').textContent = isInf ? 'Informal Referrer Acknowledgment' : 'Official Affiliate Agreement';
+    document.getElementById('agreement-gate-body').innerHTML = isInf ? INFORMAL_ACKNOWLEDGMENT_HTML : OFFICIAL_AGREEMENT_HTML;
+    document.getElementById('agreement-gate').style.display = 'flex';
+
+    const checkbox = document.getElementById('agreement-gate-checkbox');
+    const button = document.getElementById('agreement-gate-accept-btn');
+    checkbox.checked = false;
+    const syncButtonState = () => {
+      button.disabled = !checkbox.checked;
+      button.style.opacity = button.disabled ? '0.5' : '1';
+      button.style.cursor = button.disabled ? 'not-allowed' : 'pointer';
+    };
+    syncButtonState();
+    checkbox.onchange = syncButtonState;
+
+    button.onclick = async () => {
+      button.disabled = true;
+      button.textContent = 'Saving...';
+      try {
+        const idToken = await user.getIdToken();
+        const resp = await fetch('https://us-central1-amenityfit-31276.cloudfunctions.net/acceptAffiliateAgreement', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idToken }),
+        });
+        if (!resp.ok) throw new Error('Request failed');
+        // Simplest correct way to get back into the normal dashboard flow
+        // once acceptance is recorded - onAuthStateChanged fires again on
+        // reload, sees agreementAcceptedAt is now set, and renders the
+        // real dashboard exactly as it would have on any other login.
+        location.reload();
+      } catch (e) {
+        console.error('acceptAffiliateAgreement error:', e);
+        button.disabled = false;
+        button.textContent = 'I Agree - Continue';
+        syncButtonState();
+        alert('Something went wrong saving your acceptance. Please try again.');
+      }
+    };
+  }
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = 'affiliate-login.html';
@@ -600,6 +690,19 @@
       }
       const affiliate = affDoc.data();
       isInformal = affiliate.tier === 'informal';
+
+      // Gate the whole dashboard behind acceptance of the correct
+      // governing document for this affiliate's tier. Checked on every
+      // login, but only ever shown once - agreementAcceptedAt, once
+      // set, is never asked for again. Covers accounts that logged in
+      // before this gate existed just as correctly as a brand new one,
+      // since it's a real check against the field, not a signup-time
+      // flag.
+      if (!affiliate.agreementAcceptedAt) {
+        showAgreementGate(user, affiliate);
+        return;
+      }
+
       if (isInformal) {
         document.getElementById('informal-banner').classList.add('show');
         document.getElementById('mrr-stat-card').style.display = 'none';
