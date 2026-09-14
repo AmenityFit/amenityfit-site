@@ -2488,6 +2488,25 @@
     });
   }
 
+  // Neither portfolio CSV input gave any visible confirmation once a
+  // file was actually chosen - the status paragraph existed in the
+  // markup but nothing ever wrote to it. Wired here for both the
+  // building and hotel portfolio forms identically.
+  function wireCsvStatus(inputId, statusId) {
+    const input = document.getElementById(inputId);
+    const status = document.getElementById(statusId);
+    if (!input || !status) return;
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      status.textContent = file ? ('\u2713 ' + file.name + ' attached') : '';
+      status.style.color = file ? '#16A34A' : 'var(--muted)';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    wireCsvStatus('pb-csv', 'pb-csv-status');
+    wireCsvStatus('ph-csv', 'ph-csv-status');
+  });
+
   async function submitPortfolioApp(type) {
     const prefix = type === 'hotel' ? 'ph' : 'pb';
     const btn = document.getElementById(prefix + '-form-btn');
