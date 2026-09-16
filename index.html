@@ -1898,6 +1898,15 @@
               <label>Please specify your role</label>
               <input type="text" id="f-other-role" placeholder="Your role" />
             </div>
+            <div class="form-group">
+              <label>Payment Frequency</label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Choose how you would like to be billed for your committed term. Paying annually is billed once upfront at a lower total cost; paying monthly is billed every month at a higher total cost. This is a binding election and cannot be changed after you submit.</p>
+              <select id="f-billing-frequency">
+                <option value="" disabled selected>Select one</option>
+                <option value="annual">Pay Annually, in full upfront (lower total cost)</option>
+                <option value="monthly">Pay Monthly (higher total cost)</option>
+              </select>
+            </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="f-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
             <div class="form-group"><label>Anything else?</label><textarea id="f-notes" placeholder="Optional. Any context about your building or timing."></textarea></div>
             <button type="button" class="form-submit" id="form-btn" onclick="submitApp()">Submit Application</button>
@@ -1937,6 +1946,15 @@
                 <option value="Other">Other</option>
               </select>
             </div>
+            <div class="form-group">
+              <label>Payment Frequency</label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Choose how you would like to be billed for your committed term. Paying annually is billed once upfront at a lower total cost; paying monthly is billed every month at a higher total cost. This is a binding election and cannot be changed after you submit.</p>
+              <select id="h-billing-frequency">
+                <option value="" disabled selected>Select one</option>
+                <option value="annual">Pay Annually, in full upfront (lower total cost)</option>
+                <option value="monthly">Pay Monthly (higher total cost)</option>
+              </select>
+            </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="h-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
             <div class="form-group"><label>Anything else?</label><textarea id="h-notes" placeholder="Optional. Any context about your property or timing."></textarea></div>
             <button type="button" class="form-submit" id="h-form-btn" onclick="submitHotelApp()">Submit Application</button>
@@ -1961,6 +1979,15 @@
               <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Columns: <span style="font-family:monospace;color:var(--accent);">Building Name, Address, Units, Manager Email</span>. <a href="amenityfit-building-list-template.csv" download="amenityfit-building-list-template.csv" style="color:var(--accent);">Download template</a></p>
               <input type="file" accept=".csv" id="pb-csv" class="file-input" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--subtle);font-size:13px;" />
               <p id="pb-csv-status" style="font-size:12px;color:var(--muted);margin-top:6px;"></p>
+            </div>
+            <div class="form-group">
+              <label>Payment Frequency</label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Choose how you would like to be billed for your committed term. Paying annually is billed once upfront at a lower total cost; paying monthly is billed every month at a higher total cost. This is a binding election and cannot be changed after you submit.</p>
+              <select id="pb-billing-frequency">
+                <option value="" disabled selected>Select one</option>
+                <option value="annual">Pay Annually, in full upfront (lower total cost)</option>
+                <option value="monthly">Pay Monthly (higher total cost)</option>
+              </select>
             </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="pb-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
             <div class="form-group"><label>Anything else?</label><textarea id="pb-notes" placeholder="Optional. Any context about your portfolio or timing."></textarea></div>
@@ -1989,11 +2016,20 @@
             </div>
             <div class="form-group">
               <label>Multi-Year Commitment <span style="font-weight:300;color:var(--muted);">(optional, for portfolios of 3+ properties)</span></label>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Committing your full portfolio to a 2 or 3-year term instead of the standard annual term qualifies for additional pricing. Selecting a term below is a binding election that carries directly into your agreement, not a preference to be discussed later.</p>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Committing your full portfolio to a 2 or 3-year commitment term instead of the standard one-year commitment term qualifies for additional pricing (separate from how often you are billed, which you will choose below). Selecting a term below is a binding election that carries directly into your agreement, not a preference to be discussed later.</p>
               <select id="ph-multiyear" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);font-size:13px;color:#1A1A2E;">
-                <option value="">No - standard annual term</option>
-                <option value="2">Yes - 2-year term</option>
-                <option value="3">Yes - 3-year term</option>
+                <option value="">No - standard one-year commitment term</option>
+                <option value="2">Yes - 2-year commitment term</option>
+                <option value="3">Yes - 3-year commitment term</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Payment Frequency</label>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;">Choose how you would like to be billed for your committed term. Paying annually is billed once upfront at a lower total cost; paying monthly is billed every month at a higher total cost. This is a binding election and cannot be changed after you submit.</p>
+              <select id="ph-billing-frequency">
+                <option value="" disabled selected>Select one</option>
+                <option value="annual">Pay Annually, in full upfront (lower total cost)</option>
+                <option value="monthly">Pay Monthly (higher total cost)</option>
               </select>
             </div>
             <div class="form-group"><label>Referral Code <span style="font-weight:300;color:var(--muted);">(optional)</span></label><input type="text" id="ph-referral" placeholder="If someone referred you, enter their code" style="text-transform:uppercase;" /></div>
@@ -2502,8 +2538,9 @@
     const rooms = document.getElementById('h-rooms').value.trim();
     const city = document.getElementById('h-city').value.trim();
     const role = document.getElementById('h-role').value;
-    if (!first || !email || !hotel || !rooms || !city) {
-      errEl.textContent = 'Please fill in the required fields.';
+    const billingFrequency = document.getElementById('h-billing-frequency').value;
+    if (!first || !email || !hotel || !rooms || !city || !billingFrequency) {
+      errEl.textContent = 'Please fill in the required fields, including Payment Frequency.';
       errEl.classList.add('show');
       errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -2521,6 +2558,7 @@
       notes: document.getElementById('h-notes').value.trim(),
       referralCode: document.getElementById('h-referral').value.trim().toUpperCase(),
       propertyType: 'hotel',
+      billingFrequency,
     });
     if (result.success) {
       document.getElementById('apply-form-wrap-hotel').style.display = 'none';
@@ -2589,8 +2627,9 @@
     const company = document.getElementById(prefix + '-company').value.trim();
     const execEmail = document.getElementById(prefix + '-exec-email').value.trim();
     const count = document.getElementById(prefix + '-count').value.trim();
-    if (!first || !email || !company || !execEmail || !count) {
-      errEl.textContent = 'Please fill in the required fields.';
+    const billingFrequency = document.getElementById(prefix + '-billing-frequency').value;
+    if (!first || !email || !company || !execEmail || !count || !billingFrequency) {
+      errEl.textContent = 'Please fill in the required fields, including Payment Frequency.';
       errEl.classList.add('show');
       errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -2610,6 +2649,7 @@
       notes: document.getElementById(prefix + '-notes').value.trim(),
       propertyType: type,
       multiYearTerm: type === 'hotel' ? (document.getElementById('ph-multiyear').value || '') : '',
+      billingFrequency,
     });
     if (result.success) {
       document.getElementById('apply-form-wrap-portfolio-' + type).style.display = 'none';
@@ -2635,8 +2675,9 @@
     const city = document.getElementById('f-city').value.trim();
     const errEl = document.getElementById('idx-error');
     errEl.classList.remove('show');
-    if (!first || !email || !building || !units || !city) {
-      errEl.textContent = 'Please fill in the required fields.';
+    const billingFrequency = document.getElementById('f-billing-frequency').value;
+    if (!first || !email || !building || !units || !city || !billingFrequency) {
+      errEl.textContent = 'Please fill in the required fields, including Payment Frequency.';
       errEl.classList.add('show');
       errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -2649,7 +2690,8 @@
       phone: document.getElementById('f-phone').value.trim(),
       notes: document.getElementById('f-notes').value.trim(),
       referralCode: document.getElementById('f-referral').value.trim().toUpperCase(),
-      propertyType: 'building'
+      propertyType: 'building',
+      billingFrequency
     });
     if (result.success) {
       document.getElementById('apply-form-wrap').style.display = 'none';
