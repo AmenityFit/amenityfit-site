@@ -219,7 +219,22 @@
       await signInWithEmailAndPassword(auth, email, password);
       window.location.href = 'affiliate-dashboard.html';
     } catch (err) {
-      errEl.textContent = 'Incorrect email or password. Please try again.';
+      // Real fix: this always showed the same generic message before,
+      // regardless of the actual Firebase error, which made a rate-limit
+      // lockout look identical to a genuinely wrong password. Logging
+      // the real code/message so it is visible in the browser console,
+      // and branching the on-screen text for the cases that need a
+      // different action from the person signing in.
+      console.error('handleLogin error:', err.code, err.message);
+      if (err.code === 'auth/too-many-requests') {
+        errEl.textContent = 'Too many failed attempts. Please wait a few minutes and try again, or use "Forgot your password?" to reset it immediately.';
+      } else if (err.code === 'auth/user-disabled') {
+        errEl.textContent = 'This account has been disabled. Contact us for help.';
+      } else if (err.code === 'auth/invalid-email') {
+        errEl.textContent = 'That email address doesn' + String.fromCharCode(39) + 't look right.';
+      } else {
+        errEl.textContent = 'Incorrect email or password. Please try again.';
+      }
       errEl.classList.add('show');
       btn.disabled = false; btn.textContent = 'Sign In';
     }
@@ -246,6 +261,11 @@
       errEl.textContent = 'If that email has an account, a reset link has been sent.';
       errEl.classList.add('show');
     } catch (err) {
+      // Same real-error logging as handleLogin above - the on-screen
+      // message deliberately stays generic either way (so this never
+      // reveals whether an email has an account), but the true failure
+      // reason is now visible in the browser console for debugging.
+      console.error('handleForgotPassword error:', err.code, err.message);
       errEl.textContent = 'If that email has an account, a reset link has been sent.';
       errEl.classList.add('show');
     }
