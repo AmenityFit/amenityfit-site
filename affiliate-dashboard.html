@@ -27,6 +27,13 @@
 
     .checklist-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px;}
     .checklist-card h2{font-size:15px;font-weight:700;margin-bottom:14px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+    .form-group label{font-size:12px;font-weight:600;color:var(--text);}
+    .form-group input{
+      font-family:var(--ff-body);font-size:14px;padding:12px 14px;border-radius:8px;
+      border:1px solid var(--border);background:#fff;color:var(--text);width:100%;
+    }
+    .form-group input:focus{outline:none;border-color:var(--primary);}
     .checklist-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;}
     .checklist-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
     .checklist-check.done{background:var(--success);border-color:var(--success);}
