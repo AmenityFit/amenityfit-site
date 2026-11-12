@@ -891,6 +891,14 @@
         return;
       }
       const affiliate = affDoc.data();
+
+      // Affiliate access is separate from the user's Firebase identity.
+      // Do not sign out: this account may also have resident access.
+      if (affiliate.status !== 'active') {
+        document.getElementById('loading-screen').textContent =
+          'Your AmenityFit affiliate access is inactive. Please contact support if you believe this is an error.';
+        return;
+      }
       isInformal = affiliate.tier === 'informal';
 
       // Gate the whole dashboard behind acceptance of the correct
