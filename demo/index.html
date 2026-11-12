@@ -54,6 +54,25 @@
   .note { margin-top: 34px; color: var(--muted); font-size: 12.5px; text-align: center; line-height: 1.6; }
   .gone { text-align: center; padding: 80px 16px; }
   .gone h1 { font-size: 26px; }
+  .price { margin: 26px 0 0; display: grid; grid-template-columns: 1fr 1.1fr; gap: 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
+  @media (max-width: 820px) { .price { grid-template-columns: 1fr; } }
+  .price .l { padding: 22px; border-right: 1px solid var(--line); }
+  @media (max-width: 820px) { .price .l { border-right: 0; border-bottom: 1px solid var(--line); } }
+  .price .r { padding: 22px; background: linear-gradient(135deg, #12295a, #0f1e3d); }
+  .price h2 { margin: 0 0 6px; font-size: 20px; }
+  .price label { display: block; color: var(--muted); font-size: 13px; font-weight: 600; margin: 16px 0 8px; }
+  .units { display: flex; align-items: center; gap: 12px; }
+  .units input[type=number] { width: 120px; background: #0a1730; color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: 700 20px Inter, sans-serif; }
+  .units input[type=number]:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .units span { color: var(--muted); font-size: 15px; }
+  input[type=range] { width: 100%; margin-top: 14px; accent-color: var(--accent); }
+  .big { font-size: clamp(34px, 6vw, 46px); font-weight: 800; letter-spacing: -1px; line-height: 1; margin: 6px 0 4px; font-variant-numeric: tabular-nums; }
+  .big small { font-size: 16px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .yr { color: var(--good); font-weight: 700; font-size: 14.5px; margin: 8px 0 0; }
+  .incl { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
+  .incl li { color: var(--text); font-size: 14px; display: flex; gap: 9px; align-items: flex-start; line-height: 1.45; }
+  .incl li::before { content: "\2713"; color: var(--good); font-weight: 800; }
+  .tier { color: var(--muted); font-size: 13px; margin: 0; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -70,6 +89,27 @@
       <video id="v" controls playsinline preload="metadata" poster="poster.jpg" controlslist="nodownload noplaybackrate" disablepictureinpicture></video>
     </div>
     <div class="chapters" id="chapters"></div>
+
+    <section class="price" id="price">
+      <div class="l">
+        <p class="eyebrow" id="priceFor">Your building</p>
+        <h2>What it costs</h2>
+        <p class="tier">One flat price per building by unit count. Residents never pay.</p>
+        <label for="units">How many units?</label>
+        <div class="units"><input id="units" type="number" inputmode="numeric" min="1" max="5000" value="150" aria-label="Number of units"><span>units</span></div>
+        <input id="unitsRange" type="range" min="10" max="1000" step="5" value="150" aria-label="Number of units">
+      </div>
+      <div class="r" aria-live="polite">
+        <p class="tier" id="tierLine">101 to 200 units</p>
+        <p class="big" id="monthly">$1,499<small> / month</small></p>
+        <p class="yr" id="yearly">Or $1,349.10 a month, paid yearly (10% off)</p>
+        <ul class="incl">
+          <li>Every resident: a personal program built around your gym, the Coach, nutrition and progress</li>
+          <li>Your team: the manager dashboard and a monthly engagement report</li>
+          <li>No per-resident fees and no usage caps</li>
+        </ul>
+      </div>
+    </section>
 
     <section class="cta">
       <div>
@@ -131,9 +171,32 @@
       var on = 0; d.chapters.forEach(function (c, i) { if (v.currentTime >= c.t) on = i; });
       Array.prototype.forEach.call(box.children, function (b, i) { b.classList.toggle("on", i === on); });
     });
+    // Price for their building (the same tiers as the agreement and amenityfit.app)
+    if (d.units) { $("units").value = d.units; $("unitsRange").value = Math.min(1000, d.units); }
+    if (d.building) $("priceFor").textContent = d.building;
+    price();
     // FAQ
     $("faq").innerHTML = d.faq.map(function (f) { return "<details><summary>" + esc(f.q) + "</summary><p>" + esc(f.a) + "</p></details>"; }).join("");
   }).catch(function () { $("gone").hidden = false; });
+
+  // Building pricing: per building by unit count; paying for the year up front takes 10% off.
+  var TIERS = [[50, 599, "Up to 50 units"], [100, 999, "51 to 100 units"], [200, 1499, "101 to 200 units"], [300, 1999, "201 to 300 units"], [500, 2799, "301 to 500 units"], [1000, 3999, "501 to 1,000 units"]];
+  var money = function (n) { var c = Math.round(n * 100) / 100; return "$" + c.toLocaleString("en-US", { minimumFractionDigits: c % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
+  function price() {
+    var n = Math.max(1, Math.round(Number($("units").value) || 0));
+    var tier = TIERS.filter(function (x) { return n <= x[0]; })[0];
+    if (!tier) {
+      $("tierLine").textContent = "Over 1,000 units";
+      $("monthly").innerHTML = "Custom";
+      $("yearly").textContent = "Ask below and Asenso will send a quote for your building.";
+      return;
+    }
+    $("tierLine").textContent = tier[2];
+    $("monthly").innerHTML = money(tier[1]) + "<small> / month</small>";
+    $("yearly").textContent = "Or " + money(tier[1] * 0.9) + " a month, paid yearly (10% off)";
+  }
+  $("units").addEventListener("input", function () { var n = Number($("units").value) || 0; if (n >= 10) $("unitsRange").value = Math.min(1000, n); price(); });
+  $("unitsRange").addEventListener("input", function () { $("units").value = $("unitsRange").value; price(); });
 
   // how far they watched (every 15 seconds while playing, and when they leave)
   var lastSent = 0, maxT = 0;
