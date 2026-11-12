@@ -1200,6 +1200,19 @@
       .x-grid4 { grid-template-columns: 1fr; gap: 18px; }
       .x-faq summary { font-size: 16px; }
     }
+    .apply-grid > *, .x-split > *, .form-row > *, .x-trio > *, .x-quad > * { min-width: 0; }
+    .form-group input, .form-group select, .form-group textarea { min-width: 0; max-width: 100%; }
+    @media (min-width: 701px) {
+      .x-trio .x-phone { width: 100%; max-width: 272px; height: auto; }
+      .x-quad .x-phone { width: 100%; max-width: 236px; height: auto; }
+      .x-pair .x-phone, .x-stage .x-phone { width: clamp(170px, 19vw, 272px); }
+    }
+    @media (max-width: 700px) {
+      .feature-card { display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; align-items: start; padding: 18px 18px; }
+      .feature-card .feature-icon { grid-row: span 2; margin: 2px 0 0; }
+      .feature-card h3 { margin: 0 0 4px; font-size: 19px; }
+      .feature-card p { grid-column: 2; }
+    }
     @media (prefers-reduced-motion: reduce) { .x-faq summary::after { transition: none; } }
   </style>
 </head>
@@ -1958,11 +1971,11 @@
             <span class="app-store-name">App Store</span>
           </div>
         </a>
-        <a href="#" class="app-store-btn" id="android-app-link">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.18.96.04l11.34-6.55-2.44-2.44-9.86 8.95zM.54 1.7C.2 2.03 0 2.57 0 3.28v17.44c0 .71.2 1.25.54 1.58l.08.08 9.77-9.77v-.23L.62 1.62l-.08.08zM20.3 10.27l-2.63-1.52-2.74 2.74 2.74 2.74 2.65-1.53c.76-.43.76-1.14-.02-1.43zM3.18.24L14.04 6.79l-2.44 2.44L2.22.28c.28-.17.62-.19.96-.04z"/></svg>
+        <a href="https://app.amenityfit.app" class="app-store-btn" id="web-app-link" target="_blank" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           <div>
-            <span class="app-store-sub">Get it on</span>
-            <span class="app-store-name">Google Play</span>
+            <span class="app-store-sub">Android or any browser</span>
+            <span class="app-store-name">Open the web app</span>
           </div>
         </a>
       </div>
