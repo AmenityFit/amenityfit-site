@@ -1212,6 +1212,26 @@
     .x-wear-pills span i { width: 7px; height: 7px; border-radius: 99px; background: #4ade80; box-shadow: 0 0 10px #4ade80; }
     .x-wear-pills span.soon { color: rgba(255,255,255,0.6); }
     @media (max-width: 700px) { .x-watch::after { right: -4px; width: 4px; } }
+    .x-phone { position: relative; }
+    .x-phone > video, .x-phone > img { border-radius: 0 0 35px 35px; height: calc(100% - 26px) !important; margin-top: 26px; object-position: top; }
+    .x-phone::before { content: ""; position: absolute; top: 9px; left: 9px; right: 9px; height: 27px; background: #0c1630; border-radius: 35px 35px 0 0; }
+    .x-phone::after { content: ""; position: absolute; top: 16px; left: 50%; width: 30%; height: 12px; transform: translateX(-50%); background: #000; border-radius: 99px; }
+    .x-quad .x-phone > video, .x-quad .x-phone > img { border-radius: 0 0 30px 30px; height: calc(100% - 22px) !important; margin-top: 22px; }
+    .x-quad .x-phone::before { top: 8px; left: 8px; right: 8px; height: 23px; border-radius: 30px 30px 0 0; }
+    .x-quad .x-phone::after { top: 14px; height: 10px; }
+    @media (max-width: 700px) {
+      .x-phone > video, .x-phone > img { border-radius: 0 0 28px 28px; height: calc(100% - 20px) !important; margin-top: 20px; }
+      .x-phone::before { top: 7px; left: 7px; right: 7px; height: 21px; border-radius: 28px 28px 0 0; }
+      .x-phone::after { top: 12px; height: 9px; }
+      .x-pair .x-phone > video, .x-pair .x-phone > img { border-radius: 0 0 21px 21px; height: calc(100% - 16px) !important; margin-top: 16px; }
+      .x-pair .x-phone::before { top: 6px; left: 6px; right: 6px; height: 16px; border-radius: 21px 21px 0 0; }
+      .x-pair .x-phone::after { top: 9px; height: 7px; }
+    }
+    /* watches: the screen keeps its own shape, nothing is cropped */
+    .x-watch { aspect-ratio: auto; height: auto; }
+    .x-watch img { aspect-ratio: 416 / 496; height: auto; object-fit: contain; border-radius: 19% / 16%; }
+    .x-founder-tag { position: absolute; left: 16px; bottom: 16px; background: rgba(8,19,43,0.82); color: #fff; border-radius: 12px; padding: 10px 14px; font-size: 12px; line-height: 1.35; backdrop-filter: blur(6px); }
+    .x-founder-tag b { display: block; font-size: 15px; font-weight: 600; }
     .apply-grid > *, .x-split > *, .form-row > *, .x-trio > *, .x-quad > * { min-width: 0; }
     .form-group input, .form-group select, .form-group textarea { min-width: 0; max-width: 100%; }
     @media (min-width: 701px) {
@@ -1307,7 +1327,7 @@
 </div>
 
 <!-- PROBLEM -->
-<section id="problem">
+<section id="problem" class="x-dark">
   <div class="container">
     <div class="problem-header reveal">
       <div class="section-label light">The Problem</div>
@@ -1697,15 +1717,16 @@
   <div class="container">
     <div class="cred-grid">
       <div class="cred-photo-wrap reveal-scale">
-        <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_700/IMG_9496_uofbki" alt="AmenityFit founder" />
+        <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_700/IMG_9496_uofbki" alt="Asenso Ampim, founder of AmenityFit" />
         <div class="cred-photo-accent"></div>
+        <div class="x-founder-tag"><b>Asenso Ampim</b>Founder, AmenityFit</div>
       </div>
       <div class="cred-content">
         <div class="reveal">
-          <div class="section-label">Built by</div>
+          <div class="section-label">Built by Asenso Ampim</div>
           <h2>Credentials that show up in every workout.</h2>
         </div>
-        <p class="lead reveal reveal-d1">AmenityFit was built by a certified strength and conditioning coach, corrective exercise specialist, performance enhancement specialist, nutrition coach, life coach, and former professional athlete. Every program, every exercise selection, and every piece of guidance reflects that depth of expertise.</p>
+        <p class="lead reveal reveal-d1">AmenityFit was built by Asenso Ampim: a former professional basketball player who spent the past 7 years coaching clients one-on-one, many of them in their own building's gym. He is a certified strength and conditioning coach, corrective exercise specialist, performance enhancement specialist, nutrition coach and life coach, and every program, exercise selection and piece of guidance in the app reflects that depth of expertise.</p>
         <div class="cred-certs reveal reveal-d2">
           <div class="cred-cert"><p>Certified Personal Trainer</p></div>
           <div class="cred-cert"><p>Strength &amp; Conditioning Coach</p></div>
@@ -1722,7 +1743,7 @@
 </section>
 
 <!-- APPLY -->
-<section id="apply">
+<section id="apply" class="x-dark">
   <div class="container">
     <div class="apply-grid">
       <div>
