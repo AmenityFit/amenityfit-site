@@ -1247,6 +1247,11 @@
     }
     @media (prefers-reduced-motion: reduce) { .x-faq summary::after { transition: none; } }
   </style>
+<script>
+  // A refresh always starts at the header video, not wherever the visitor was (links to a section, like #apply, still go there).
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+  if (!location.hash) { window.scrollTo(0, 0); window.addEventListener("load", function () { window.scrollTo(0, 0); }); window.addEventListener("pageshow", function (e) { if (e.persisted) window.scrollTo(0, 0); }); }
+</script>
 </head>
 <body>
 <div id="nav-scroll-sentinel" style="position:absolute;top:40px;left:0;width:1px;height:1px;pointer-events:none;opacity:0;"></div>
