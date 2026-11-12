@@ -1200,6 +1200,18 @@
       .x-grid4 { grid-template-columns: 1fr; gap: 18px; }
       .x-faq summary { font-size: 16px; }
     }
+    .x-watches { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 3%; padding: 20px 0; }
+    .x-watch { margin: 0; width: 29%; max-width: 196px; aspect-ratio: 416 / 496; border-radius: 30%/26%; padding: clamp(6px, 0.9vw, 11px); position: relative; flex: none;
+      background: linear-gradient(155deg, #3a4256 0%, #12161f 45%, #2a3142 100%);
+      box-shadow: 0 34px 60px -18px rgba(2,8,28,0.7), 0 0 0 1px rgba(255,255,255,0.08) inset; }
+    .x-watch::after { content: ""; position: absolute; right: -5px; top: 30%; width: 6px; height: 18%; border-radius: 3px; background: linear-gradient(180deg, #4a5368, #232937); }
+    .x-watch img { width: 100%; height: 100%; object-fit: cover; border-radius: 24%/20%; display: block; background: #0b1530; }
+    .x-watch.x-mid { width: 33%; max-width: 232px; }
+    .x-wear-pills { flex-basis: 100%; display: flex; justify-content: center; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+    .x-wear-pills span { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 99px; padding: 7px 14px; display: inline-flex; align-items: center; gap: 8px; }
+    .x-wear-pills span i { width: 7px; height: 7px; border-radius: 99px; background: #4ade80; box-shadow: 0 0 10px #4ade80; }
+    .x-wear-pills span.soon { color: rgba(255,255,255,0.6); }
+    @media (max-width: 700px) { .x-watch::after { right: -4px; width: 4px; } }
     .apply-grid > *, .x-split > *, .form-row > *, .x-trio > *, .x-quad > * { min-width: 0; }
     .form-group input, .form-group select, .form-group textarea { min-width: 0; max-width: 100%; }
     @media (min-width: 701px) {
@@ -1565,47 +1577,16 @@
       <div class="wearable-content">
         <div class="reveal">
           <div class="section-label light">Wearables</div>
-          <h2 class="light">Apple Watch, <em>built in.</em></h2>
+          <h2 class="light">Apple Watch, <em>built&nbsp;in.</em></h2>
           <p class="lead light" style="margin-top:14px;margin-bottom:20px">Residents can train from the wrist with the AmenityFit Apple Watch app, and every session is saved to Apple Health and their AmenityFit history.</p>
         </div>
-        <div class="wearable-feature reveal reveal-d1">
-          <h4>Real workouts on the wrist</h4>
-          <p>A 3-2-1 start, live heart rate and personal heart zones, splits, routes with hills, racket score keeping, and pool swims with water lock.</p>
-        </div>
-        <div class="wearable-feature reveal reveal-d2">
-          <h4>Heart rate on every session</h4>
-          <p>Heart rate from the watch is added to each workout, so residents see how hard they worked, not just what they did.</p>
-        </div>
-        <div class="wearable-feature reveal reveal-d3">
-          <h4>Saved to Apple Health</h4>
-          <p>Every session goes to Apple Health once, never duplicated, alongside the rest of the resident's health data.</p>
-        </div>
-        <div class="wearable-feature reveal reveal-d4">
-          <h4>Connect in one tap</h4>
-          <p>Residents connect Apple Health once from their profile and the app handles the rest.</p>
-        </div>
+        <div class="x-points reveal reveal-d1"><div class="x-point"><strong>Real workouts on the wrist</strong><span>A 3-2-1 start, live heart rate and personal heart zones, splits, routes with hills, racket score keeping, and pool swims with water lock.</span></div><div class="x-point"><strong>Heart rate on every session</strong><span>Heart rate from the watch is added to each workout, so residents see how hard they worked, not just what they did.</span></div><div class="x-point"><strong>Saved to Apple Health</strong><span>Every session goes to Apple Health once, never duplicated, alongside the rest of the resident's health data.</span></div><div class="x-point"><strong>Connect in one tap</strong><span>Residents connect Apple Health once from their profile and the app handles the rest.</span></div></div>
       </div>
-      <div class="watch-showcase" id="watch-trio">
-        <div class="watch-row-top">
-          <div class="watch-card" id="watch-1">
-            <div class="watch-img-wrap">
-              <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-22_at_8.57.53_PM_o2mbgb" alt="Apple Watch" />
-            </div>
-            <div class="watch-card-info">
-              <span class="watch-card-name">Apple Watch</span>
-              <div class="watch-live"><div class="live-dot"></div>Live</div>
-            </div>
-          </div>
-          <div class="watch-card" id="watch-2">
-            <div class="watch-img-wrap">
-              <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-23_at_12.48.33_PM_qn5tnu" alt="Whoop" />
-            </div>
-            <div class="watch-card-info">
-              <span class="watch-card-name">Whoop</span>
-              <div class="watch-live x-soon">Coming soon</div>
-            </div>
-          </div>
-        </div>
+      <div class="x-watches reveal-scale">
+        <figure class="x-watch"><img src="media/watch-run.png" loading="lazy" decoding="async" alt="A run on Apple Watch with time, distance, pace and heart rate"></figure>
+        <figure class="x-watch x-mid"><img src="media/watch-route.png" loading="lazy" decoding="async" alt="The route of a run with its hills, on Apple Watch"></figure>
+        <figure class="x-watch"><img src="media/watch-summary.png" loading="lazy" decoding="async" alt="A finished run's summary on Apple Watch"></figure>
+        <div class="x-wear-pills"><span><i></i>Apple Watch</span><span class="soon">Whoop, coming soon</span></div>
       </div>
     </div>
   </div>
