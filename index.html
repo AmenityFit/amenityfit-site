@@ -1131,6 +1131,76 @@
     }
     input[type="range"] { -webkit-appearance: none; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; }
+    /* ===== Real app screens (Nov 12 2026): phones, loops, FAQ ===== */
+    .x-sec { padding: clamp(84px, 10vw, 136px) 0; position: relative; overflow: hidden; }
+    section.x-dark { background: radial-gradient(1100px 560px at 85% -10%, #1b3a7c 0%, rgba(27,58,124,0) 62%), radial-gradient(800px 500px at 0% 110%, #12285a 0%, rgba(18,40,90,0) 60%), #08132b !important; }
+    section.x-light { background: linear-gradient(180deg, #f7f8fb 0%, #eef2f9 100%) !important; }
+    .x-split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 88px); align-items: center; }
+    .x-copy .lead { margin-top: 18px; max-width: 520px; font-size: clamp(15px, 1.3vw, 16.5px); }
+    .x-points { margin-top: 30px; display: grid; gap: 18px; max-width: 520px; }
+    .x-point { padding-left: 16px; border-left: 2px solid var(--accent); }
+    .x-point strong { display: block; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .x-point span { display: block; font-size: 14px; line-height: 1.6; color: var(--muted); font-weight: 300; }
+    .x-dark .x-point strong { color: #fff; }
+    .x-dark .x-point span { color: rgba(255,255,255,0.62); }
+    .x-phone { margin: 0; width: 272px; aspect-ratio: 886 / 1808; border-radius: 44px; padding: 9px; flex: none;
+      background: linear-gradient(160deg, #24304d 0%, #0b1122 55%, #1a2440 100%);
+      box-shadow: 0 50px 90px -20px rgba(2,8,28,0.6), 0 0 0 1px rgba(255,255,255,0.07) inset, 0 0 0 1px rgba(0,0,0,0.35); }
+    .x-phone video, .x-phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 35px; display: block; background: #0d1733; }
+    .x-light .x-phone { box-shadow: 0 46px 80px -24px rgba(16,34,80,0.42), 0 0 0 1px rgba(255,255,255,0.08) inset; }
+    .x-stage { position: relative; display: flex; justify-content: center; align-items: center; min-height: 620px; }
+    .x-stage .x-front { position: relative; z-index: 2; transform: translateX(-22%); }
+    .x-stage .x-back { position: absolute; z-index: 1; left: 50%; transform: translateX(-8%) translateY(26px) rotate(5deg) scale(0.9); filter: saturate(0.95) brightness(0.9); }
+    .x-pair { gap: 26px; }
+    .x-pair .x-phone:nth-child(2) { transform: translateY(54px); }
+    .x-head { max-width: 780px; margin: 0 auto clamp(44px, 6vw, 68px); text-align: center; }
+    .x-head .lead { margin: 18px auto 0; max-width: 640px; font-size: clamp(15px, 1.3vw, 16.5px); }
+    .x-trio, .x-quad { display: grid; gap: clamp(20px, 3vw, 40px); justify-items: center; }
+    .x-trio { grid-template-columns: repeat(3, 1fr); }
+    .x-quad { grid-template-columns: repeat(4, 1fr); }
+    .x-quad .x-phone { width: 236px; border-radius: 38px; padding: 8px; }
+    .x-quad .x-phone video, .x-quad .x-phone img { border-radius: 30px; }
+    .x-trio > div, .x-quad > div { display: flex; flex-direction: column; align-items: center; }
+    .x-label { margin-top: 20px; text-align: center; font-size: 14px; line-height: 1.55; color: var(--muted); font-weight: 300; max-width: 250px; }
+    .x-label b { display: block; color: var(--text); font-size: 16px; font-weight: 600; margin-bottom: 3px; }
+    .x-grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: clamp(48px, 6vw, 72px); }
+    .x-cap { margin-top: 44px; text-align: center; font-size: 12px; letter-spacing: 0.03em; color: rgba(255,255,255,0.42); }
+    .x-cap.dark { color: var(--light); }
+    .x-narrow { max-width: 860px; }
+    .x-faq details { border-bottom: 1px solid var(--border); }
+    .x-faq details:first-child { border-top: 1px solid var(--border); }
+    .x-faq summary { list-style: none; cursor: pointer; padding: 22px 44px 22px 0; font-size: 17px; font-weight: 600; color: var(--text); position: relative; }
+    .x-faq summary::-webkit-details-marker { display: none; }
+    .x-faq summary::after { content: "+"; position: absolute; right: 6px; top: 16px; font-size: 26px; font-weight: 300; color: var(--primary); transition: transform 0.25s var(--ease-out); }
+    .x-faq details[open] summary::after { transform: rotate(45deg); }
+    .x-faq details p { padding: 0 0 24px; font-size: 15.5px; line-height: 1.72; color: var(--muted); font-weight: 300; max-width: 720px; }
+    .watch-live.x-soon { color: rgba(255,255,255,0.72); }
+    @media (max-width: 980px) {
+      .x-split { grid-template-columns: 1fr; }
+      .x-rev .x-stage { order: 2; }
+      .x-stage { min-height: 0; padding: 10px 0 40px; }
+      .x-grid4 { grid-template-columns: 1fr 1fr; }
+      .x-quad { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .x-phone { width: min(62vw, 250px); border-radius: 34px; padding: 7px; }
+      .x-phone video, .x-phone img { border-radius: 28px; }
+      .x-stage .x-front { transform: translateX(-24%); }
+      .x-stage .x-back { transform: translateX(-6%) translateY(18px) rotate(5deg) scale(0.9); }
+      .x-pair .x-phone { width: min(42vw, 200px); border-radius: 26px; padding: 6px; }
+      .x-pair .x-phone video, .x-pair .x-phone img { border-radius: 21px; }
+      .x-pair { gap: 14px; }
+      .x-pair .x-phone:nth-child(2) { transform: translateY(34px); }
+      .x-trio, .x-quad { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; justify-items: initial;
+        margin: 0 calc(-1 * clamp(20px,5vw,60px)); padding: 0 clamp(20px,5vw,60px) 12px; scrollbar-width: none; }
+      .x-trio::-webkit-scrollbar, .x-quad::-webkit-scrollbar { display: none; }
+      .x-trio > div, .x-quad > div { scroll-snap-align: center; flex: none; }
+      .x-quad .x-phone { width: min(56vw, 230px); border-radius: 32px; padding: 7px; }
+      .x-quad .x-phone video, .x-quad .x-phone img { border-radius: 26px; }
+      .x-grid4 { grid-template-columns: 1fr; gap: 18px; }
+      .x-faq summary { font-size: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .x-faq summary::after { transition: none; } }
   </style>
 </head>
 <body>
@@ -1151,12 +1221,13 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="#problem" onclick="event.preventDefault();scrollToSection('problem')">The Problem</a>
-  <a href="#features" onclick="event.preventDefault();scrollToSection('features')">Features</a>
-  <a href="#app-experience" onclick="event.preventDefault();scrollToSection('app-experience')">App</a>
   <a href="#manager" onclick="event.preventDefault();scrollToSection('manager')">For Managers</a>
+  <a href="#app-experience" onclick="event.preventDefault();scrollToSection('app-experience')">The App</a>
+  <a href="#assistant" onclick="event.preventDefault();scrollToSection('assistant')">The Coach</a>
+  <a href="#wellness" onclick="event.preventDefault();scrollToSection('wellness')">Classes</a>
   <a href="#wearables" onclick="event.preventDefault();scrollToSection('wearables')">Activity</a>
   <a href="#pricing" onclick="event.preventDefault();scrollToSection('pricing')">Pricing</a>
+  <a href="#faq" onclick="event.preventDefault();scrollToSection('faq')">FAQ</a>
   <a href="#apply" class="mobile-cta" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
 </div>
 
@@ -1315,221 +1386,92 @@
   </div>
 </section>
 
-<!-- APP EXPERIENCE -->
-<section id="app-experience">
+<!-- BUILDING MANAGER -->
+<section id="manager" class="x-sec x-dark">
   <div class="container">
-    <div class="app-grid">
-      <div class="phone-stack reveal-scale">
-        <div class="phone-frame phone-back">
-          <div class="phone-notch"></div>
-          <img class="phone-screen" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_1000/DSC01500_wdgoih" alt="App screen" />
-        </div>
-        <div class="phone-frame phone-mid">
-          <div class="phone-notch"></div>
-          <img class="phone-screen" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_1000/DSC01308_fogdzx" style="object-fit:cover;object-position:center 15%;" alt="App screen" />
-        </div>
-        <div class="phone-frame phone-main">
-          <div class="phone-notch"></div>
-          <img class="phone-screen" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_1000/DSC01222_bbrcny" alt="App screen" />
+    <div class="x-split">
+      <div class="x-copy reveal">
+        <div class="section-label light">For Managers</div>
+        <h2 class="light">Know the amenity is working. <em>Every month.</em></h2>
+        <p class="lead light">Your team gets its own dashboard: how many residents signed up, who is training, when the gym is busiest, and how it is trending. On the first of every month, the report lands in your inbox, ready to forward to ownership.</p>
+        <div class="x-points">
+          <div class="x-point"><strong>Adoption and engagement</strong><span>Sign-ups, active residents, workouts, hours of exercise and Coach sessions, with last month beside each number.</span></div>
+          <div class="x-point"><strong>Built around your gym</strong><span>You tell us the equipment. Every resident's program is built from what is actually in your facility, and it adjusts when that changes.</span></div>
+          <div class="x-point"><strong>A report you never have to make</strong><span>Sent automatically on the first of each month. Two minutes to read, one tap to forward.</span></div>
+          <div class="x-point"><strong>You decide who gets in</strong><span>Residents join with your building's invite codes, and you can switch a code off when someone moves out.</span></div>
         </div>
       </div>
-      <div class="app-features">
-        <div class="reveal">
-          <div class="section-label">App Experience</div>
-          <h2>Built for residents who actually show up.</h2>
-        </div>
-        <div class="app-feat-item reveal reveal-d1">
-          <div class="app-feat-num">01</div>
-          <div class="app-feat-text">
-            <h4>Access via building invite code</h4>
-            <p>Residents sign up with their building's unique code. No app store browsing, no searching. One link from management and they're in.</p>
-          </div>
-        </div>
-        <div class="app-feat-item reveal reveal-d2">
-          <div class="app-feat-num">02</div>
-          <div class="app-feat-text">
-            <h4>Video-guided workouts for every exercise</h4>
-            <p>Over 1,000 exercises each with an individual demonstration video. Millions of unique workout combinations with programming that continuously evolves so residents never plateau, never repeat, and never get bored.</p>
-          </div>
-        </div>
-        <div class="app-feat-item reveal reveal-d3">
-          <div class="app-feat-num">03</div>
-          <div class="app-feat-text">
-            <h4>Injury-aware from day one</h4>
-            <p>Residents note their injuries during onboarding. Every exercise, every program, every cycle automatically filters around them with no manual input needed.</p>
-          </div>
-        </div>
-        <div class="app-feat-item reveal reveal-d4">
-          <div class="app-feat-num">04</div>
-          <div class="app-feat-text">
-            <h4>Body measurement tracking built in</h4>
-            <p>Weight, waist, hips, arms, chest logged over time with visual charts. Residents see exactly what is changing across each 30-day cycle.</p>
-          </div>
-        </div>
+      <div class="x-stage reveal-scale">
+        <figure class="x-phone x-front"><video data-loop muted playsinline loop preload="none" poster="media/loop-dashboard.webp" aria-label="Manager dashboard for a sample building"><source src="media/loop-dashboard.mp4" type="video/mp4"></video></figure>
+        <figure class="x-phone x-back"><img src="media/monthly-report-sm.webp" srcset="media/monthly-report-sm.webp 443w, media/monthly-report.webp 886w" sizes="(max-width: 700px) 62vw, 300px" loading="lazy" decoding="async" alt="Monthly amenity report email"></figure>
       </div>
     </div>
+    <p class="x-cap">Real app screens. Sample building and sample residents.</p>
   </div>
 </section>
 
-<!-- BUILDING MANAGER DASHBOARD -->
-<section id="manager">
+<!-- APP EXPERIENCE -->
+<section id="app-experience" class="x-sec x-light">
   <div class="container">
-    <div class="manager-grid">
-      <div class="manager-dashboard reveal-scale">
-        <div class="dash-header">
-          <div class="dash-header-left">
-            <span class="dash-building-label">Building Manager</span>
-            <span class="dash-building-name">Sample Building</span>
-          </div>
-          <span style="font-size:11px;color:rgba(255,255,255,0.3);font-weight:300;">October 2026</span>
-        </div>
-        <div class="dash-tabs" id="dash-tabs">
-          <div class="dash-tab active" data-tab="overview" onclick="switchTab('overview')">Overview</div>
-          <div class="dash-tab" data-tab="equipment" onclick="switchTab('equipment')">Equipment</div>
-          <div class="dash-tab" data-tab="report" onclick="switchTab('report')">Report</div>
-        </div>
-        <div class="dash-progress-bar"><div class="dash-progress-fill" id="dash-progress"></div></div>
-        <div style="min-height:380px;">
-        <!-- OVERVIEW TAB -->
-        <div class="dash-panel active" id="panel-overview">
-          <div>
-            <div class="dash-section-label">Adoption</div>
-            <div class="dash-stat-grid">
-              <div class="dash-stat-card">
-                <div class="dash-stat-val green" data-count="601" data-suffix="/815">0/815</div>
-                <div class="dash-stat-label">Signed Up</div>
-                <div class="dash-stat-sub">74% adoption rate</div>
-              </div>
-              <div class="dash-stat-card">
-                <div class="dash-stat-val blue" data-count="364">0</div>
-                <div class="dash-stat-label">Active This Month</div>
-                <div class="dash-stat-sub">logged a workout</div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="dash-section-label">Engagement, October 2026</div>
-            <div class="dash-stat-3">
-              <div class="dash-stat-card">
-                <div class="dash-stat-val orange" data-count="1247">0</div>
-                <div class="dash-stat-label">Workouts Done</div>
-              </div>
-              <div class="dash-stat-card">
-                <div class="dash-stat-val blue" style="font-size:22px">3.4</div>
-                <div class="dash-stat-label">Avg/User/Wk</div>
-              </div>
-              <div class="dash-stat-card">
-                <div class="dash-stat-val purple" data-count="819">0</div>
-                <div class="dash-stat-label">Coach Sessions</div>
-              </div>
-            </div>
-          </div>
-          <div class="dash-report-card">
-            <div class="dash-report-text">
-              <strong>Monthly Amenity Report</strong>
-              <span>Auto-generated. Share with ownership.</span>
-            </div>
-            <div class="dash-report-badge">PDF</div>
-          </div>
-        </div>
+    <div class="x-head reveal">
+      <div class="section-label">The App</div>
+      <h2>A personal trainer that <em>comes with the apartment.</em></h2>
+      <p class="lead">Residents join with your building's code, answer a few questions, and their program is built around your gym's actual equipment, their goal, their schedule and any injuries.</p>
+    </div>
+    <div class="x-trio reveal-scale">
+      <div><figure class="x-phone "><video data-loop muted playsinline loop preload="none" poster="media/loop-program.webp" aria-label="A program being built for a resident"><source src="media/loop-program.mp4" type="video/mp4"></video></figure><p class="x-label"><b>Built for your gym</b>Day one is ready in seconds.</p></div>
+      <div><figure class="x-phone "><video data-loop muted playsinline loop preload="none" poster="media/loop-workout.webp" aria-label="An exercise with its demonstration video"><source src="media/loop-workout.mp4" type="video/mp4"></video></figure><p class="x-label"><b>Every move, shown</b>A video and a coach's note on every exercise.</p></div>
+      <div><figure class="x-phone "><img src="media/progress-bib-sm.webp" srcset="media/progress-bib-sm.webp 443w, media/progress-bib.webp 886w" sizes="(max-width: 700px) 62vw, 300px" loading="lazy" decoding="async" alt="A personal record on the Progress screen"></figure><p class="x-label"><b>Progress they can see</b>Personal bests, top lifts and every session.</p></div>
+    </div>
+    <div class="x-grid4 reveal">
+      <div class="x-point"><strong>Join with a code</strong><span>One code from management and they are in. No searching, no setup.</span></div>
+      <div class="x-point"><strong>Hundreds of exercises</strong><span>Each with its own demonstration video, and millions of workout combinations so it never gets stale.</span></div>
+      <div class="x-point"><strong>Injury-aware</strong><span>Residents note injuries once. Every exercise and every cycle works around them.</span></div>
+      <div class="x-point"><strong>Mid-workout help</strong><span>Tap the mic and ask the Coach. It knows the exact set they are on.</span></div>
+    </div>
+    <p class="x-cap dark">Real app screens. Sample building and sample residents.</p>
+  </div>
+</section>
 
-        <!-- EQUIPMENT TAB -->
-        <div class="dash-panel" id="panel-equipment">
-          <div style="background:rgba(74,144,217,0.1);border:1px solid rgba(74,144,217,0.2);border-radius:6px;padding:10px 12px;margin-bottom:8px">
-            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:3px">Gym Equipment Setup</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:300;line-height:1.5">Resident programs only include exercises that match your equipment. Keep this updated as your gym changes.</div>
-          </div>
-          <div style="margin-bottom:8px">
-            <div class="equip-group-label">Start with a preset</div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px">
-              <div style="border:1.5px solid var(--accent);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--accent);font-weight:500">Full Gym</div>
-              <div style="border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,0.5);font-weight:300">Free Weights and Cardio</div>
-              <div style="border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,0.5);font-weight:300">Dumbbells and Cardio</div>
-              <div style="border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,0.5);font-weight:300">Resistance Bands Only</div>
-            </div>
-          </div>
-          <div class="equip-group">
-            <div class="equip-group-label">Free Weights</div>
-            <div class="equip-items">
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Dumbbells</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Barbell</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>EZ Bar</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Kettlebell</div>
-            </div>
-          </div>
-          <div class="equip-group">
-            <div class="equip-group-label">Machines</div>
-            <div class="equip-items">
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Cable Machine</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Lat Pulldown</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Leg Press</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Smith Machine</div>
-            </div>
-          </div>
-          <div class="equip-group">
-            <div class="equip-group-label">Cardio</div>
-            <div class="equip-items">
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Treadmill</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Rowing Machine</div>
-              <div class="equip-item"><div class="equip-check"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Jump Rope</div>
-            </div>
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.3);font-weight:300;margin-top:4px">Resident programs automatically filter to your specific equipment.</div>
-        </div>
-
-        <!-- REPORT TAB -->
-        <div class="dash-panel" id="panel-report">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <div style="font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3)">Monthly Amenity Report, October 2026</div>
-            <div class="dash-report-badge">PDF</div>
-          </div>
-          <div class="report-row"><span class="report-row-label">Residents Invited</span><span class="report-row-val">815</span></div>
-          <div class="report-row"><span class="report-row-label">Residents Signed Up</span><span class="report-row-val positive">601 (74%)</span></div>
-          <div class="report-row"><span class="report-row-label">Active This Month</span><span class="report-row-val positive">364</span></div>
-          <div class="report-row"><span class="report-row-label">Total Workouts Completed</span><span class="report-row-val positive">1,247</span></div>
-          <div class="report-row"><span class="report-row-label">Avg Workouts / User / Week</span><span class="report-row-val">3.4</span></div>
-          <div class="report-row"><span class="report-row-label">Coach Conversations</span><span class="report-row-val">819</span></div>
-          <div class="report-row"><span class="report-row-label">Month-over-Month Growth</span><span class="report-row-val positive">+18%</span></div>
-        </div>
-        </div><!-- end panels wrap -->
+<!-- THE COACH -->
+<section id="assistant" class="x-sec x-dark">
+  <div class="container">
+    <div class="x-split x-rev">
+      <div class="x-stage x-pair reveal-scale">
+        <figure class="x-phone "><video data-loop muted playsinline loop preload="none" poster="media/loop-coach.webp" aria-label="The Coach building a meal plan"><source src="media/loop-coach.mp4" type="video/mp4"></video></figure>
+        <figure class="x-phone "><video data-loop muted playsinline loop preload="none" poster="media/loop-snap.webp" aria-label="Snap My Meal identifying a meal from a photo"><source src="media/loop-snap.mp4" type="video/mp4"></video></figure>
       </div>
-      <div class="manager-content">
-        <div class="reveal">
-          <div class="section-label light">Building Manager Portal</div>
-          <h2 class="light">Complete visibility into your amenity's performance.</h2>
-        </div>
-        <p class="lead light reveal reveal-d1">Property managers get a dedicated dashboard with real-time data on adoption, engagement, and resident activity. Know exactly whether the investment is working.</p>
-        <div class="reveal reveal-d2">
-          <div class="manager-point">
-            <div class="manager-point-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div class="manager-point-text">
-              <strong>Adoption and engagement tracking</strong>
-              <span>See how many residents signed up, how many are actively training, and how that changes month over month.</span>
-            </div>
-          </div>
-          <div class="manager-point" style="margin-top:16px">
-            <div class="manager-point-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-            </div>
-            <div class="manager-point-text">
-              <strong>Equipment configuration</strong>
-              <span>Tell the platform exactly what your gym has. Resident programs automatically match what is available in your specific facility.</span>
-            </div>
-          </div>
-          <div class="manager-point" style="margin-top:16px">
-            <div class="manager-point-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            </div>
-            <div class="manager-point-text">
-              <strong>Monthly amenity report</strong>
-              <span>A clean PDF generated automatically each month. Forward it to ownership or use it in lease renewal conversations.</span>
-            </div>
-          </div>
+      <div class="x-copy reveal">
+        <div class="section-label light">The Coach</div>
+        <h2 class="light">Ask anything. <em>Get a real answer.</em></h2>
+        <p class="lead light">The Coach knows each resident's program, injuries, equipment and history, so the answer fits that person, not everyone. Residents type, or just talk to it.</p>
+        <div class="x-points">
+          <div class="x-point"><strong>Plans built in seconds</strong><span>A meal plan for their goal, a 5K plan, a lighter day. It lands on their calendar.</span></div>
+          <div class="x-point"><strong>Snap My Meal</strong><span>A photo of any meal, from jollof to sushi, is identified and logged, including the oil and sauce you cannot see.</span></div>
+          <div class="x-point"><strong>Talk mode</strong><span>A real voice conversation, mid-workout or at home, in any language.</span></div>
+          <div class="x-point"><strong>Built on real coaching</strong><span>Strength, conditioning, corrective exercise, nutrition and life coaching expertise behind every answer.</span></div>
         </div>
       </div>
     </div>
+    <p class="x-cap">Real app screens. Sample building and sample residents.</p>
+  </div>
+</section>
+
+<!-- EVERY AGE -->
+<section id="wellness" class="x-sec x-light">
+  <div class="container">
+    <div class="x-head reveal">
+      <div class="section-label">Classes and Wellness</div>
+      <h2>Built for <em>every resident, every age.</em></h2>
+      <p class="lead">Guided stretching, boxing, HIIT and meditation sit beside every training program, with clear screens and plain language. A 71-year-old with an old knee injury and a 28-year-old beginner each get a plan that fits.</p>
+    </div>
+    <div class="x-quad reveal-scale">
+      <div><figure class="x-phone "><img src="media/stretching-sm.webp" srcset="media/stretching-sm.webp 443w, media/stretching.webp 886w" sizes="(max-width: 700px) 62vw, 300px" loading="lazy" decoding="async" alt="Guided stretching"></figure><p class="x-label"><b>Stretching</b>For tight hips at 7am or after a long day.</p></div>
+      <div><figure class="x-phone "><img src="media/boxing-sm.webp" srcset="media/boxing-sm.webp 443w, media/boxing.webp 886w" sizes="(max-width: 700px) 62vw, 300px" loading="lazy" decoding="async" alt="A guided boxing session"></figure><p class="x-label"><b>Boxing</b>Every punch shown, with the why behind it.</p></div>
+      <div><figure class="x-phone "><img src="media/meditation-sm.webp" srcset="media/meditation-sm.webp 443w, media/meditation.webp 886w" sizes="(max-width: 700px) 62vw, 300px" loading="lazy" decoding="async" alt="A guided meditation"></figure><p class="x-label"><b>Meditation</b>Sleep, focus and calm, fully guided.</p></div>
+      <div><figure class="x-phone "><img src="media/robert-workout-sm.webp" srcset="media/robert-workout-sm.webp 443w, media/robert-workout.webp 886w" sizes="(max-width: 700px) 62vw, 300px" loading="lazy" decoding="async" alt="A program for an older resident"></figure><p class="x-label"><b>Every age</b>Warm-ups first, and moves that respect old injuries.</p></div>
+    </div>
+    <p class="x-cap dark">Real app screens. Sample residents.</p>
   </div>
 </section>
 
@@ -1583,105 +1525,24 @@
   </div>
 </section>
 
-<!-- FITNESS ASSISTANT -->
-<section id="assistant">
-  <div class="container">
-    <div class="assistant-grid">
-      <div class="reveal">
-        <div class="section-label">The Coach</div>
-        <h2>Real coaching intelligence. <em>On demand.</em></h2>
-        <p class="lead" style="margin-top:20px;margin-bottom:28px">The Coach knows each resident's program, injury history, equipment access, and training phase. It gives the right answer for that resident in the moment, not a generic response.</p>
-        <div class="assistant-points">
-          <div class="assistant-point"><span class="assistant-point-dash">&#8226;</span>Answers form and technique questions with context specific to that resident's program</div>
-          <div class="assistant-point"><span class="assistant-point-dash">&#8226;</span>Explains why each exercise is in the program and how it fits the broader goal</div>
-          <div class="assistant-point"><span class="assistant-point-dash">&#8226;</span>Builds plans, swaps exercises, and answers by voice or text</div>
-          <div class="assistant-point"><span class="assistant-point-dash">&#8226;</span>Trained on certified expertise spanning strength, conditioning, corrective exercise, performance, nutrition, and life coaching</div>
-        </div>
-      </div>
-      <div class="chat-window reveal reveal-d2">
-        <div class="chat-top">
-          <div class="chat-avatar-wrap">
-            <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="AmenityFit" />
-          </div>
-          <div class="chat-top-text">
-            <strong>Coach</strong>
-            <span>Powered by real coaching expertise</span>
-          </div>
-          <div style="margin-left:auto"><div class="chat-status">Online</div></div>
-        </div>
-        <div class="chat-msgs">
-          <div class="msg user"><div class="bubble">Can I skip the Romanian deadlifts today? My hamstrings are still sore.</div></div>
-          <div class="msg"><div class="bubble">Soreness from yesterday is expected. That is muscle adaptation, not injury. The RDLs today are lighter and actually help flush the soreness. Go through them. Reduce range of motion on the first set if it feels sharp and you will feel better by set two.</div></div>
-          <div class="msg user"><div class="bubble">That actually makes sense. How much weight should I use?</div></div>
-          <div class="msg"><div class="bubble">Start at 60 to 65% of what felt challenging last week. You are in a volume phase. The goal is reps at controlled tempo, not max load. 3 sets of 10.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- WEARABLES -->
 <!-- ACTIVITY -->
-<section id="wearables">
+<section id="wearables" class="x-dark">
   <div class="container">
-    <div class="wearables-grid">
-      <div class="wearable-content">
-        <div class="reveal">
-          <div class="section-label light">Activity</div>
-          <h2 class="light">Every workout, tracked and <em>shareable.</em></h2>
-          <p class="lead light" style="margin-top:14px;margin-bottom:20px">Not just lifting. Runs, rides, hikes, swims, whatever the day calls for. AmenityFit tracks the whole picture and turns it into something worth showing off.</p>
-        </div>
-        <div class="wearable-feature reveal reveal-d1">
-          <h4>One card, every stat</h4>
-          <p>Distance, pace, route, heart rate, and time. Pulled together automatically into a single card, ready to post in one tap.</p>
-        </div>
-        <div class="wearable-feature reveal reveal-d2">
-          <h4>Every activity, its own moment</h4>
-          <p>Meditation, stretching, pilates, yoga. Each one gets its own reflection prompt, not a generic one-size-fits-all check-in.</p>
+    <div class="x-split">
+      <div class="x-copy reveal">
+        <div class="section-label light">Beyond the Gym</div>
+        <h2 class="light">Runs, rides and hikes. <em>Neighbors, too.</em></h2>
+        <p class="lead light">Fitness does not stop at the gym door. Residents track outdoor activities with live maps and personal bests, and find neighbors in their own building to train with.</p>
+        <div class="x-points">
+          <div class="x-point"><strong>Live maps and personal bests</strong><span>Distance, pace, route and heart rate, with a share card ready in one tap.</span></div>
+          <div class="x-point"><strong>Training partners</strong><span>Invite a neighbor, run together, take a class together, or race each other live.</span></div>
+          <div class="x-point"><strong>A reason to meet people</strong><span>Neighbors who train together keep each other going, and keep using the gym.</span></div>
         </div>
       </div>
-      <div class="watch-showcase">
-        <div class="activity-photo-pair">
-          <div class="activity-photo-card reveal">
-            <div class="activity-photo-overlay">
-              <div class="activity-photo-title" style="display:flex;align-items:center;gap:8px;">
-                <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/v1788947665/stretching_anmgsa.png" alt="" style="width:20px;height:20px;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.65));" />
-                Stretching
-              </div>
-              <div class="activity-photo-stat-row">
-                <span class="activity-photo-stat-hero">47:23</span>
-                <span class="activity-photo-stat-label">Time</span>
-              </div>
-              <div class="activity-photo-logo-row">
-                <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
-                <span>AMENITYFIT</span>
-              </div>
-            </div>
-          </div>
-          <div class="activity-photo-card reveal" style="background-image:url('https://res.cloudinary.com/dk5g9itw8/image/upload/v1788948291/e5e40c8f-3bdf-45c2-8bc8-2bf72fcdd105_nmzkd7.jpg');">
-            <img loading="lazy" src="route-final.png"
-              alt=""
-              style="position:absolute; top:28px; left:70px; width:60px; height:auto; transform:rotate(-38deg); filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));" />
-            <div class="activity-photo-overlay">
-              <div class="activity-photo-title" style="display:flex;align-items:center;gap:8px;">
-                <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/v1788947666/running_rsqtkg.png" alt="" style="width:20px;height:20px;object-fit:contain;filter:brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.65));" />
-                Outdoor Run
-              </div>
-              <div class="activity-photo-stat-grid" style="gap:8px 14px;">
-                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">3.1 mi</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Distance</div></div>
-                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">8:09/mi</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Pace</div></div>
-                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">25:16</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Time</div></div>
-                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">18 ft</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Elev Gain</div></div>
-                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">~380</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Calories</div></div>
-                <div><div class="activity-photo-stat-grid-value" style="font-size:17px;">156 bpm</div><div class="activity-photo-stat-grid-label" style="font-size:9px;">Heart Rate</div></div>
-              </div>
-              <div class="activity-photo-logo-row">
-                <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/f_png,q_auto/Logo_rkq0cv" alt="" />
-                <span>AMENITYFIT</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="x-stage x-pair reveal-scale">
+        <figure class="x-phone "><video data-loop muted playsinline loop preload="none" poster="media/loop-run.webp" aria-label="A live run with the route on a map"><source src="media/loop-run.mp4" type="video/mp4"></video></figure>
+        <figure class="x-phone "><video data-loop muted playsinline loop preload="none" poster="media/loop-partners.webp" aria-label="Inviting a training partner in the building"><source src="media/loop-partners.mp4" type="video/mp4"></video></figure>
       </div>
     </div>
 
@@ -1722,12 +1583,21 @@
               <div class="watch-live"><div class="live-dot"></div>Live</div>
             </div>
           </div>
-</div>
+          <div class="watch-card" id="watch-2">
+            <div class="watch-img-wrap">
+              <img loading="lazy" src="https://res.cloudinary.com/dk5g9itw8/image/upload/q_auto,f_jpg,w_600/Screen_Shot_2026-05-23_at_12.48.33_PM_qn5tnu" alt="Whoop" />
+            </div>
+            <div class="watch-card-info">
+              <span class="watch-card-name">Whoop</span>
+              <div class="watch-live x-soon">Coming soon</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 <!-- PRICING -->
 <section id="pricing">
@@ -1804,6 +1674,26 @@
         <div class="tier-pill" id="tph4" onclick="selectTierPill(750)"><strong class="tier-price" data-usd="2199">$2,199/mo</strong><span>501 to 1,000 rooms</span></div>
         <div class="tier-pill tier-custom" id="tph5" onclick="selectTierPill(1001)"><strong>Custom</strong><span>1,000+ rooms or multi-property chain</span></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="x-sec x-light">
+  <div class="container x-narrow">
+    <div class="x-head reveal">
+      <div class="section-label">Questions</div>
+      <h2>Straight <em>answers.</em></h2>
+    </div>
+    <div class="x-faq reveal">
+      <details><summary>What does it cost?</summary><p>Billed per building by unit count, with no per-resident fees and no usage caps: up to 50 units $599 a month, 51 to 100 units $999, 101 to 200 units $1,499, 201 to 300 units $1,999, 301 to 500 units $2,799, 501 to 1,000 units $3,999. Over 1,000 units is a custom quote. Paying for the year up front takes 10% off.</p></details>
+      <details><summary>What do residents pay?</summary><p>Nothing. AmenityFit is included as a building amenity. Residents never pay, and the building does not charge them a separate fee for it.</p></details>
+      <details><summary>How long is the agreement?</summary><p>The initial term is 12 months from the service start date. It then renews a year at a time unless either side gives written notice at least 60 days before the term ends. Paying monthly is a payment schedule, not a shorter commitment.</p></details>
+      <details><summary>Are the terms negotiable?</summary><p>No. Pricing and terms are the same for every building, which keeps it simple and fair. Portfolios get volume discounts set out in advance: 10% for 5 to 9 buildings, 13% for 10 to 19, and 17% for 20 to 39.</p></details>
+      <details><summary>How do we pay?</summary><p>By invoice through Stripe, due within 15 days of the invoice date, monthly or the full year up front for 10% off.</p></details>
+      <details><summary>Who sets it up, and how long does it take?</summary><p>We do. Once the agreement is signed and the first invoice is paid, your building is set up and your team receives the manager login and your residents' invite codes by email. You tell us what equipment your gym has, and every program is built around it.</p></details>
+      <details><summary>Is resident data private?</summary><p>Your dashboard and monthly report show building-level adoption and engagement. Personal health and fitness details stay private to each resident and are not shared with the building.</p></details>
+      <details><summary>Do you work with hotels and portfolios?</summary><p>Yes. Hotels have their own plans by room count, and portfolios of buildings or hotels are covered under one agreement with volume discounts.</p></details>
     </div>
   </div>
 </section>
@@ -2733,6 +2623,21 @@
         if (field) field.value = code;
       });
     }
+  })();
+
+  // Real app loops: play only while on screen, never for people who prefer reduced motion.
+  (function () {
+    var vids = document.querySelectorAll('video[data-loop]');
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!vids.length || still || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) { if (v.preload !== 'auto') { v.preload = 'auto'; } var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        else { v.pause(); }
+      });
+    }, { threshold: 0.35 });
+    vids.forEach(function (v) { v.muted = true; io.observe(v); });
   })();
 </script>
 </body>
