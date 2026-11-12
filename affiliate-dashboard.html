@@ -830,9 +830,9 @@
   }
   function demoEmail(kind, l) {
     const place = l.building || l.company || 'your building';
-    if (kind === 'intro') return 'Subject: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nI wanted to share something I think ' + place + "'s residents would actually use. AmenityFit is a fitness and wellness app for residents: workouts built around the exact equipment in your gym, a Coach they can ask anything, and a monthly report for your team showing how it is being used. Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + '\n\nIt covers pricing and the common questions, and you can ask anything right on the page.\n\nBest,\n' + demoMe;
+    if (kind === 'intro') return 'Subject: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nI wanted to share something I think ' + place + "'s residents would actually use. AmenityFit is a fitness and wellness app for residents: workouts built around the exact equipment in your gym, a Coach they can ask anything, and a monthly report for your team showing how it's being used. Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + '\n\nIt covers pricing and the common questions, and you can ask anything right on the page.\n\nBest,\n' + demoMe;
     if (kind === 'nudge') return 'Subject: Re: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nJust bumping this in case it got buried. The walkthrough is here whenever you have 7 minutes:\n' + l.url + '\n\nBest,\n' + demoMe;
-    return 'Subject: Re: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nThanks for taking a look. If it is a fit for ' + place + ', the application takes about 2 minutes at amenityfit.app, and the agreement comes by e-signature. Any questions, you can ask right on the page.\n\nBest,\n' + demoMe;
+    return 'Subject: Re: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nThanks for taking a look. If it\'s a fit for ' + place + ', the application takes about 2 minutes at amenityfit.app, and the agreement comes by e-signature. Any questions, you can ask right on the page.\n\nBest,\n' + demoMe;
   }
   async function demoCall(method, body) {
     const t = await demoUser.getIdToken();
