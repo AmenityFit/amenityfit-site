@@ -997,12 +997,13 @@
       display: none; position: fixed; top: 58px; left: 0; right: 0; z-index: 199;
       background: rgba(13,13,26,0.97); backdrop-filter: blur(20px);
       padding: 20px 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.08);
-      flex-direction: column; gap: 4px;
+      flex-direction: column; gap: 2px;
+      bottom: 0; overflow-y: auto; overscroll-behavior: contain; /* covers the whole screen below the nav, so the page never shows through */
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
       font-family: var(--ff-body); font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.75);
-      text-decoration: none; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+      text-decoration: none; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
       transition: color 0.2s;
     }
     .mobile-menu a:last-child { border-bottom: none; }
@@ -1247,6 +1248,11 @@
     }
     @media (prefers-reduced-motion: reduce) { .x-faq summary::after { transition: none; } }
   </style>
+<script>
+  // A refresh always starts at the header video, not wherever the visitor was (links to a section, like #apply, still go there).
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+  if (!location.hash) { window.scrollTo(0, 0); window.addEventListener("load", function () { window.scrollTo(0, 0); }); window.addEventListener("pageshow", function (e) { if (e.persisted) window.scrollTo(0, 0); }); }
+</script>
 </head>
 <body>
 <div id="nav-scroll-sentinel" style="position:absolute;top:40px;left:0;width:1px;height:1px;pointer-events:none;opacity:0;"></div>
@@ -1266,13 +1272,16 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
+  <a href="#features" onclick="event.preventDefault();scrollToSection('features')">What It Does</a>
   <a href="#manager" onclick="event.preventDefault();scrollToSection('manager')">For Managers</a>
   <a href="#app-experience" onclick="event.preventDefault();scrollToSection('app-experience')">The App</a>
   <a href="#assistant" onclick="event.preventDefault();scrollToSection('assistant')">The Coach</a>
-  <a href="#wellness" onclick="event.preventDefault();scrollToSection('wellness')">Classes</a>
-  <a href="#wearables" onclick="event.preventDefault();scrollToSection('wearables')">Activity</a>
+  <a href="#wellness" onclick="event.preventDefault();scrollToSection('wellness')">Classes and Wellness</a>
+  <a href="#nutrition" onclick="event.preventDefault();scrollToSection('nutrition')">Nutrition</a>
+  <a href="#wearables" onclick="event.preventDefault();scrollToSection('wearables')">Activity and Apple Watch</a>
   <a href="#pricing" onclick="event.preventDefault();scrollToSection('pricing')">Pricing</a>
   <a href="#faq" onclick="event.preventDefault();scrollToSection('faq')">FAQ</a>
+  <a href="#credibility" onclick="event.preventDefault();scrollToSection('credibility')">About the Founder</a>
   <a href="#apply" class="mobile-cta" onclick="event.preventDefault();scrollToSection('apply')">Request Access</a>
 </div>
 
@@ -2163,8 +2172,12 @@
       const el = document.getElementById(id);
       if (!el) return null;
       const navH = document.getElementById('nav').offsetHeight;
-      const extra = id === 'pricing' ? -30 : (id === 'apply' ? -6 : 0);
-      return el.getBoundingClientRect().top + window.pageYOffset - navH - extra;
+      // Land every section the same way: its small label sits 24px under the nav, so each one starts cleanly at
+      // the top of the screen with its title in view (falls back to the section's own top edge).
+      const label = el.querySelector('.section-label');
+      const elTop = el.getBoundingClientRect().top;
+      if (label && label.getBoundingClientRect().top - elTop < 200) return Math.max(0, Math.round(label.getBoundingClientRect().top + window.pageYOffset - navH - 24));
+      return Math.round(elTop + window.pageYOffset - navH);
     };
     // Poll the target position until it's stable (two identical reads
     // in a row) instead of guessing how long images/fonts take to
