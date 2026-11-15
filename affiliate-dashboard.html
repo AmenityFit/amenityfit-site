@@ -360,7 +360,7 @@
     </details>
     <details class="demo-library" id="dm-library">
       <summary>Every email and script</summary>
-      <p class="demo-lib-sub">Filled in with an example. On each manager's row, the same emails come filled in with their name and link.</p>
+      <p class="demo-lib-sub">The templates. On each manager's row, the same emails come filled in with their name, building and private link, and with your name, apply link and code.</p>
       <div id="dm-library-list"></div>
     </details>
     <div class="demo-tips">Pricing and terms are the same for every building, so there is nothing to negotiate. Questions they ask on the page are answered there, or by Asenso by email. Never promise a price, a discount or a feature that isn't on the page.</div>
@@ -1007,7 +1007,8 @@
     document.getElementById('dm-faq-list').innerHTML = faq.map((f) => '<details class="demo-lib-item"><summary>' + demoEsc(f.q) + '</summary><div class="demo-timeline" style="color:var(--text);margin-top:6px">' + demoEsc(f.a) + '</div></details>').join('');
   }
   function libraryRender() {
-    const sample = { firstName: 'Dana', building: 'The Calloway', url: 'https://amenityfit.app/demo/?t=their-own-link' };
+    // Nov 14 2026 (Senz: it's a template): placeholders, never a real or made-up person; each manager's row fills in the real ones.
+    const sample = { firstName: '[First name]', building: '[Building]', url: '[Their private walkthrough link]' };
     document.getElementById('dm-library-list').innerHTML = K.LIBRARY.map(([k, name, whenText]) =>
       '<details class="demo-lib-item"><summary>' + demoEsc(name) + '<span>' + demoEsc(whenText) + '</span></summary>' + mailHtml(k, sample) + '</details>').join('');
   }
