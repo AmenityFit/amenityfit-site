@@ -62,7 +62,7 @@
     if (l.outcome === "not_interested") return done("Not interested. No more emails. Thank them and move on.");
     if (l.outcome === "wrong_person") return done("Wrong person. Make a new link for the right manager.");
     if (l.applyClickedAtMs) return done("They clicked Apply. AmenityFit takes it from here, and it shows under Your referrals once they apply.");
-    if (l.handedOffAtMs || touches.some(function (t) { return t.kind === "handoff"; })) return done("Handed to Asenso. He reaches out to them himself, and it shows under Your referrals once they apply.");
+    if (l.handedOffAtMs || touches.some(function (t) { return t.kind === "handoff"; })) return done("Handed to Asenso. He has your note, and it shows under Your referrals once they sign up.");
     var replied = touches.some(function (t) { return t.kind === "replied" || t.kind === "met"; }) || l.outcome === "interested";
     if (l.nextFollowUpAtMs > 0) return step(replied ? "apply" : l.opens > 0 ? "checkin" : "nudge", l.nextFollowUpAtMs, "Your follow-up date.");
     if (l.outcome === "not_now") return done("Not right now. Set a follow-up date for when they said to check back.");
@@ -146,7 +146,7 @@
     ["Why a manager cares", "It makes the gym they already paid for get used, it's an amenity they can show on tours, and the team gets a monthly report showing how residents use it. Residents never pay anything."],
     ["For every age", "Many residents are in their 60s and 70s. The programs meet people where they are, so it is not only for the gym regulars."],
     ["Price, if asked", "One flat monthly price per building by size, the same for everyone, 10% off when paid for the year. The walkthrough shows the exact price for their building. Never offer a discount or a free trial."],
-    ["The next step", "Send their private walkthrough. When they are interested, tap Hand to Asenso and he takes it from there."],
+    ["The next step", "Send their private walkthrough. When they are interested, tell them to sign up with the Apply button on it: your referral code is already filled in, so the building is credited to you. Then tap Hand to Asenso with a short note on what you told them and what they need, so he knows it came from you."],
   ];
   var api = { BUILDING: BUILDING, HOTEL: HOTEL, RATE: RATE, tierFor: tierFor, portfolioPct: portfolioPct, hotelBonus: hotelBonus, estimate: estimate, plan: plan, stage: stage, email: email, disclosure: disclosure, LIBRARY: LIBRARY, DAY: DAY, TALK: TALK };
   if (typeof module !== "undefined" && module.exports) module.exports = api;

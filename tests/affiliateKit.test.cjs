@@ -117,3 +117,14 @@ test("the sample emails (Nov 14, from an affiliate's own): the first has the wal
   for (const k of ["intro", "nudge", "last"]) { const b = K.email(k, link(), o).body; assert.doesNotMatch(b, /[—–]|\bAI\b|Senz|Lucille/); }
   assert.doesNotMatch(K.email("intro", link(), { ...o, code: "" }).body, /referral code/);
 });
+
+test("next step: they sign up with Apply on their walkthrough (code filled in), then the affiliate tells Asenso", () => {
+  const step = K.TALK.find((t) => t[0] === "The next step")[1];
+  assert.match(step, /sign up with the Apply button/);
+  assert.match(step, /referral code is already filled in/);
+  assert.match(step, /Hand to Asenso/);
+  assert.doesNotMatch(step, /takes it from there/);
+  const html = require("fs").readFileSync(require("path").join(__dirname, "../affiliate-dashboard.html"), "utf8");
+  assert.ok(html.includes("Interested? Have them sign up, then tell Asenso"));
+  assert.ok(!html.includes("He reaches out himself"));
+});

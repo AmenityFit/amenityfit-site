@@ -960,9 +960,9 @@
         '<div class="demo-tools"><button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'replied\'})">They replied</button>' +
         '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'call\'})">I called</button>' +
         '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'met\'})">We spoke</button></div>' +
-        (l.handedOffAtMs ? '<div class="demo-h">Handed to Asenso</div><div class="demo-timeline">' + when(l.handedOffAtMs) + ': he has everything and reaches out himself.</div>'
-          : '<div class="demo-h">Interested? Hand it to Asenso</div><div class="demo-timeline">When they want to talk pricing, a contract or a start date, send it to Asenso with what you know. He reaches out himself and you stay credited.</div>' +
-            '<textarea id="dm-ho-note-' + i + '" placeholder="What they said, e.g. wants it for 3 buildings, asked about seniors"></textarea>' +
+        (l.handedOffAtMs ? '<div class="demo-h">Handed to Asenso</div><div class="demo-timeline">' + when(l.handedOffAtMs) + ': he has your note and knows it came from you. It shows under Your referrals once they sign up.</div>'
+          : '<div class="demo-h">Interested? Have them sign up, then tell Asenso</div><div class="demo-timeline">Tell them to sign up with the Apply button on their walkthrough. That is how a building joins, and your code is already filled in, so you are credited. Then hand it to Asenso with what you told them and what they need, so he knows it came from you.</div>' +
+            '<textarea id="dm-ho-note-' + i + '" placeholder="What you told them and what they said, e.g. told them to apply this week, wants it for 3 buildings, asked about seniors"></textarea>' +
             '<input id="dm-ho-contact-' + i + '" placeholder="Best way to reach them (phone, best time)" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:14px var(--ff-body);margin-top:6px">' +
             '<div class="demo-tools"><button class="demo-btn" onclick="afDemoHandoff(' + i + ')">Hand to Asenso</button></div>') +
         '<div class="demo-h">Notes</div><div class="demo-timeline">' + notes + '</div>' +
