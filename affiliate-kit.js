@@ -61,6 +61,7 @@
     if (l.outcome === "not_interested") return done("Not interested. No more emails. Thank them and move on.");
     if (l.outcome === "wrong_person") return done("Wrong person. Make a new link for the right manager.");
     if (l.applyClickedAtMs) return done("They clicked Apply. AmenityFit takes it from here, and it shows under Your referrals once they apply.");
+    if (l.handedOffAtMs || touches.some(function (t) { return t.kind === "handoff"; })) return done("Handed to Asenso. He reaches out to them himself, and it shows under Your referrals once they apply.");
     var replied = touches.some(function (t) { return t.kind === "replied" || t.kind === "met"; }) || l.outcome === "interested";
     if (l.nextFollowUpAtMs > 0) return step(replied ? "apply" : l.opens > 0 ? "checkin" : "nudge", l.nextFollowUpAtMs, "Your follow-up date.");
     if (l.outcome === "not_now") return done("Not right now. Set a follow-up date for when they said to check back.");
@@ -132,7 +133,16 @@
     ["call", "Phone or in person", "What to say, in 20 seconds."],
   ];
 
-  var api = { BUILDING: BUILDING, HOTEL: HOTEL, RATE: RATE, tierFor: tierFor, portfolioPct: portfolioPct, hotelBonus: hotelBonus, estimate: estimate, plan: plan, stage: stage, email: email, disclosure: disclosure, LIBRARY: LIBRARY, DAY: DAY };
+  // How to talk about it: Senz's own positioning, in short lines an affiliate can say out loud.
+  var TALK = [
+    ["Who to reach", "The property manager, general manager or asset manager of a building with a gym (apartments, condos, senior-friendly buildings) or a hotel with a fitness room. A management company with several buildings is the best find: one agreement covers all of them."],
+    ["What it is", "A fitness and wellness app that comes with the apartment. Workouts are built around the exact equipment in their gym, residents can track walks, runs, rides and hikes, and there is a personal coach in the app they can ask anything, from workouts to meals."],
+    ["Why a manager cares", "It makes the gym they already paid for get used, it's an amenity they can show on tours, and the team gets a monthly report showing how residents use it. Residents never pay anything."],
+    ["For every age", "Many residents are in their 60s and 70s. The programs meet people where they are, so it is not only for the gym regulars."],
+    ["Price, if asked", "One flat monthly price per building by size, the same for everyone, 10% off when paid for the year. The walkthrough shows the exact price for their building. Never offer a discount or a free trial."],
+    ["The next step", "Send their private walkthrough. When they are interested, tap Hand to Asenso and he takes it from there."],
+  ];
+  var api = { BUILDING: BUILDING, HOTEL: HOTEL, RATE: RATE, tierFor: tierFor, portfolioPct: portfolioPct, hotelBonus: hotelBonus, estimate: estimate, plan: plan, stage: stage, email: email, disclosure: disclosure, LIBRARY: LIBRARY, DAY: DAY, TALK: TALK };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.AFKit = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -347,6 +347,15 @@
     </div>
     <div class="demo-err" id="dm-err"></div>
     <div class="demo-list" id="dm-list"></div>
+    <details class="demo-library" id="dm-talk">
+      <summary>How to talk about AmenityFit</summary>
+      <div id="dm-talk-list"></div>
+    </details>
+    <details class="demo-library" id="dm-faq" style="display:none">
+      <summary>Answers to the usual questions</summary>
+      <p class="demo-lib-sub">The same approved answers the walkthrough page gives. Use these words, and send anything else to Asenso.</p>
+      <div id="dm-faq-list"></div>
+    </details>
     <details class="demo-library" id="dm-library">
       <summary>Every email and script</summary>
       <p class="demo-lib-sub">Filled in with an example. On each manager's row, the same emails come filled in with their name and link.</p>
@@ -659,6 +668,10 @@
         }
       }
 
+      // Nov 14 2026: a hotel portfolio's one-time bonus, and yearly billing paying the whole 12 months at once.
+      if (r.bonusUsd) extra += `<div class="rr-payout-note" style="color:#166534;font-weight:600">Hotel portfolio bonus: ${formatCurrency(r.bonusUsd)}, ${r.bonusStatus === 'paid' ? 'paid' : 'on its way'}.</div>`;
+      if (r.status === 'closed' && r.billingFrequency === 'annual') extra += `<div class="rr-payout-note">They paid for the year up front, so all 12 months are paid to you together.</div>`;
+
       // CRM section - contact info, a priority tag, note history, and a
       // next-follow-up date - only for leads still actually in play. A
       // closed or lost deal has nothing left to follow up on.
@@ -943,6 +956,11 @@
         '<div class="demo-tools"><button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'replied\'})">They replied</button>' +
         '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'call\'})">I called</button>' +
         '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'met\'})">We spoke</button></div>' +
+        (l.handedOffAtMs ? '<div class="demo-h">Handed to Asenso</div><div class="demo-timeline">' + when(l.handedOffAtMs) + ': he has everything and reaches out himself.</div>'
+          : '<div class="demo-h">Interested? Hand it to Asenso</div><div class="demo-timeline">When they want to talk pricing, a contract or a start date, send it to Asenso with what you know. He reaches out himself and you stay credited.</div>' +
+            '<textarea id="dm-ho-note-' + i + '" placeholder="What they said, e.g. wants it for 3 buildings, asked about seniors"></textarea>' +
+            '<input id="dm-ho-contact-' + i + '" placeholder="Best way to reach them (phone, best time)" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:14px var(--ff-body);margin-top:6px">' +
+            '<div class="demo-tools"><button class="demo-btn" onclick="afDemoHandoff(' + i + ')">Hand to Asenso</button></div>') +
         '<div class="demo-h">Notes</div><div class="demo-timeline">' + notes + '</div>' +
         '<textarea id="dm-note-' + i + '" placeholder="e.g. Said to check back after the holidays"></textarea>' +
         '<div class="demo-tools"><label style="font-size:12.5px;color:var(--muted)">My follow-up date <input type="date" id="dm-fu-' + i + '" value="' + fuVal + '"></label>' +
@@ -976,6 +994,14 @@
       dueBox.innerHTML = '<b>' + due.length + ' to do today</b>' + due.map((x) => '<div><a onclick="afDemoToggle(' + x.i + ', true)">' + demoEsc(x.l.firstName) + (x.l.building ? ', ' + demoEsc(x.l.building) : '') + '</a>: send the ' + (EMAIL_NAMES[x.p.kind] || 'follow-up') + '</div>').join('');
     } else dueBox.style.display = 'none';
   }
+  function talkRender() {
+    document.getElementById('dm-talk-list').innerHTML = K.TALK.map(([h, t]) => '<div class="demo-lib-item"><b style="font-size:13.5px">' + demoEsc(h) + '</b><div class="demo-timeline" style="color:var(--text)">' + demoEsc(t) + '</div></div>').join('');
+  }
+  function faqRender(faq) {
+    if (!Array.isArray(faq) || !faq.length) return;
+    document.getElementById('dm-faq').style.display = 'block';
+    document.getElementById('dm-faq-list').innerHTML = faq.map((f) => '<details class="demo-lib-item"><summary>' + demoEsc(f.q) + '</summary><div class="demo-timeline" style="color:var(--text);margin-top:6px">' + demoEsc(f.a) + '</div></details>').join('');
+  }
   function libraryRender() {
     const sample = { firstName: 'Dana', building: 'The Calloway', url: 'https://amenityfit.app/demo/?t=their-own-link' };
     document.getElementById('dm-library-list').innerHTML = K.LIBRARY.map(([k, name, whenText]) =>
@@ -1001,6 +1027,15 @@
     catch (e) { alert(e.message); if (btn) { btn.disabled = false; btn.textContent = 'Try again'; } }
   }
   window.afDemoTrack = (i, body) => track(i, body, event && event.target);
+  window.afDemoHandoff = async (i) => {
+    const l = demoLinks[i]; if (!l) return;
+    const btn = event && event.target;
+    const note = document.getElementById('dm-ho-note-' + i).value.trim();
+    if (note.length < 3) { alert('Add a line about what they said, so Asenso knows where it stands.'); return; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+    try { const d = await demoCall('POST', { action: 'handoff', token: l.token, note, contact: document.getElementById('dm-ho-contact-' + i).value.trim() }); demoLinks[i] = { ...l, ...d.link }; demoRender(); }
+    catch (e) { alert(e.message); if (btn) { btn.disabled = false; btn.textContent = 'Hand to Asenso'; } }
+  };
   window.afDemoSave = (i) => {
     const note = document.getElementById('dm-note-' + i).value.trim();
     const fu = document.getElementById('dm-fu-' + i).value;
@@ -1033,11 +1068,11 @@
     demoUser = user; demoMe = affiliate && affiliate.name ? affiliate.name : '';
     if (affiliate && affiliate.referralCode) demoApply = 'https://amenityfit.app/?ref=' + encodeURIComponent(affiliate.referralCode) + '#apply';
     document.getElementById('demo-card').style.display = 'block';
-    libraryRender();
-    try { const d = await demoCall('GET'); demoLinks = d.links || []; demoRender(); }
+    libraryRender(); talkRender();
+    try { const d = await demoCall('GET'); demoLinks = d.links || []; faqRender(d.faq); demoRender(); }
     catch (e) { document.getElementById('dm-list').innerHTML = '<p style="font-size:13px;color:#B91C1C;padding:12px 0;">' + demoEsc(e.message) + '</p>'; }
   };
-  window.__afDemoTest = { set: (links, me, code) => { demoLinks = links; demoMe = me; demoApply = 'https://amenityfit.app/?ref=' + code + '#apply'; document.getElementById('demo-card').style.display = 'block'; libraryRender(); demoRender(); } };
+  window.__afDemoTest = { set: (links, me, code) => { demoLinks = links; demoMe = me; demoApply = 'https://amenityfit.app/?ref=' + code + '#apply'; document.getElementById('demo-card').style.display = 'block'; libraryRender(); talkRender(); faqRender([{ q: 'What does it cost?', a: 'Sample answer.' }]); demoRender(); } };
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {

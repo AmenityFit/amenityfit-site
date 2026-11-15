@@ -70,3 +70,9 @@ test("emails: their link, the affiliate's apply link (so they are credited), the
   assert.match(K.email("intro", link(), { ...o, informal: true }).body, /I'm not paid for this/);
   assert.doesNotMatch(K.email("intro", link(), { ...o, informal: true }).body, /referral fee/);
 });
+test("handed to Asenso: no more emails from the affiliate; the talking points stay on message", () => {
+  assert.match(K.plan(link({ handedOffAtMs: T0, opens: 1, touches: [{ kind: "sent", atMs: T0 - D }, { kind: "handoff", atMs: T0 }] }), T0 + 5 * D).text, /Handed to Asenso/);
+  assert.equal(K.plan(link({ handedOffAtMs: T0 }), T0).done, true);
+  const all = K.TALK.map(([h, t]) => h + " " + t).join(" ");
+  assert.doesNotMatch(all, /[—–]|\bAI\b|Senz/); assert.match(all, /Residents never pay/); assert.match(all, /Hand to Asenso/);
+});
