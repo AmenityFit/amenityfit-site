@@ -108,3 +108,12 @@ test("a link to #apply lands on the top of Request Access once the page settles,
   assert.match(b, /try \{ scrollToSection\(id\); \}/); assert.match(b, /window\.addEventListener\('load', go\)/); assert.match(b, /setTimeout\(go, 1500\)/);
   assert.match(b, /\['wheel', 'touchstart', 'keydown'\]/);
 });
+test("the sample emails (Nov 14, from an affiliate's own): the first has the walkthrough, the apply link and their code; no dashes, no AI", () => {
+  const o = { me: "Ana Diaz", applyUrl: "https://amenityfit.app/?ref=ANA7#apply", siteUrl: "https://amenityfit.app/?ref=ANA7", code: "ANA7" };
+  const intro = K.email("intro", link(), o);
+  assert.equal(intro.subject, "A personal trainer for every resident at The Brook");
+  assert.match(intro.body, /demo\/\?t=abc[\s\S]*my referral code, ANA7, is already filled in[\s\S]*\?ref=ANA7#apply[\s\S]*Full disclosure/);
+  assert.match(K.email("nudge", link(), o).body, /brings neighbors together[\s\S]*demo\/\?t=abc/);
+  for (const k of ["intro", "nudge", "last"]) { const b = K.email(k, link(), o).body; assert.doesNotMatch(b, /[—–]|\bAI\b|Senz|Lucille/); }
+  assert.doesNotMatch(K.email("intro", link(), { ...o, code: "" }).body, /referral code/);
+});

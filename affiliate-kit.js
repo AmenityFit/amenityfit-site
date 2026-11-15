@@ -107,14 +107,17 @@
     var place = l.building || l.company || "your building";
     var hi = "Hi " + (l.firstName || "there") + ",\n\n";
     var sign = "\n\nBest,\n" + (o.me || "");
-    var subj = "A fitness amenity for " + place;
+    var subj = "A personal trainer for every resident at " + place;
     var apply = o.applyUrl || "https://amenityfit.app/#apply";
     var site = o.siteUrl || "https://amenityfit.app";
     var disc = "\n\n" + disclosure(o.informal);
     switch (kind) {
-      case "intro": return { subject: subj, body: hi + "I wanted to share something I think " + place + "'s residents would actually use. " + PITCH + " Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + "\n\nIt covers pricing and the common questions, and you can ask anything right on the page. If you'd like to look around first, our website is here:\n" + site + disc + sign };
-      case "nudge": return { subject: "Re: " + subj, body: hi + "Just bumping this in case it got buried. The walkthrough is here whenever you have 7 minutes:\n" + l.url + sign };
-      case "last": return { subject: "Re: " + subj, body: hi + "Last note from me on this. If you haven't had a chance yet, this 7-minute walkthrough shows exactly what your residents and your team would get:\n" + l.url + "\n\nIf resident fitness isn't a priority right now, no problem at all. It stays up for a while." + sign };
+      // Nov 14 2026: built from an affiliate's own first email and follow-up (Lucille's), tightened and made true to
+      // the app: the problem in one question, what residents and the team get, the walkthrough, how to apply with
+      // the code already in, and the disclosure.
+      case "intro": return { subject: subj, body: hi + "I'm reaching out about AmenityFit, a fitness and wellness app made for residential buildings.\n\nWhat if every resident at " + place + " had a personal trainer, without adding staff or equipment?\n\nAmenityFit builds each resident's workouts around the exact equipment in your gym, for every age and level, and goes beyond the gym: the pool, the yoga room, outdoor runs. Residents get a coach they can ask anything, from workouts to meals, and can find neighbors to train with. Your team gets a dashboard and a monthly report showing how residents use it. Residents never pay anything.\n\nI made you a private 7-minute walkthrough of the real app, with pricing:\n" + l.url + "\n\nIf it's a fit, you can apply in about 2 minutes here" + (o.code ? " (my referral code, " + o.code + ", is already filled in)" : "") + ":\n" + apply + disc + sign };
+      case "nudge": return { subject: "Re: " + subj, body: hi + "Following up with one more part of AmenityFit: it brings neighbors together. Residents can find others in the building who train, team up and work out together, so the gym becomes part of the community.\n\nIt also covers more than the gym, with workouts for the pool, the yoga or fitness room, courts and outdoor runs, so every amenity you offer gets used.\n\nHere's your private walkthrough again, 7 minutes:\n" + l.url + "\n\nHappy to answer anything." + sign };
+      case "last": return { subject: "Re: " + subj, body: hi + "Last note from me on this. If you haven't had a chance yet, this 7-minute walkthrough shows exactly what your residents and your team would get:\n" + l.url + "\n\nIf resident fitness isn't a priority right now, no problem at all. The link stays up for a while if it becomes one." + sign };
       case "thanks": return { subject: "Re: " + subj, body: hi + "Thanks for taking a look. If it's a fit for " + place + ", the application takes about 2 minutes here:\n" + apply + "\n\nThe agreement comes by e-signature after that. Any question, you can ask right on the walkthrough page or just reply here." + sign };
       case "checkin": return { subject: "Re: " + subj, body: hi + "Checking in on AmenityFit for " + place + ". Happy to answer anything, or to put you in touch with Asenso, the founder, if a quick call would help.\n\nThe walkthrough again: " + l.url + sign };
       case "apply": return { subject: "Next step for " + place, body: hi + "Great talking with you. Here is the application. It takes about 2 minutes:\n" + apply + "\n\nAfter that the agreement comes by e-signature, and the AmenityFit team sets up " + place + " with you." + sign };
@@ -125,7 +128,7 @@
     return { subject: "", body: "" };
   }
   var LIBRARY = [
-    ["intro", "First email", "Day 1. Their private walkthrough, plus your website link."],
+    ["intro", "First email", "Day 1. Their private walkthrough, and your link to apply."],
     ["nudge", "Follow-up", "A week after the first email, only if it was not opened."],
     ["last", "Last note", "5 days after the follow-up, only if still not opened. Then stop."],
     ["thanks", "After they watch", "A day or two after they open it. How to apply."],
