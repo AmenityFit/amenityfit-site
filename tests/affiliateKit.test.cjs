@@ -100,3 +100,11 @@ test("the website keeps the affiliate's code for 90 days, so a later visit still
   assert.equal(run("?ref=ben1", store, 2000), "BEN1", "a newer link wins");
   assert.equal(run("?ref=<script>", store, 3000), "BEN1", "junk is ignored");
 });
+test("a link to #apply lands on the top of Request Access once the page settles, and stops if they scroll", () => {
+  const src = fs.readFileSync(__dirname + "/../index.html", "utf8");
+  const i = src.indexOf("(function landOnSection() {");
+  assert.ok(i > 0);
+  const b = src.slice(i, i + 900);
+  assert.match(b, /try \{ scrollToSection\(id\); \}/); assert.match(b, /window\.addEventListener\('load', go\)/); assert.match(b, /setTimeout\(go, 1500\)/);
+  assert.match(b, /\['wheel', 'touchstart', 'keydown'\]/);
+});

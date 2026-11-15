@@ -2663,6 +2663,19 @@
     }
   })();
 
+  // Nov 14 2026 (Senz: a manager tapped Apply on the walkthrough and landed on the founder's credentials, above the
+  // form): a link straight to a section (amenityfit.app/?ref=CODE#apply) lands on that section's top, once the photos
+  // and fonts above it have settled. Stops as soon as the visitor scrolls or taps on their own.
+  (function landOnSection() {
+    var id = (location.hash || '').slice(1);
+    if (!/^[a-z][a-z0-9-]{0,40}$/.test(id) || !document.getElementById(id)) return;
+    var moved = false;
+    ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { once: true, passive: true }); });
+    var go = function () { if (!moved) { try { scrollToSection(id); } catch (e) {} } };
+    if (document.readyState === 'complete') go(); else window.addEventListener('load', go);
+    setTimeout(go, 1500);
+  })();
+
   // Real app loops: play only while on screen, never for people who prefer reduced motion.
   (function () {
     var vids = document.querySelectorAll('video[data-loop]');
