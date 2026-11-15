@@ -34,12 +34,13 @@ test("the dashboard and the server use the same prices", () => {
 });
 
 const link = (x) => ({ url: "https://amenityfit.app/demo/?t=abc", firstName: "Kim", building: "The Brook", state: "live", createdAtMs: T0, opens: 0, touches: [], ...x });
-test("the plan: intro, one follow-up after 4 days, one last note, then stop", () => {
+test("the plan (Senz, Nov 14): intro, a follow-up a week later, a last note 5 days after that, then stop", () => {
   let p = K.plan(link(), T0); assert.equal(p.kind, "intro"); assert.equal(p.due, true);
-  p = K.plan(link({ touches: [{ kind: "sent", atMs: T0 }] }), T0 + D); assert.equal(p.kind, "nudge"); assert.equal(p.due, false); assert.equal(p.dueAtMs, T0 + 4 * D);
-  assert.equal(K.plan(link({ touches: [{ kind: "sent", atMs: T0 }] }), T0 + 4 * D).due, true);
-  p = K.plan(link({ touches: [{ kind: "sent", atMs: T0 }, { kind: "followup", atMs: T0 + 4 * D }] }), T0 + 5 * D); assert.equal(p.kind, "last"); assert.equal(p.dueAtMs, T0 + 9 * D);
-  p = K.plan(link({ touches: [{ kind: "sent", atMs: T0 }, { kind: "followup", atMs: T0 + 4 * D }, { kind: "followup", atMs: T0 + 9 * D }] }), T0 + 30 * D);
+  p = K.plan(link({ touches: [{ kind: "sent", atMs: T0 }] }), T0 + D); assert.equal(p.kind, "nudge"); assert.equal(p.due, false); assert.equal(p.dueAtMs, T0 + 7 * D);
+  assert.equal(K.plan(link({ touches: [{ kind: "sent", atMs: T0 }] }), T0 + 6 * D).due, false);
+  assert.equal(K.plan(link({ touches: [{ kind: "sent", atMs: T0 }] }), T0 + 7 * D).due, true);
+  p = K.plan(link({ touches: [{ kind: "sent", atMs: T0 }, { kind: "followup", atMs: T0 + 7 * D }] }), T0 + 8 * D); assert.equal(p.kind, "last"); assert.equal(p.dueAtMs, T0 + 12 * D);
+  p = K.plan(link({ touches: [{ kind: "sent", atMs: T0 }, { kind: "followup", atMs: T0 + 7 * D }, { kind: "followup", atMs: T0 + 12 * D }] }), T0 + 30 * D);
   assert.equal(p.done, true); assert.match(p.text, /limit/);
 });
 test("the plan once they open it: next step, one check-in, then leave it", () => {
@@ -75,4 +76,27 @@ test("handed to Asenso: no more emails from the affiliate; the talking points st
   assert.equal(K.plan(link({ handedOffAtMs: T0 }), T0).done, true);
   const all = K.TALK.map(([h, t]) => h + " " + t).join(" ");
   assert.doesNotMatch(all, /[—–]|\bAI\b|Senz/); assert.match(all, /Residents never pay/); assert.match(all, /Hand to Asenso/);
+});
+
+test("emails (Nov 14): the first carries the walkthrough and the affiliate's website link; the last note the walkthrough again", () => {
+  const o = { me: "Ana Diaz", applyUrl: "https://amenityfit.app/?ref=ANA7#apply", siteUrl: "https://amenityfit.app/?ref=ANA7" };
+  const intro = K.email("intro", link(), o).body;
+  assert.match(intro, /demo\/\?t=abc[\s\S]*https:\/\/amenityfit\.app\/\?ref=ANA7/);
+  assert.match(K.email("last", link(), o).body, /demo\/\?t=abc/);
+  assert.match(K.LIBRARY.find((x) => x[0] === "nudge")[2], /A week after the first email/);
+});
+test("the website keeps the affiliate's code for 90 days, so a later visit still credits them", () => {
+  const src = fs.readFileSync(__dirname + "/../index.html", "utf8");
+  const i = src.indexOf("(function prefillReferralCode() {"), j = src.indexOf("})();", i) + 5;
+  const run = (search, store, now) => {
+    const fields = {}; ["f-referral", "h-referral", "pb-referral", "ph-referral"].forEach((k) => { fields[k] = { value: "" }; });
+    new Function("window", "document", "localStorage", "Date", "URLSearchParams", src.slice(i, j))({ location: { search } }, { getElementById: (k) => fields[k] }, store, { now: () => now }, URLSearchParams);
+    return fields["f-referral"].value;
+  };
+  const mem = {}; const store = { getItem: (k) => mem[k] ?? null, setItem: (k, v) => { mem[k] = v; } };
+  assert.equal(run("?ref=ana7", store, 1000), "ANA7");
+  assert.equal(run("", store, 1000 + 30 * 86400000), "ANA7", "came back a month later");
+  assert.equal(run("", store, 1000 + 91 * 86400000), "", "after 90 days it is gone");
+  assert.equal(run("?ref=ben1", store, 2000), "BEN1", "a newer link wins");
+  assert.equal(run("?ref=<script>", store, 3000), "BEN1", "junk is ignored");
 });

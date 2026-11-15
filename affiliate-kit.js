@@ -71,8 +71,9 @@
     if (!firstSent) return step("intro", l.createdAtMs || now, "Send the intro email with their link, then tap I sent it.");
     if (!(l.opens > 0)) {
       var n = Math.max(1, emails.length);
-      if (n === 1) return step("nudge", firstSent + 4 * DAY, "Not opened yet. One short follow-up 4 days after the first email.");
-      if (n === 2) return step("last", (last || firstSent) + 5 * DAY, "Still not opened. One last short note.");
+      // Nov 14 2026 (Senz): a week before the follow-up, then 5 days before the last note.
+      if (n === 1) return step("nudge", firstSent + 7 * DAY, "Not opened yet. One short follow-up, a week after the first email.");
+      if (n === 2) return step("last", (last || firstSent) + 5 * DAY, "Still not opened. One last short note, with the walkthrough link again.");
       return done("Three emails and no open: that is the limit. Leave it. The link stays live for 90 days.");
     }
     var openedAt = l.firstOpenedAtMs || l.lastOpenedAtMs || firstSent;
@@ -108,11 +109,12 @@
     var sign = "\n\nBest,\n" + (o.me || "");
     var subj = "A fitness amenity for " + place;
     var apply = o.applyUrl || "https://amenityfit.app/#apply";
+    var site = o.siteUrl || "https://amenityfit.app";
     var disc = "\n\n" + disclosure(o.informal);
     switch (kind) {
-      case "intro": return { subject: subj, body: hi + "I wanted to share something I think " + place + "'s residents would actually use. " + PITCH + " Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + "\n\nIt covers pricing and the common questions, and you can ask anything right on the page." + disc + sign };
+      case "intro": return { subject: subj, body: hi + "I wanted to share something I think " + place + "'s residents would actually use. " + PITCH + " Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + "\n\nIt covers pricing and the common questions, and you can ask anything right on the page. If you'd like to look around first, our website is here:\n" + site + disc + sign };
       case "nudge": return { subject: "Re: " + subj, body: hi + "Just bumping this in case it got buried. The walkthrough is here whenever you have 7 minutes:\n" + l.url + sign };
-      case "last": return { subject: "Re: " + subj, body: hi + "Last note from me on this. If resident fitness isn't a priority right now, no problem at all. The walkthrough stays up for a while if it ever is:\n" + l.url + sign };
+      case "last": return { subject: "Re: " + subj, body: hi + "Last note from me on this. If you haven't had a chance yet, this 7-minute walkthrough shows exactly what your residents and your team would get:\n" + l.url + "\n\nIf resident fitness isn't a priority right now, no problem at all. It stays up for a while." + sign };
       case "thanks": return { subject: "Re: " + subj, body: hi + "Thanks for taking a look. If it's a fit for " + place + ", the application takes about 2 minutes here:\n" + apply + "\n\nThe agreement comes by e-signature after that. Any question, you can ask right on the walkthrough page or just reply here." + sign };
       case "checkin": return { subject: "Re: " + subj, body: hi + "Checking in on AmenityFit for " + place + ". Happy to answer anything, or to put you in touch with Asenso, the founder, if a quick call would help.\n\nThe walkthrough again: " + l.url + sign };
       case "apply": return { subject: "Next step for " + place, body: hi + "Great talking with you. Here is the application. It takes about 2 minutes:\n" + apply + "\n\nAfter that the agreement comes by e-signature, and the AmenityFit team sets up " + place + " with you." + sign };
@@ -123,9 +125,9 @@
     return { subject: "", body: "" };
   }
   var LIBRARY = [
-    ["intro", "First email", "Day 1. With their private link."],
-    ["nudge", "Follow-up", "4 days later, only if it was not opened."],
-    ["last", "Last note", "5 days after that, only if still not opened. Then stop."],
+    ["intro", "First email", "Day 1. Their private walkthrough, plus your website link."],
+    ["nudge", "Follow-up", "A week after the first email, only if it was not opened."],
+    ["last", "Last note", "5 days after the follow-up, only if still not opened. Then stop."],
     ["thanks", "After they watch", "A day or two after they open it. How to apply."],
     ["checkin", "Check-in", "A week after that, once."],
     ["apply", "How to apply", "When they say they're interested."],

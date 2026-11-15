@@ -52,6 +52,7 @@
     .demo-step b{display:block;color:var(--text);font-size:13.5px;margin-bottom:2px;}
     .demo-form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
     .demo-form input{border:1px solid var(--border);border-radius:9px;padding:10px 12px;font:14px var(--ff-body);width:100%;}
+    .demo-credit{font-size:12.5px;color:#166534;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 12px;margin:0 0 14px;line-height:1.5;}
     .demo-made{margin-top:12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 14px;display:none;}
     .demo-made .url{font-size:13px;word-break:break-all;margin-bottom:8px;color:var(--text);}
     .demo-btns{display:flex;gap:8px;flex-wrap:wrap;}
@@ -333,10 +334,11 @@
     </div>
     <div class="demo-due" id="dm-due" style="display:none"></div>
     <div class="demo-steps">
-      <div class="demo-step"><b>1. Make a link</b>Their first name and building. The page greets them by name.</div>
-      <div class="demo-step"><b>2. Send it yourself</b>Copy the email below into your own email, then tap I sent it.</div>
-      <div class="demo-step"><b>3. Follow the plan</b>This page says when to follow up and gives you the exact email. Never more than three before they answer.</div>
+      <div class="demo-step"><b>1. Make their link</b>Fill in the form below (their first name and building) and tap Make link. Their walkthrough greets them by name.</div>
+      <div class="demo-step"><b>2. Email it from your own email</b>Their link and a ready-made email appear right below the form. Tap Copy email, paste it into a new email in Gmail, Outlook or whatever you use, and send it to them. Then come back and tap I sent it.</div>
+      <div class="demo-step"><b>3. Follow up when this page says</b>Tapping I sent it starts the reminders: it tells you when to follow up and gives you the exact email. Never more than three before they answer.</div>
     </div>
+    <p class="demo-credit">Every link here carries your referral code, and so does your website link above. If they apply from the walkthrough or the website, even days later, your code is already filled in, so the building is credited to you.</p>
     <div class="demo-form">
       <input id="dm-first" placeholder="Manager's first name" autocomplete="off" />
       <input id="dm-last" placeholder="Last name (optional)" autocomplete="off" />
@@ -906,7 +908,8 @@
   const DEMO_API = 'https://us-central1-amenityfit-31276.cloudfunctions.net/affiliateDemo';
   let demoUser = null, demoLinks = [], demoMe = '', demoApply = 'https://amenityfit.app/#apply', demoOpen = '';
   const demoEsc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const demoOpts = () => ({ me: demoMe, applyUrl: demoApply, informal: isInformal });
+  let demoSite = 'https://amenityfit.app';
+  const demoOpts = () => ({ me: demoMe, applyUrl: demoApply, siteUrl: demoSite, informal: isInformal });
   const dayLabel = (ms) => {
     const d = new Date(ms), t = new Date(); t.setHours(0, 0, 0, 0);
     const days = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - t) / 86400000);
@@ -1066,7 +1069,7 @@
   };
   window.afDemoInit = async (user, affiliate) => {
     demoUser = user; demoMe = affiliate && affiliate.name ? affiliate.name : '';
-    if (affiliate && affiliate.referralCode) demoApply = 'https://amenityfit.app/?ref=' + encodeURIComponent(affiliate.referralCode) + '#apply';
+    if (affiliate && affiliate.referralCode) { demoApply = 'https://amenityfit.app/?ref=' + encodeURIComponent(affiliate.referralCode) + '#apply'; demoSite = 'https://amenityfit.app/?ref=' + encodeURIComponent(affiliate.referralCode); }
     document.getElementById('demo-card').style.display = 'block';
     libraryRender(); talkRender();
     try { const d = await demoCall('GET'); demoLinks = d.links || []; faqRender(d.faq); demoRender(); }

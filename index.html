@@ -2644,9 +2644,16 @@
   // portfolio, hotel portfolio), not just whichever one happens to be
   // selected by default, since the visitor may switch to any of them
   // before submitting.
+  // Nov 14 2026: the code is also kept on this device for 90 days, so a manager who opened an affiliate's link and
+  // comes back later by typing amenityfit.app (or from a bookmark) still applies with that affiliate's code.
   (function prefillReferralCode() {
     const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
+    let ref = (params.get('ref') || '').trim();
+    const KEY = 'af_ref', DAYS90 = 90 * 24 * 60 * 60 * 1000;
+    try {
+      if (/^[A-Za-z0-9_-]{2,40}$/.test(ref)) localStorage.setItem(KEY, JSON.stringify({ code: ref.toUpperCase(), at: Date.now() }));
+      else { ref = ''; const kept = JSON.parse(localStorage.getItem(KEY) || 'null'); if (kept && kept.code && Date.now() - kept.at < DAYS90) ref = kept.code; }
+    } catch (e) { if (!/^[A-Za-z0-9_-]{2,40}$/.test(ref)) ref = ''; }
     if (ref) {
       const code = ref.trim().toUpperCase();
       ['f-referral', 'h-referral', 'pb-referral', 'ph-referral'].forEach(id => {
