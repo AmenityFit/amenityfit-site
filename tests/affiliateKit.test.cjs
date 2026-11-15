@@ -19,9 +19,9 @@ test("every tier on amenityfit.app is in the estimator, including 501 to 1,000 u
 });
 test("yearly prepay, portfolios and the hotel bonus are counted the way the agreement does", () => {
   const y = K.estimate("building", 80, 1);
-  assert.equal(y.yearlyMonthly, 134.87); assert.equal(y.priceYearlyPerMonth, 899.1);
+  assert.equal(y.yearlyMonthly, 134.86, "rounded down, as paid"); assert.equal(y.priceYearlyPerMonth, 899.1);
   const p = K.estimate("building", 80, 5); // 10% off five buildings
-  assert.equal(p.priceMonthly, 4495.5); assert.equal(p.monthly, 674.33);
+  assert.equal(p.priceMonthly, 4495.5); assert.equal(p.monthly, 674.32);
   const big = K.estimate("building", 80, 20); // 17% off, then 10% yearly: 25.3% is capped at 25%
   assert.equal(big.priceYearlyPerMonth, 14985);
   assert.equal(K.estimate("building", 80, 40).custom, true);

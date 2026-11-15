@@ -38,7 +38,8 @@
     var base = t.monthly * n;
     var monthlyMult = Math.max(0.75, 1 - pct), yearlyMult = Math.max(0.75, (1 - pct) * 0.9);
     var priceMonthly = round2(base * monthlyMult), priceYearlyPerMonth = round2(base * yearlyMult);
-    var c1 = round2(priceMonthly * RATE), c2 = round2(priceYearlyPerMonth * RATE);
+    // The same as the payout: 15% in whole cents, rounded down, so the estimate is never more than what is paid.
+    var c1 = Math.floor(Math.round(priceMonthly * 100) * 15 / 100) / 100, c2 = Math.floor(Math.round(priceYearlyPerMonth * 12 * 100) * 15 / 1200) / 100;
     return {
       custom: false, tier: t, count: n, portfolioPct: pct, priceMonthly: priceMonthly, priceYearlyPerMonth: priceYearlyPerMonth,
       monthly: c1, twelve: round2(c1 * 12), yearlyMonthly: c2, yearlyTwelve: round2(c2 * 12), bonus: hotelBonus(kind, n),
