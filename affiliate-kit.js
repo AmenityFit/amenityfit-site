@@ -1,0 +1,138 @@
+// The affiliate dashboard's plain logic (Nov 14 2026): prices and commission, the follow-up plan for each demo link,
+// and the emails and scripts. Kept apart from the page so it is tested. The page loads it as a plain script
+// (window.AFKit); the tests load it with require().
+(function (root) {
+  "use strict";
+
+  // The same prices as amenityfit.app, the demo page and the signed agreement (Exhibit A).
+  var BUILDING = [[50, 599, "Up to 50 units"], [100, 999, "51 to 100 units"], [200, 1499, "101 to 200 units"], [300, 1999, "201 to 300 units"], [500, 2799, "301 to 500 units"], [1000, 3999, "501 to 1,000 units"]];
+  var HOTEL = [[100, 349, "Up to 100 rooms"], [250, 699, "101 to 250 rooms"], [500, 1299, "251 to 500 rooms"], [1000, 2199, "501 to 1,000 rooms"]];
+  var RATE = 0.15;
+  var round2 = function (x) { return Math.round(x * 100) / 100; };
+
+  function tiers(kind) { return kind === "hotel" ? HOTEL : BUILDING; }
+  function tierFor(kind, size) {
+    var n = Math.round(Number(size) || 0);
+    if (n < 1) return null;
+    var t = tiers(kind).filter(function (x) { return n <= x[0]; })[0];
+    return t ? { max: t[0], monthly: t[1], label: t[2] } : null;
+  }
+  // Portfolio discounts, the same as the portfolio application (one agreement for several properties).
+  function portfolioPct(kind, count) {
+    var n = Number(count) || 1;
+    if (kind === "hotel") return n >= 20 ? 0.10 : n >= 10 ? 0.08 : n >= 3 ? 0.05 : 0;
+    if (n >= 40) return null; // custom agreement
+    return n >= 20 ? 0.17 : n >= 10 ? 0.13 : n >= 5 ? 0.10 : 0;
+  }
+  function hotelBonus(kind, count) { return kind !== "hotel" ? 0 : count >= 10 ? 1500 : count >= 3 ? 500 : 0; }
+
+  /**
+   * What a deal pays the affiliate. kind "building" or "hotel"; size units or rooms per property; count properties of
+   * that size under one agreement. Prices are combined the way the agreement does it, capped at 25% off in all.
+   */
+  function estimate(kind, size, count) {
+    var n = Math.max(1, Math.min(200, Math.round(Number(count) || 1)));
+    var t = tierFor(kind, size);
+    var pct = portfolioPct(kind, n);
+    if (!t || pct === null) return { custom: true, tier: t, count: n, bonus: hotelBonus(kind, n) };
+    var base = t.monthly * n;
+    var monthlyMult = Math.max(0.75, 1 - pct), yearlyMult = Math.max(0.75, (1 - pct) * 0.9);
+    var priceMonthly = round2(base * monthlyMult), priceYearlyPerMonth = round2(base * yearlyMult);
+    var c1 = round2(priceMonthly * RATE), c2 = round2(priceYearlyPerMonth * RATE);
+    return {
+      custom: false, tier: t, count: n, portfolioPct: pct, priceMonthly: priceMonthly, priceYearlyPerMonth: priceYearlyPerMonth,
+      monthly: c1, twelve: round2(c1 * 12), yearlyMonthly: c2, yearlyTwelve: round2(c2 * 12), bonus: hotelBonus(kind, n),
+    };
+  }
+
+  // ----- the follow-up plan for one demo link -----
+  // At most three emails before they answer (the first and two follow-ups) and, once they have watched, two notes.
+  // Never more: the link stays live for 90 days and they can come back to it.
+  var DAY = 86400000;
+  var EMAIL_TOUCHES = { sent: 1, followup: 1 };
+  function plan(l, now) {
+    now = now || Date.now();
+    var touches = Array.isArray(l.touches) ? l.touches.slice().sort(function (a, b) { return a.atMs - b.atMs; }) : [];
+    var emails = touches.filter(function (t) { return EMAIL_TOUCHES[t.kind]; });
+    var last = touches.length ? touches[touches.length - 1].atMs : 0;
+    var done = function (text) { return { done: true, text: text }; };
+    var step = function (kind, dueAtMs, text) { return { kind: kind, dueAtMs: dueAtMs, due: dueAtMs <= now, text: text }; };
+    if (l.state && l.state !== "live") return done("This link is no longer live.");
+    if (l.outcome === "not_interested") return done("Not interested. No more emails. Thank them and move on.");
+    if (l.outcome === "wrong_person") return done("Wrong person. Make a new link for the right manager.");
+    if (l.applyClickedAtMs) return done("They clicked Apply. AmenityFit takes it from here, and it shows under Your referrals once they apply.");
+    var replied = touches.some(function (t) { return t.kind === "replied" || t.kind === "met"; }) || l.outcome === "interested";
+    if (l.nextFollowUpAtMs > 0) return step(replied ? "apply" : l.opens > 0 ? "checkin" : "nudge", l.nextFollowUpAtMs, "Your follow-up date.");
+    if (l.outcome === "not_now") return done("Not right now. Set a follow-up date for when they said to check back.");
+    if (replied) return done("You are talking. Set a follow-up date for your next step, or send the how-to-apply note.");
+    var firstSent = emails.length ? emails[0].atMs : l.opens > 0 ? l.createdAtMs : 0;
+    if (!firstSent) return step("intro", l.createdAtMs || now, "Send the intro email with their link, then tap I sent it.");
+    if (!(l.opens > 0)) {
+      var n = Math.max(1, emails.length);
+      if (n === 1) return step("nudge", firstSent + 4 * DAY, "Not opened yet. One short follow-up 4 days after the first email.");
+      if (n === 2) return step("last", (last || firstSent) + 5 * DAY, "Still not opened. One last short note.");
+      return done("Three emails and no open: that is the limit. Leave it. The link stays live for 90 days.");
+    }
+    var openedAt = l.firstOpenedAtMs || l.lastOpenedAtMs || firstSent;
+    var after = emails.filter(function (t) { return t.atMs >= openedAt; }).length;
+    var watchedAll = l.completedAtMs || l.maxSeconds >= 444;
+    if (after === 0) return step("thanks", openedAt + (watchedAll ? 1 : 2) * DAY, watchedAll ? "They watched it all. Send the next-step note." : "They opened it. Send the next-step note.");
+    if (after === 1) return step("checkin", (last || openedAt) + 7 * DAY, "One friendly check-in a week later.");
+    return done("They have everything. Leave the next move to them, or call if you know them.");
+  }
+
+  function stage(l) {
+    if (l.state && l.state !== "live") return ["off", l.state === "off" ? "Switched off" : "Expired"];
+    if (l.applyClickedAtMs) return ["hot", "Clicked Apply"];
+    if (l.completedAtMs || l.maxSeconds >= 444) return ["hot", "Watched it all"];
+    if (l.maxSeconds >= 60) return ["warm", "Watched " + Math.floor(l.maxSeconds / 60) + " min"];
+    if (l.opens > 0) return ["warm", "Opened"];
+    return ["cold", "Not opened yet"];
+  }
+
+  // ----- emails and scripts -----
+  // Disclosure: the affiliate agreement and the FTC need paid affiliates to say they may be paid. Informal referrers
+  // are never paid, so theirs says so instead.
+  function disclosure(informal) {
+    return informal
+      ? "I'm not paid for this. I just think it's a good fit."
+      : "Full disclosure: I'm an AmenityFit partner and may earn a referral fee if you sign up.";
+  }
+  var PITCH = "AmenityFit is a fitness and wellness app for residents: workouts built around the exact equipment in your gym, a Coach they can ask anything, and a monthly report for your team showing how it's being used. Residents never pay.";
+  function email(kind, l, o) {
+    o = o || {};
+    var place = l.building || l.company || "your building";
+    var hi = "Hi " + (l.firstName || "there") + ",\n\n";
+    var sign = "\n\nBest,\n" + (o.me || "");
+    var subj = "A fitness amenity for " + place;
+    var apply = o.applyUrl || "https://amenityfit.app/#apply";
+    var disc = "\n\n" + disclosure(o.informal);
+    switch (kind) {
+      case "intro": return { subject: subj, body: hi + "I wanted to share something I think " + place + "'s residents would actually use. " + PITCH + " Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + "\n\nIt covers pricing and the common questions, and you can ask anything right on the page." + disc + sign };
+      case "nudge": return { subject: "Re: " + subj, body: hi + "Just bumping this in case it got buried. The walkthrough is here whenever you have 7 minutes:\n" + l.url + sign };
+      case "last": return { subject: "Re: " + subj, body: hi + "Last note from me on this. If resident fitness isn't a priority right now, no problem at all. The walkthrough stays up for a while if it ever is:\n" + l.url + sign };
+      case "thanks": return { subject: "Re: " + subj, body: hi + "Thanks for taking a look. If it's a fit for " + place + ", the application takes about 2 minutes here:\n" + apply + "\n\nThe agreement comes by e-signature after that. Any question, you can ask right on the walkthrough page or just reply here." + sign };
+      case "checkin": return { subject: "Re: " + subj, body: hi + "Checking in on AmenityFit for " + place + ". Happy to answer anything, or to put you in touch with Asenso, the founder, if a quick call would help.\n\nThe walkthrough again: " + l.url + sign };
+      case "apply": return { subject: "Next step for " + place, body: hi + "Great talking with you. Here is the application. It takes about 2 minutes:\n" + apply + "\n\nAfter that the agreement comes by e-signature, and the AmenityFit team sets up " + place + " with you." + sign };
+      case "text": return { subject: "", body: "Hi " + (l.firstName || "") + ", it's " + (o.me || "") + ". Here's the 7-minute AmenityFit walkthrough I mentioned, made for " + place + ": " + l.url + " " + disclosure(o.informal) };
+      case "linkedin": return { subject: "", body: "Hi " + (l.firstName || "") + ", I work with buildings on resident amenities. AmenityFit gives residents a personal trainer in their pocket, built around the gym they already have, at no cost to residents. I made a private 7-minute walkthrough for " + place + ": " + l.url + " " + disclosure(o.informal) };
+      case "call": return { subject: "", body: "\"Hi " + (l.firstName || "") + ", it's " + (o.me || "") + ". Quick one: do your residents use the gym at " + place + " much? There's an app called AmenityFit that builds workouts around the exact equipment in your gym and gives your team a monthly report on use. Residents don't pay anything. Can I send you a private 7-minute walkthrough?\"\n\nIf yes: make their link, send the intro email, tap I sent it." };
+    }
+    return { subject: "", body: "" };
+  }
+  var LIBRARY = [
+    ["intro", "First email", "Day 1. With their private link."],
+    ["nudge", "Follow-up", "4 days later, only if it was not opened."],
+    ["last", "Last note", "5 days after that, only if still not opened. Then stop."],
+    ["thanks", "After they watch", "A day or two after they open it. How to apply."],
+    ["checkin", "Check-in", "A week after that, once."],
+    ["apply", "How to apply", "When they say they're interested."],
+    ["text", "Text message", "For someone you already know."],
+    ["linkedin", "LinkedIn message", "Short, for a first message there."],
+    ["call", "Phone or in person", "What to say, in 20 seconds."],
+  ];
+
+  var api = { BUILDING: BUILDING, HOTEL: HOTEL, RATE: RATE, tierFor: tierFor, portfolioPct: portfolioPct, hotelBonus: hotelBonus, estimate: estimate, plan: plan, stage: stage, email: email, disclosure: disclosure, LIBRARY: LIBRARY, DAY: DAY };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  root.AFKit = api;
+})(typeof window !== "undefined" ? window : globalThis);

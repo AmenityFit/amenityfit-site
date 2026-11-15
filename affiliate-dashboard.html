@@ -66,6 +66,46 @@
     .demo-stage.hot{background:#DCFCE7;color:#166534;} .demo-stage.warm{background:#FEF3C7;color:#92400E;} .demo-stage.cold{background:#EEF2F9;color:#475569;} .demo-stage.off{background:#F1F5F9;color:#94A3B8;}
     .demo-tips{margin-top:16px;font-size:13px;color:var(--muted);line-height:1.6;}
     @media (max-width:720px){.demo-steps,.demo-form{grid-template-columns:1fr;}.demo-card{padding:20px;}}
+    .est-kind{display:flex;gap:8px;margin-bottom:14px;}
+    .est-kind-btn{flex:1;border:1.5px solid var(--border);background:#fff;border-radius:9px;padding:9px 10px;font:600 13px var(--ff-body);color:var(--muted);cursor:pointer;}
+    .est-kind-btn.active{border-color:var(--primary);color:var(--primary);background:#EEF4FC;}
+    .est-num{width:84px;padding:7px 9px;border-radius:8px;border:1.5px solid var(--border);font-size:14px;font-family:var(--ff-body);text-align:right;color:var(--text);}
+    .est-count-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;}
+    .est-count-row label{font-weight:600;}
+    .est-count-note{color:var(--muted);font-size:12px;}
+    .est-line{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5;}
+    .est-bonus{color:#166534;font-weight:600;}
+    .est-tiers{margin-top:12px;font-size:13px;}
+    .est-tiers summary{cursor:pointer;color:var(--primary);font-weight:600;}
+    .est-tier-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}
+    .est-tier-row.on{font-weight:700;color:var(--primary);}
+    .est-tier-row span:last-child{text-align:right;}
+    .demo-watch{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#EEF4FC;border:1px solid #CFE0F7;border-radius:10px;padding:12px 14px;margin-bottom:16px;}
+    .demo-watch b{display:block;font-size:14px;} .demo-watch span{font-size:12.5px;color:var(--muted);}
+    .demo-due{background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;}
+    .demo-due b{display:block;font-size:14px;margin-bottom:4px;color:#92400E;}
+    .demo-due a{color:var(--text);cursor:pointer;text-decoration:underline;}
+    .demo-next{font-size:12.5px;color:var(--text);margin-top:4px;}
+    .demo-next.due{color:#B45309;font-weight:700;}
+    .demo-open{flex-basis:100%;background:var(--subtle);border-radius:10px;padding:14px;margin-top:4px;display:none;}
+    .demo-row.open .demo-open{display:block;}
+    .demo-mail{background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;white-space:pre-wrap;line-height:1.5;margin:8px 0;max-height:220px;overflow:auto;}
+    .demo-mail b{display:block;margin-bottom:6px;}
+    .demo-h{font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;}
+    .demo-h:first-child{margin-top:0;}
+    .demo-timeline{font-size:12.5px;color:var(--muted);line-height:1.7;}
+    .demo-open textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:14px var(--ff-body);min-height:44px;resize:vertical;}
+    .demo-open input[type=date],.demo-open select{border:1px solid var(--border);border-radius:8px;padding:7px 9px;font:14px var(--ff-body);background:#fff;}
+    .demo-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;}
+    .demo-library{margin-top:18px;border-top:1px solid var(--border);padding-top:14px;}
+    .demo-library summary{cursor:pointer;font-weight:700;font-size:14px;}
+    .demo-lib-sub{font-size:12.5px;color:var(--muted);margin:6px 0 10px;}
+    .demo-lib-item{border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+    .demo-lib-item summary{font-size:13.5px;font-weight:600;cursor:pointer;}
+    .demo-lib-item summary span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px;}
+    /* Nov 14 2026: iPhone zooms the page in when a box with text under 16px is tapped. */
+    @media (max-width:820px){input,select,textarea{font-size:16px !important;}}
+
     .referral-card{background:linear-gradient(135deg,#0d0d1a,#151a2e);color:#fff;border-radius:14px;padding:24px 28px;margin-bottom:24px;}
     .referral-card .label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
     .referral-link-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
@@ -239,51 +279,11 @@
     <div class="referral-code-line">Referral code: <strong id="referral-code-text">...</strong></div>
   </div>
 
-  <div class="demo-card" id="demo-card" style="display:none">
-    <h2>Your private demo links</h2>
-    <p class="sub">The 7-minute walkthrough of the real app, with pricing, answers to the usual questions, and a box to ask anything. Make one link for each manager you reach out to. Each link carries your referral code, so when they apply from it, the building is credited to you.</p>
-    <div class="demo-steps">
-      <div class="demo-step"><b>1. Make a link</b>The manager's first name and building. The page greets them by name.</div>
-      <div class="demo-step"><b>2. Send it yourself</b>From your own email, in your own words, or copy the short note below.</div>
-      <div class="demo-step"><b>3. Watch where it stands</b>Opened, how far they watched, and when they click Apply.</div>
-    </div>
-    <div class="demo-form">
-      <input id="dm-first" placeholder="Manager's first name" />
-      <input id="dm-last" placeholder="Last name (optional)" />
-      <input id="dm-email" type="email" placeholder="Their email (optional)" />
-      <input id="dm-building" placeholder="Building" />
-      <input id="dm-company" placeholder="Management company (optional)" />
-      <button class="demo-btn" id="dm-make" onclick="afDemoMake()">Make link</button>
-    </div>
-    <div class="demo-err" id="dm-err"></div>
-    <div class="demo-made" id="dm-made">
-      <div class="url" id="dm-made-url"></div>
-      <div class="demo-btns">
-        <button class="demo-btn" onclick="afDemoCopy('link')">Copy link</button>
-        <button class="demo-btn ghost" onclick="afDemoCopy('intro')">Copy intro email</button>
-      </div>
-    </div>
-    <div class="demo-list" id="dm-list"></div>
-    <div class="demo-tips">Keep it light: one short follow-up after 4 or 5 days if it has not been opened, and one last note after that. Pricing and terms are the same for every building, so there is nothing to negotiate. Questions go to Asenso through the page.</div>
-  </div>
-
-  <div class="af-error-msg" id="informal-banner" style="background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF;">
-    You're tracking referrals as an informal contributor. This is for your own visibility only and isn't a compensation or contractual arrangement.
-  </div>
-
-  <div class="stats-grid" id="stats-grid">
-    <div class="stat-card" id="mrr-stat-card"><div class="stat-val" id="stat-mrr">$0</div><div class="stat-label">Current MRR<span class="rr-info-icon" onclick="this.classList.toggle('show-tip')" tabindex="0">?<span class="rr-tooltip">MRR stands for Monthly Recurring Revenue, the commission you're currently earning per month across all your active referrals.</span></span></div></div>
-    <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Referrals</div></div>
-    <div class="stat-card"><div class="stat-val" id="stat-closed">0</div><div class="stat-label">Buildings Closed</div></div>
-    <div class="stat-card"><div class="stat-val" id="stat-closing-pct">0%</div><div class="stat-label">Closing Rate</div></div>
-    <div class="stat-card"><div class="stat-val" id="stat-avg-days">-</div><div class="stat-label">Avg Days to Close</div></div>
-  </div>
-
   <div class="estimator-card" id="estimator-card">
     <div class="currency-row">
       <div>
-        <h2>Earnings estimator</h2>
-        <p class="sub" style="margin-bottom:0;">See what a building could earn you before you pitch it.</p>
+        <h2>What a building pays you</h2>
+        <p class="sub" style="margin-bottom:0;">You earn 15% of what the building pays AmenityFit, every month for 12 months. Same prices as amenityfit.app.</p>
       </div>
       <div>
         <label for="currency-select">Display currency</label>
@@ -297,19 +297,74 @@
         </select>
       </div>
     </div>
+    <div class="est-kind" role="group" aria-label="Kind of property">
+      <button type="button" class="est-kind-btn active" data-kind="building" onclick="setEstKind('building')">Apartment building</button>
+      <button type="button" class="est-kind-btn" data-kind="hotel" onclick="setEstKind('hotel')">Hotel</button>
+    </div>
     <div class="estimator-input-row">
-      <input type="range" id="est-slider" min="1" max="1000" value="100" oninput="syncEstimatorFromSlider(this.value)" />
+      <input type="range" id="est-slider" min="1" max="1000" value="100" oninput="syncEstimatorFromSlider(this.value)" aria-label="Size" />
       <div style="display:flex;align-items:center;gap:6px;">
-        <input type="number" id="est-units-input" min="1" max="100000" value="100" oninput="syncEstimatorFromInput(this.value)"
-          style="width:76px;padding:7px 9px;border-radius:8px;border:1.5px solid var(--border);font-size:14px;font-family:var(--ff-body);text-align:right;color:var(--text);" />
-        <span style="font-size:13px;color:var(--muted);">units</span>
+        <input type="number" id="est-units-input" inputmode="numeric" min="1" max="100000" value="100" oninput="syncEstimatorFromInput(this.value)" class="est-num" />
+        <span id="est-unit-word" style="font-size:13px;color:var(--muted);">units</span>
       </div>
     </div>
-    <div class="estimator-result">
-      <div><strong id="est-monthly">$149.85</strong><span>Monthly</span></div>
-      <div><strong id="est-annual">$1,798.20</strong><span>Over 12 Months</span></div>
+    <div class="est-count-row">
+      <label for="est-count">Properties in this deal</label>
+      <input type="number" id="est-count" inputmode="numeric" min="1" max="200" value="1" oninput="updateEstimator()" class="est-num" />
+      <span class="est-count-note" id="est-count-note">Several under one agreement get a portfolio discount.</span>
     </div>
+    <div class="estimator-result">
+      <div><strong id="est-monthly">$149.85</strong><span>You, each month</span></div>
+      <div><strong id="est-annual">$1,798.20</strong><span>You, over 12 months</span></div>
+    </div>
+    <p class="est-line" id="est-tier-line"></p>
+    <p class="est-line" id="est-yearly-line"></p>
+    <p class="est-line est-bonus" id="est-bonus-line" style="display:none"></p>
+    <details class="est-tiers"><summary>See every price</summary><div id="est-tier-table"></div></details>
     <p class="currency-note">Approximate conversion. You're always paid in USD, regardless of display currency.</p>
+  </div>
+
+  <div class="demo-card" id="demo-card" style="display:none">
+    <h2>Your private demo links</h2>
+    <p class="sub">The 7-minute walkthrough of the real app, with pricing, answers to the usual questions, and a box to ask anything. Make one link for each manager. Each link carries your referral code, so when they apply from it, the building is credited to you.</p>
+    <div class="demo-watch">
+      <div><b>Know what you're sending</b><span>Watch the same walkthrough managers see. Your own copy never shows up as a manager opening it.</span></div>
+      <button class="demo-btn" id="dm-watch" onclick="afDemoWatch()">Watch the demo</button>
+    </div>
+    <div class="demo-due" id="dm-due" style="display:none"></div>
+    <div class="demo-steps">
+      <div class="demo-step"><b>1. Make a link</b>Their first name and building. The page greets them by name.</div>
+      <div class="demo-step"><b>2. Send it yourself</b>Copy the email below into your own email, then tap I sent it.</div>
+      <div class="demo-step"><b>3. Follow the plan</b>This page says when to follow up and gives you the exact email. Never more than three before they answer.</div>
+    </div>
+    <div class="demo-form">
+      <input id="dm-first" placeholder="Manager's first name" autocomplete="off" />
+      <input id="dm-last" placeholder="Last name (optional)" autocomplete="off" />
+      <input id="dm-email" type="email" placeholder="Their email (optional)" autocomplete="off" />
+      <input id="dm-building" placeholder="Building" autocomplete="off" />
+      <input id="dm-company" placeholder="Management company (optional)" autocomplete="off" />
+      <button class="demo-btn" id="dm-make" onclick="afDemoMake()">Make link</button>
+    </div>
+    <div class="demo-err" id="dm-err"></div>
+    <div class="demo-list" id="dm-list"></div>
+    <details class="demo-library" id="dm-library">
+      <summary>Every email and script</summary>
+      <p class="demo-lib-sub">Filled in with an example. On each manager's row, the same emails come filled in with their name and link.</p>
+      <div id="dm-library-list"></div>
+    </details>
+    <div class="demo-tips">Pricing and terms are the same for every building, so there is nothing to negotiate. Questions they ask on the page are answered there, or by Asenso by email. Never promise a price, a discount or a feature that isn't on the page.</div>
+  </div>
+
+  <div class="af-error-msg" id="informal-banner" style="background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF;">
+    You're tracking referrals as an informal contributor. This is for your own visibility only and isn't a compensation or contractual arrangement.
+  </div>
+
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card" id="mrr-stat-card"><div class="stat-val" id="stat-mrr">$0</div><div class="stat-label">Current MRR<span class="rr-info-icon" onclick="this.classList.toggle('show-tip')" tabindex="0">?<span class="rr-tooltip">MRR stands for Monthly Recurring Revenue, the commission you're currently earning per month across all your active referrals.</span></span></div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Referrals</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-closed">0</div><div class="stat-label">Buildings Closed</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-closing-pct">0%</div><div class="stat-label">Closing Rate</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-avg-days">-</div><div class="stat-label">Avg Days to Close</div></div>
   </div>
 
   <div class="referrals-section">
@@ -333,6 +388,7 @@
   </div>
 </div>
 
+<script src="affiliate-kit.js"></script>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -351,23 +407,9 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Same tier ladder as the server (getTierLabel in the Cloud Functions
-  // codebase) - kept in sync manually since this is a display-only
-  // estimate, not what actually gets billed.
-  const TIER_MONTHLY_VALUES = [
-    { max: 50, value: 599 },
-    { max: 100, value: 999 },
-    { max: 200, value: 1499 },
-    { max: 300, value: 1999 },
-    { max: 500, value: 2799 },
-    { max: 1000, value: 3999 },
-  ];
-  function estimateMonthlyValue(units) {
-    for (const t of TIER_MONTHLY_VALUES) {
-      if (units <= t.max) return t.value;
-    }
-    return null; // over 1000 units - Custom tier, no fixed estimate
-  }
+  // Nov 14 2026: the estimator uses the same prices as amenityfit.app and the agreement (affiliate-kit.js, tested):
+  // apartment buildings and hotels, portfolios, paying for the year up front, and the hotel portfolio bonus.
+  const K = window.AFKit;
 
   // Same rates as the main site's pricing calculator - display-only, the
   // affiliate is always paid the real amount in USD via Stripe Connect.
@@ -381,6 +423,7 @@
   };
   let currentCurrency = 'USD';
   let lastEstimatorUnits = 100;
+  let estKind = 'building';
   let lastMrrUsd = 0;
   let isInformal = false;
 
@@ -389,6 +432,7 @@
     const converted = usdAmount * c.rate;
     return c.symbol + converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+  const usd0 = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
 
   window.changeCurrency = function(code) {
     currentCurrency = code;
@@ -396,27 +440,55 @@
     document.getElementById('stat-mrr').textContent = formatCurrency(lastMrrUsd);
   };
 
+  window.setEstKind = function(kind) {
+    estKind = kind === 'hotel' ? 'hotel' : 'building';
+    document.querySelectorAll('.est-kind-btn').forEach(b => b.classList.toggle('active', b.dataset.kind === estKind));
+    document.getElementById('est-unit-word').textContent = estKind === 'hotel' ? 'rooms' : 'units';
+    updateEstimator(lastEstimatorUnits);
+  };
+
+  function renderTierTable(currentMax) {
+    const word = estKind === 'hotel' ? 'rooms' : 'units';
+    const list = estKind === 'hotel' ? K.HOTEL : K.BUILDING;
+    document.getElementById('est-tier-table').innerHTML = list.map(([max, monthly, label]) =>
+      `<div class="est-tier-row${max === currentMax ? ' on' : ''}"><span>${label}</span><span>${usd0(monthly)} a month &middot; you ${formatCurrency(monthly * K.RATE)}</span></div>`
+    ).join('') + `<div class="est-tier-row${currentMax === null ? ' on' : ''}"><span>Over 1,000 ${word}</span><span>Custom quote &middot; you get 15% of it</span></div>`;
+  }
+
   window.updateEstimator = function(units) {
+    if (units === undefined) units = lastEstimatorUnits;
     units = parseInt(units) || 0;
     lastEstimatorUnits = units;
-    const monthlyValue = estimateMonthlyValue(units);
+    const count = Math.max(1, parseInt(document.getElementById('est-count').value) || 1);
+    const e = K.estimate(estKind, units, count);
+    const word = estKind === 'hotel' ? 'rooms' : 'units';
     const monthlyEl = document.getElementById('est-monthly');
     const annualEl = document.getElementById('est-annual');
-    if (monthlyValue === null) {
+    const tierLine = document.getElementById('est-tier-line');
+    const yearlyLine = document.getElementById('est-yearly-line');
+    const bonusLine = document.getElementById('est-bonus-line');
+    const countNote = document.getElementById('est-count-note');
+    countNote.textContent = estKind === 'hotel'
+      ? (count >= 3 ? `${Math.round((K.portfolioPct('hotel', count) || 0) * 100)}% portfolio discount on ${count} hotels.` : 'Three or more hotels under one agreement: a portfolio discount and a one-time bonus for you.')
+      : (count >= 40 ? '40 or more buildings is a custom agreement.' : count >= 5 ? `${Math.round((K.portfolioPct('building', count) || 0) * 100)}% portfolio discount on ${count} buildings.` : 'Five or more buildings under one agreement get a portfolio discount.');
+    renderTierTable(e.tier ? e.tier.max : (units > 0 ? null : -1));
+    if (e.custom) {
       monthlyEl.textContent = 'Custom';
       annualEl.textContent = 'Custom';
+      tierLine.textContent = e.tier ? 'A portfolio this size gets its own agreement. You earn 15% of what it pays, every month for 12 months.' : `Over 1,000 ${word} is a custom quote. You earn 15% of whatever it pays, every month for 12 months.`;
+      yearlyLine.textContent = '';
     } else {
-      const commission = monthlyValue * 0.15;
-      monthlyEl.textContent = formatCurrency(commission);
-      annualEl.textContent = formatCurrency(commission * 12);
+      monthlyEl.textContent = formatCurrency(e.monthly);
+      annualEl.textContent = formatCurrency(e.twelve);
+      tierLine.textContent = `${e.tier.label}: ${usd0(e.tier.monthly)} a month` + (count > 1 ? ` each, ${usd0(e.priceMonthly)} a month for all ${count}` + (e.portfolioPct ? ` after the ${Math.round(e.portfolioPct * 100)}% portfolio discount` : '') : '') + '.';
+      yearlyLine.textContent = `If they pay for the year up front (10% off), you earn ${formatCurrency(e.yearlyMonthly)} a month, ${formatCurrency(e.yearlyTwelve)} over 12 months.` + (estKind === 'hotel' && count >= 3 ? ' A 2 or 3 year hotel term takes a little more off.' : '');
     }
+    if (e.bonus) { bonusLine.style.display = 'block'; bonusLine.textContent = `Plus a one-time ${formatCurrency(e.bonus)} hotel portfolio bonus for ${count} hotels under one agreement.`; }
+    else bonusLine.style.display = 'none';
   };
 
   // Slider and number input stay in sync both ways. The slider caps out
-  // at 1000 units visually (its usable drag range), but someone can still
-  // type a larger real number directly - the slider just shows maxed out
-  // in that case while the typed number remains the true value used for
-  // the actual calculation.
+  // at 1000 visually, but a larger typed number is still the one used.
   window.syncEstimatorFromSlider = function(val) {
     document.getElementById('est-units-input').value = val;
     updateEstimator(val);
@@ -816,24 +888,21 @@
   }
 
 
-  // Private demo links: one per manager, carrying this affiliate's code (Nov 12 2026).
+  // Private demo links: one per manager, carrying this affiliate's code (Nov 12 2026). Nov 14 2026: a preview to
+  // watch, a follow-up plan on every link with the exact email to send, notes, a date of their own, and how it ended.
   const DEMO_API = 'https://us-central1-amenityfit-31276.cloudfunctions.net/affiliateDemo';
-  let demoUser = null, demoLinks = [], demoMade = null, demoMe = '';
+  let demoUser = null, demoLinks = [], demoMe = '', demoApply = 'https://amenityfit.app/#apply', demoOpen = '';
   const demoEsc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  function demoStage(l) {
-    if (l.state !== 'live') return ['off', l.state === 'off' ? 'Switched off' : 'Expired'];
-    if (l.applyClickedAtMs) return ['hot', 'Clicked Apply'];
-    if (l.completedAtMs || l.maxSeconds >= 444) return ['hot', 'Watched it all'];
-    if (l.maxSeconds >= 60) return ['warm', 'Watched ' + Math.floor(l.maxSeconds / 60) + ' min'];
-    if (l.opens > 0) return ['warm', 'Opened'];
-    return ['cold', 'Not opened yet'];
-  }
-  function demoEmail(kind, l) {
-    const place = l.building || l.company || 'your building';
-    if (kind === 'intro') return 'Subject: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nI wanted to share something I think ' + place + "'s residents would actually use. AmenityFit is a fitness and wellness app for residents: workouts built around the exact equipment in your gym, a Coach they can ask anything, and a monthly report for your team showing how it's being used. Think of it as a personal trainer that comes with the apartment.\n\nHere is a private 7-minute walkthrough made for you:\n" + l.url + '\n\nIt covers pricing and the common questions, and you can ask anything right on the page.\n\nBest,\n' + demoMe;
-    if (kind === 'nudge') return 'Subject: Re: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nJust bumping this in case it got buried. The walkthrough is here whenever you have 7 minutes:\n' + l.url + '\n\nBest,\n' + demoMe;
-    return 'Subject: Re: A fitness amenity for ' + place + '\n\nHi ' + l.firstName + ',\n\nThanks for taking a look. If it\'s a fit for ' + place + ', the application takes about 2 minutes at amenityfit.app, and the agreement comes by e-signature. Any questions, you can ask right on the page.\n\nBest,\n' + demoMe;
-  }
+  const demoOpts = () => ({ me: demoMe, applyUrl: demoApply, informal: isInformal });
+  const dayLabel = (ms) => {
+    const d = new Date(ms), t = new Date(); t.setHours(0, 0, 0, 0);
+    const days = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - t) / 86400000);
+    if (days === 0) return 'today'; if (days === 1) return 'tomorrow'; if (days === -1) return 'yesterday';
+    return d.toLocaleDateString(undefined, { weekday: days > 0 && days < 7 ? 'long' : undefined, month: 'short', day: 'numeric' });
+  };
+  const when = (ms) => new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  const TOUCH_WORDS = { sent: 'You sent the first email', followup: 'You sent a follow-up', call: 'You called', text: 'You texted', replied: 'They replied', met: 'You met or spoke' };
+  const EMAIL_NAMES = { intro: 'first email', nudge: 'follow-up', last: 'last note', thanks: 'next-step note', checkin: 'check-in', apply: 'how-to-apply note' };
   async function demoCall(method, body) {
     const t = await demoUser.getIdToken();
     const r = await fetch(DEMO_API, { method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t }, body: body ? JSON.stringify(body) : undefined });
@@ -841,42 +910,134 @@
     if (!r.ok) throw new Error(d.error || 'Something went wrong. Please try again.');
     return d;
   }
+  function mailHtml(kind, l) {
+    const e = K.email(kind, l, demoOpts());
+    return '<div class="demo-mail">' + (e.subject ? '<b>Subject: ' + demoEsc(e.subject) + '</b>' : '') + demoEsc(e.body) + '</div>';
+  }
+  function rowHtml(l, i) {
+    const [tone, label] = K.stage(l);
+    const p = K.plan(l);
+    const next = p.done ? '<div class="demo-next">' + demoEsc(p.text) + '</div>'
+      : '<div class="demo-next' + (p.due ? ' due' : '') + '">' + (p.due ? 'To do now: ' : 'Next, ' + dayLabel(p.dueAtMs) + ': ') + demoEsc(p.text) + '</div>';
+    const open = demoOpen === l.token;
+    let body = '';
+    if (open) {
+      const tl = [['Link made', l.createdAtMs]];
+      (l.touches || []).forEach((t) => tl.push([TOUCH_WORDS[t.kind] || t.kind, t.atMs]));
+      if (l.firstOpenedAtMs) tl.push(['They opened it' + (l.opens > 1 ? ' (' + l.opens + ' times)' : ''), l.firstOpenedAtMs]);
+      if (l.maxSeconds >= 60) tl.push(['Watched ' + Math.floor(l.maxSeconds / 60) + ' of 7 min', l.lastOpenedAtMs || l.firstOpenedAtMs]);
+      if (l.questions) tl.push(['Asked ' + l.questions + ' question' + (l.questions > 1 ? 's' : '') + ' on the page', l.lastOpenedAtMs]);
+      if (l.applyClickedAtMs) tl.push(['Clicked Apply', l.applyClickedAtMs]);
+      tl.sort((a, b) => (a[1] || 0) - (b[1] || 0));
+      const notes = (l.notes || []).slice().reverse().map((n) => '<div>' + when(n.atMs) + ': ' + demoEsc(n.text) + '</div>').join('') || '<div>No notes yet.</div>';
+      const isEmail = !p.done && EMAIL_NAMES[p.kind];
+      const sentKind = p.kind === 'intro' ? 'sent' : 'followup';
+      const fu = l.nextFollowUpAtMs ? new Date(l.nextFollowUpAtMs) : null;
+      const fuVal = fu ? fu.getFullYear() + '-' + String(fu.getMonth() + 1).padStart(2, '0') + '-' + String(fu.getDate()).padStart(2, '0') : '';
+      body = '<div class="demo-open">' +
+        (isEmail ? '<div class="demo-h">Send next: the ' + EMAIL_NAMES[p.kind] + '</div>' + mailHtml(p.kind, l) +
+          '<div class="demo-tools"><button class="demo-btn" onclick="afDemoCopyMail(' + i + ',\'' + p.kind + '\')">Copy email</button>' +
+          (l.email ? '<a class="demo-btn ghost" style="text-decoration:none" href="' + demoEsc(mailtoFor(p.kind, l)) + '">Open in my email</a>' : '') +
+          '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'' + sentKind + '\'})">I sent it</button></div>' : '') +
+        '<div class="demo-h">What happened</div><div class="demo-timeline">' + tl.map((x) => '<div>' + when(x[1] || l.createdAtMs) + ': ' + demoEsc(x[0]) + '</div>').join('') + '</div>' +
+        '<div class="demo-tools"><button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'replied\'})">They replied</button>' +
+        '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'call\'})">I called</button>' +
+        '<button class="demo-btn ghost" onclick="afDemoTrack(' + i + ',{touch:\'met\'})">We spoke</button></div>' +
+        '<div class="demo-h">Notes</div><div class="demo-timeline">' + notes + '</div>' +
+        '<textarea id="dm-note-' + i + '" placeholder="e.g. Said to check back after the holidays"></textarea>' +
+        '<div class="demo-tools"><label style="font-size:12.5px;color:var(--muted)">My follow-up date <input type="date" id="dm-fu-' + i + '" value="' + fuVal + '"></label>' +
+        '<select id="dm-out-' + i + '"><option value="">Still working on it</option><option value="interested"' + (l.outcome === 'interested' ? ' selected' : '') + '>Interested</option><option value="not_now"' + (l.outcome === 'not_now' ? ' selected' : '') + '>Not right now</option><option value="not_interested"' + (l.outcome === 'not_interested' ? ' selected' : '') + '>Not interested</option><option value="wrong_person"' + (l.outcome === 'wrong_person' ? ' selected' : '') + '>Wrong person</option></select>' +
+        '<button class="demo-btn" onclick="afDemoSave(' + i + ')">Save</button></div>' +
+        '<div class="demo-h">Copy another email for ' + demoEsc(l.firstName) + '</div><div class="demo-tools">' +
+        K.LIBRARY.map(([k, name]) => '<button class="demo-btn ghost" onclick="afDemoCopyMail(' + i + ',\'' + k + '\')">' + demoEsc(name) + '</button>').join('') + '</div>' +
+        '</div>';
+    }
+    return '<div class="demo-row' + (open ? ' open' : '') + '" id="dm-row-' + i + '"><div class="who"><b>' + demoEsc(l.firstName + ' ' + (l.lastName || '')) + '</b><span>' + demoEsc([l.building, l.company].filter(Boolean).join(' · ')) + '</span>' + next + '</div>' +
+      '<span class="demo-stage ' + tone + '">' + label + '</span>' +
+      '<div class="demo-btns"><button class="demo-btn ghost" onclick="afDemoRowCopy(' + i + ')">Copy link</button>' +
+      '<button class="demo-btn' + (open ? ' ghost' : '') + '" onclick="afDemoToggle(' + i + ')">' + (open ? 'Close' : 'Open') + '</button></div>' + body + '</div>';
+  }
+  function mailtoFor(kind, l) {
+    const e = K.email(kind, l, demoOpts());
+    return 'mailto:' + encodeURIComponent(l.email) + '?subject=' + encodeURIComponent(e.subject) + '&body=' + encodeURIComponent(e.body);
+  }
   function demoRender() {
     const box = document.getElementById('dm-list');
-    if (!demoLinks.length) { box.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:12px 0;">No links yet. Make your first one above.</p>'; return; }
-    box.innerHTML = demoLinks.map((l, i) => {
-      const [tone, label] = demoStage(l);
-      const next = tone === 'cold' ? 'nudge' : 'thanks';
-      return '<div class="demo-row"><div class="who"><b>' + demoEsc(l.firstName + ' ' + (l.lastName || '')) + '</b><span>' + demoEsc([l.building, l.company].filter(Boolean).join(' \u00b7 ')) + '</span></div>' +
-        '<span class="demo-stage ' + tone + '">' + label + '</span>' +
-        '<div class="demo-btns"><button class="demo-btn ghost" onclick="afDemoRowCopy(' + i + ',\'link\')">Copy link</button>' +
-        (l.state === 'live' ? '<button class="demo-btn ghost" onclick="afDemoRowCopy(' + i + ',\'' + next + '\')">' + (next === 'nudge' ? 'Copy follow-up' : 'Copy next step') + '</button>' : '') + '</div></div>';
-    }).join('');
+    if (!demoLinks.length) { box.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:12px 0;">No links yet. Make your first one above.</p>'; }
+    else {
+      // Due first, then the soonest next step, then the newest.
+      const order = demoLinks.map((l, i) => ({ l, i, p: K.plan(l) })).sort((a, b) => (a.p.due === b.p.due ? 0 : a.p.due ? -1 : 1) || ((a.p.done ? 1 : 0) - (b.p.done ? 1 : 0)) || ((a.p.dueAtMs || 0) - (b.p.dueAtMs || 0)) || (b.l.createdAtMs - a.l.createdAtMs));
+      box.innerHTML = order.map((x) => rowHtml(x.l, x.i)).join('');
+    }
+    const due = demoLinks.map((l, i) => ({ l, i, p: K.plan(l) })).filter((x) => !x.p.done && x.p.due);
+    const dueBox = document.getElementById('dm-due');
+    if (due.length) {
+      dueBox.style.display = 'block';
+      dueBox.innerHTML = '<b>' + due.length + ' to do today</b>' + due.map((x) => '<div><a onclick="afDemoToggle(' + x.i + ', true)">' + demoEsc(x.l.firstName) + (x.l.building ? ', ' + demoEsc(x.l.building) : '') + '</a>: send the ' + (EMAIL_NAMES[x.p.kind] || 'follow-up') + '</div>').join('');
+    } else dueBox.style.display = 'none';
+  }
+  function libraryRender() {
+    const sample = { firstName: 'Dana', building: 'The Calloway', url: 'https://amenityfit.app/demo/?t=their-own-link' };
+    document.getElementById('dm-library-list').innerHTML = K.LIBRARY.map(([k, name, whenText]) =>
+      '<details class="demo-lib-item"><summary>' + demoEsc(name) + '<span>' + demoEsc(whenText) + '</span></summary>' + mailHtml(k, sample) + '</details>').join('');
   }
   async function demoCopyText(text, btn) {
     try { await navigator.clipboard.writeText(text); } catch (e) { window.prompt('Copy this', text); return; }
     if (btn) { const o = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = o; }, 1500); }
   }
-  window.afDemoCopy = (kind) => { if (demoMade) demoCopyText(kind === 'link' ? demoMade.url : demoEmail('intro', demoMade), event && event.target); };
-  window.afDemoRowCopy = (i, kind) => { const l = demoLinks[i]; if (l) demoCopyText(kind === 'link' ? l.url : demoEmail(kind, l), event && event.target); };
+  const mailText = (kind, l) => { const e = K.email(kind, l, demoOpts()); return (e.subject ? 'Subject: ' + e.subject + '\n\n' : '') + e.body; };
+  window.afDemoRowCopy = (i) => { const l = demoLinks[i]; if (l) demoCopyText(l.url, event && event.target); };
+  window.afDemoCopyMail = (i, kind) => { const l = demoLinks[i]; if (l) demoCopyText(mailText(kind, l), event && event.target); };
+  window.afDemoToggle = (i, only) => {
+    const l = demoLinks[i]; if (!l) return;
+    demoOpen = only || demoOpen !== l.token ? l.token : '';
+    demoRender();
+    const el = document.getElementById('dm-row-' + i); if (el && only) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  async function track(i, body, btn) {
+    const l = demoLinks[i]; if (!l) return;
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+    try { const d = await demoCall('POST', { action: 'track', token: l.token, ...body }); demoLinks[i] = { ...l, ...d.link }; demoRender(); }
+    catch (e) { alert(e.message); if (btn) { btn.disabled = false; btn.textContent = 'Try again'; } }
+  }
+  window.afDemoTrack = (i, body) => track(i, body, event && event.target);
+  window.afDemoSave = (i) => {
+    const note = document.getElementById('dm-note-' + i).value.trim();
+    const fu = document.getElementById('dm-fu-' + i).value;
+    const body = { outcome: document.getElementById('dm-out-' + i).value, nextFollowUpAtMs: fu ? new Date(fu + 'T09:00:00').getTime() : 0 };
+    if (note) body.note = note;
+    track(i, body, event && event.target);
+  };
+  window.afDemoWatch = async () => {
+    const btn = document.getElementById('dm-watch');
+    // Opened right away (before the request) so the phone does not block it as a pop-up.
+    const w = window.open('', '_blank');
+    btn.disabled = true; btn.textContent = 'Opening...';
+    try { const d = await demoCall('POST', { action: 'preview' }); if (w) w.location.href = d.url; else location.href = d.url; }
+    catch (e) { if (w) w.close(); alert(e.message); }
+    finally { btn.disabled = false; btn.textContent = 'Watch the demo'; }
+  };
   window.afDemoMake = async () => {
     const err = document.getElementById('dm-err'); err.style.display = 'none';
     const v = (id) => document.getElementById(id).value.trim();
     const btn = document.getElementById('dm-make'); btn.disabled = true; btn.textContent = 'Making...';
     try {
       const d = await demoCall('POST', { action: 'new', firstName: v('dm-first'), lastName: v('dm-last'), email: v('dm-email'), building: v('dm-building'), company: v('dm-company') });
-      demoMade = d.link; demoLinks.unshift(d.link); demoRender();
-      document.getElementById('dm-made-url').textContent = d.link.url; document.getElementById('dm-made').style.display = 'block';
+      demoLinks.unshift({ touches: [], notes: [], ...d.link }); demoOpen = d.link.token; demoRender();
       ['dm-first', 'dm-last', 'dm-email', 'dm-building', 'dm-company'].forEach((id) => { document.getElementById(id).value = ''; });
+      const el = document.getElementById('dm-row-0'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (e) { err.textContent = e.message; err.style.display = 'block'; }
     finally { btn.disabled = false; btn.textContent = 'Make link'; }
   };
   window.afDemoInit = async (user, affiliate) => {
     demoUser = user; demoMe = affiliate && affiliate.name ? affiliate.name : '';
+    if (affiliate && affiliate.referralCode) demoApply = 'https://amenityfit.app/?ref=' + encodeURIComponent(affiliate.referralCode) + '#apply';
     document.getElementById('demo-card').style.display = 'block';
+    libraryRender();
     try { const d = await demoCall('GET'); demoLinks = d.links || []; demoRender(); }
     catch (e) { document.getElementById('dm-list').innerHTML = '<p style="font-size:13px;color:#B91C1C;padding:12px 0;">' + demoEsc(e.message) + '</p>'; }
   };
+  window.__afDemoTest = { set: (links, me, code) => { demoLinks = links; demoMe = me; demoApply = 'https://amenityfit.app/?ref=' + code + '#apply'; document.getElementById('demo-card').style.display = 'block'; libraryRender(); demoRender(); } };
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
