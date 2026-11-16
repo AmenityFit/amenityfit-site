@@ -65,7 +65,7 @@
   var API = "https://us-central1-amenityfit-31276.cloudfunctions.net/contractSign";
   var token = new URLSearchParams(location.search).get("t") || "";
   var main = document.getElementById("main");
-  var info = null, mode = "draw", drawn = false;
+  var info = null, mode = "draw", drawn = false, useSaved = false;
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var pdfUrl = function () { return API + "?t=" + encodeURIComponent(token) + "&pdf=1"; };
 
@@ -114,14 +114,23 @@
           '<label for="tt">Title</label><input type="text" id="tt" autocomplete="organization-title" maxlength="80" placeholder="Property Manager" />' +
           '<label for="na">Address for legal notices</label><input type="text" id="na" autocomplete="street-address" maxlength="160" placeholder="Street, suite, city, state, ZIP" /><p class="hint">Where official notices about this agreement should be sent.</p>'
         : "") +
-      '<label>Signature</label><div class="tabs"><button type="button" id="tDraw" class="on">Draw</button><button type="button" id="tType">Type</button></div>' +
+      (!client && info.savedSignature ? '<div id="savedBox"><label>Your saved signature</label><div class="pad" style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px"><img src="' + info.savedSignature + '" alt="Saved signature" style="max-height:80px;max-width:70%" /><button type="button" class="clear" style="position:static" id="other">Sign differently</button></div></div>' : "") +
+      '<div id="drawBox"' + (!client && info.savedSignature ? ' style="display:none"' : "") + '><label>Signature</label><div class="tabs"><button type="button" id="tDraw" class="on">Draw</button><button type="button" id="tType">Type</button></div>' +
       '<div class="pad" id="padWrap"><canvas id="pad"></canvas><div class="line"></div><div class="x">×</div><button type="button" class="clear" id="clr">Clear</button></div>' +
       '<div class="pad" id="typeWrap" style="display:none"><div class="typed" id="typed"></div></div>' +
+      (!client ? '<label class="consent" style="margin-top:12px"><input type="checkbox" id="save" checked /><span>Save this signature so next time I can countersign with one tap</span></label>' : "") + '</div>' +
       '<label class="consent"><input type="checkbox" id="ok" /><span>' + esc(info.consent) + '</span></label>' +
       '<button type="button" class="go" id="go">' + (client ? "Sign the agreement" : "Countersign and complete") + '</button>' +
       '<div class="err" id="err"></div>' +
       (client ? '<button type="button" class="decline" id="dec">I do not want to sign this agreement</button>' : "") + '</div>';
     renderPdf(document.getElementById("pages"));
+    useSaved = !client && !!info.savedSignature;
+    if (document.getElementById("other")) document.getElementById("other").onclick = function () { useSaved = false; document.getElementById("savedBox").style.display = "none"; document.getElementById("drawBox").style.display = ""; if (window.__padResize) window.__padResize(); };
+    if (info.documents && info.documents.length) {
+      var docsCard = document.createElement("div"); docsCard.className = "card";
+      docsCard.innerHTML = '<h1 style="font-size:17px">AmenityFit documents</h1><p class="sub" style="margin:4px 0 10px">For your records and vendor setup.</p>' + info.documents.map(function (d) { return '<p style="margin:8px 0"><a href="' + API + '?t=' + encodeURIComponent(token) + '&doc=' + encodeURIComponent(d.id) + '" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700;text-decoration:none">' + esc(d.name.replace(/\.pdf$/, "")) + ' (PDF)</a></p>'; }).join("");
+      var sc0 = document.getElementById("signcard"); sc0.parentNode.insertBefore(docsCard, sc0);
+    }
     setupPad();
     var nameFor = function () { var el = document.getElementById("nm"); return (el ? el.value : info.signer.name).trim(); };
     var typed = document.getElementById("typed");
@@ -140,7 +149,7 @@
   function setupPad() {
     var c = document.getElementById("pad"), ctx = c.getContext("2d"), last = null;
     var size = function () { var r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#14203c"; drawn = false; };
-    size();
+    size(); window.__padResize = size;
     window.addEventListener("orientationchange", function () { setTimeout(size, 300); });
     var pt = function (e) { var r = c.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
     c.addEventListener("pointerdown", function (e) { e.preventDefault(); c.setPointerCapture(e.pointerId); last = pt(e); ctx.beginPath(); ctx.arc(last.x, last.y, 1.2, 0, Math.PI * 2); ctx.fillStyle = "#14203c"; ctx.fill(); });
@@ -185,8 +194,12 @@
       if (body.title.length < 2) { err.textContent = "Please enter your title."; return; }
       if (body.noticeAddress.length < 8) { err.textContent = "Please enter the address for legal notices."; return; }
     }
+    if (useSaved) { body.useSaved = true; body.method = "saved"; }
+    else {
     body.signature = await signaturePng(name);
-    if (!body.signature) { err.textContent = mode === "type" ? "Please enter your name to type your signature." : "Please draw your signature in the box."; return; }
+    if (!client && document.getElementById("save") && document.getElementById("save").checked) body.saveSignature = true;
+    }
+    if (!useSaved && !body.signature) { err.textContent = mode === "type" ? "Please enter your name to type your signature." : "Please draw your signature in the box."; return; }
     if (!body.consent) { err.textContent = "Please tick the box to agree to sign electronically."; return; }
     go.disabled = true; go.textContent = "Signing…";
     try {
