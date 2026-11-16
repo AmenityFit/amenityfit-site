@@ -131,9 +131,9 @@ test("next step: they sign up with Apply on their walkthrough (code filled in), 
 
 test("Nov 16 2026: the first email and the call open on the real pain point, from Asenso's 7 years in residential gyms; affiliates are told to add one personal line", () => {
   const b = K.email("intro", { firstName: "Maria", building: "The Brook", url: "https://amenityfit.app/demo/?t=abc" }, { me: "Pat", code: "ANA7" }).body;
-  assert.match(b, /^Hi Maria,\n\nI wanted to share something that could help residents at The Brook get more out of the gym\. The founder of AmenityFit, Asenso Ampim, spent 7 years as a personal trainer in buildings like yours and kept hearing the same thing: people wanted to use the gym but weren't sure what to do, and a trainer every week was too expensive\. Without a plan, most stopped going consistently\.\n\nThat's why he built AmenityFit, so every resident gets workouts built around the exact equipment in your gym/);
+  assert.match(b, /^Hi Maria,\n\nI wanted to share something that could help residents at The Brook get more out of the gym\. The founder of AmenityFit, Asenso Ampim, spent 7 years as a personal trainer in buildings like yours and kept hearing the same thing: people wanted to use the gym but weren't sure what to do, and a trainer every week could get costly\. Without a plan, most stopped going consistently\.\n\nThat's why he built AmenityFit, so every resident gets workouts built around the exact equipment in your gym/);
   assert.doesNotMatch(b, /[—–]|\bAI\b/);
-  assert.match(K.email("call", { firstName: "Maria", building: "The Brook", url: "x" }, { me: "Pat" }).body, /aren't sure what to do, and a trainer every week is too expensive/);
+  assert.match(K.email("call", { firstName: "Maria", building: "The Brook", url: "x" }, { me: "Pat" }).body, /aren't sure what to do, and a trainer every week can get costly/);
   assert.ok(K.TALK.some(([h, t]) => h === "Make it yours" && /one line at the top in your own words/.test(t)));
   assert.ok(K.TALK.some(([h]) => h === "The problem it solves"));
   assert.match(K.LIBRARY.find((l) => l[0] === "intro")[2], /Add one personal line at the top/);
