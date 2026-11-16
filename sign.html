@@ -119,8 +119,9 @@
       '<div class="pad" id="padWrap"><canvas id="pad"></canvas><div class="line"></div><div class="x">×</div><button type="button" class="clear" id="clr">Clear</button></div>' +
       '<div class="pad" id="typeWrap" style="display:none"><div class="typed" id="typed"></div></div>' +
       (!client ? '<label class="consent" style="margin-top:12px"><input type="checkbox" id="save" checked /><span>Save this signature so next time I can countersign with one tap</span></label>' : "") + '</div>' +
-      '<label class="consent"><input type="checkbox" id="ok" /><span>' + esc(info.consent) + '</span></label>' +
-      '<button type="button" class="go" id="go">' + (client ? "Sign the agreement" : "Countersign and complete") + '</button>' +
+      (client ? '<label class="consent"><input type="checkbox" id="ok" /><span>' + esc(info.consent) + '</span></label>'
+              : '<p class="consent" style="display:block">By tapping Countersign, I agree to the following: ' + esc(info.consent) + '</p>') +
+      '<button type="button" class="go" id="go">' + (client ? "Sign the agreement" : "Countersign") + '</button>' +
       '<div class="err" id="err"></div>' +
       (client ? '<button type="button" class="decline" id="dec">I do not want to sign this agreement</button>' : "") + '</div>';
     renderPdf(document.getElementById("pages"));
@@ -187,7 +188,7 @@
     err.textContent = "";
     var client = info.role === "client";
     var name = client ? document.getElementById("nm").value.trim() : info.signer.name;
-    var body = { t: token, action: "sign", consent: document.getElementById("ok").checked, method: mode === "type" ? "typed" : "drawn" };
+    var body = { t: token, action: "sign", consent: document.getElementById("ok") ? document.getElementById("ok").checked : true, method: mode === "type" ? "typed" : "drawn" };
     if (client) {
       body.name = name; body.title = document.getElementById("tt").value.trim(); body.noticeAddress = document.getElementById("na").value.trim();
       if (name.length < 3) { err.textContent = "Please enter your full name."; return; }
@@ -210,7 +211,7 @@
       if (j.role === "client") doneView("Thank you, you have signed", "AmenityFit will countersign shortly. You will receive the fully signed agreement by email.");
       else doneView("The agreement is fully signed", "Both parties have signed. The signed copy, with its Signing Certificate, has been emailed to both of you." + (info.testMode ? " This was a TEST contract." : ""));
     } catch (e) {
-      err.textContent = e.message; go.disabled = false; go.textContent = client ? "Sign the agreement" : "Countersign and complete";
+      err.textContent = e.message; go.disabled = false; go.textContent = client ? "Sign the agreement" : "Countersign";
     }
   }
 
