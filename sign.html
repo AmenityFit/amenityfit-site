@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>Sign your AmenityFit agreement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@600&display=swap" rel="stylesheet" />
+<style>
+  /* AmenityFit's own contract signing page (Nov 15 2026). Opened only from a private link in an email. */
+  :root { --navy: #0d1830; --primary: #1E5FBE; --text: #1A1A2E; --muted: #5a5a72; --line: #e2e4ea; --bg: #f4f6fa; --ok: #1f8a4c; --err: #c0392b; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', system-ui, sans-serif; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+  header { background: var(--navy); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; position: sticky; top: 0; z-index: 5; }
+  header b { font-size: 18px; letter-spacing: .2px; }
+  header span { font-size: 12.5px; opacity: .8; text-align: right; }
+  main { max-width: 860px; margin: 0 auto; padding: 20px 16px 120px; }
+  .card { background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--line); }
+  h1 { font-size: 22px; line-height: 1.3; margin-bottom: 6px; }
+  .sub { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+  .test { background: #fff4e5; border: 1px solid #f0c27a; color: #7a4b00; border-radius: 10px; padding: 10px 12px; font-size: 13.5px; margin-top: 12px; font-weight: 500; }
+  #pages { display: flex; flex-direction: column; gap: 10px; }
+  #pages canvas { width: 100%; height: auto; background: #fff; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+  .loading { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; }
+  label { display: block; font-size: 13px; font-weight: 700; margin: 14px 0 6px; }
+  input[type=text], textarea { width: 100%; font: inherit; font-size: 16px; padding: 12px 13px; border: 1px solid #cfd3dd; border-radius: 10px; background: #fff; color: var(--text); }
+  input[type=text]:focus, textarea:focus { outline: 2px solid #b7cdf0; border-color: var(--primary); }
+  .hint { color: var(--muted); font-size: 12.5px; margin-top: 5px; }
+  .tabs { display: flex; gap: 8px; margin: 6px 0 10px; }
+  .tabs button { flex: 1; font: inherit; font-size: 14px; font-weight: 700; padding: 10px; border-radius: 10px; border: 1px solid #cfd3dd; background: #fff; color: var(--muted); cursor: pointer; }
+  .tabs button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .pad { position: relative; border: 1px dashed #aab1c2; border-radius: 12px; background: #fbfcfe; touch-action: none; }
+  .pad canvas { display: block; width: 100%; height: 170px; border-radius: 12px; cursor: crosshair; }
+  .pad .line { position: absolute; left: 18px; right: 18px; bottom: 38px; border-bottom: 1px solid #c9cedb; pointer-events: none; }
+  .pad .x { position: absolute; left: 20px; bottom: 42px; color: #9aa1b3; font-size: 18px; pointer-events: none; }
+  .pad .clear { position: absolute; right: 10px; top: 10px; font: inherit; font-size: 12.5px; padding: 5px 10px; border-radius: 8px; border: 1px solid #cfd3dd; background: #fff; color: var(--muted); cursor: pointer; }
+  .typed { font-family: 'Caveat', cursive; font-size: 44px; padding: 26px 18px; min-height: 170px; color: #14203c; display: flex; align-items: center; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 14px; line-height: 1.5; color: #33354a; }
+  .consent input { width: 22px; height: 22px; margin-top: 1px; flex: 0 0 auto; accent-color: var(--primary); }
+  .go { width: 100%; margin-top: 18px; font: inherit; font-size: 16.5px; font-weight: 700; padding: 15px; border: 0; border-radius: 12px; background: var(--primary); color: #fff; cursor: pointer; }
+  .go:disabled { opacity: .5; cursor: default; }
+  .err { color: var(--err); font-size: 14px; margin-top: 12px; min-height: 1em; }
+  .done { text-align: center; padding: 30px 20px; }
+  .done .tick { width: 56px; height: 56px; border-radius: 50%; background: #e6f4ec; color: var(--ok); display: inline-flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 12px; }
+  .btn2 { display: inline-block; margin-top: 16px; font-weight: 700; font-size: 15px; color: #fff; background: var(--navy); padding: 12px 20px; border-radius: 10px; text-decoration: none; }
+  .decline { display: block; margin: 18px auto 0; background: none; border: 0; color: var(--muted); font: inherit; font-size: 13.5px; text-decoration: underline; cursor: pointer; }
+  .who { font-size: 14px; color: #33354a; line-height: 1.6; }
+  .who b { color: var(--text); }
+  .jump { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(244,246,250,.96); border-top: 1px solid var(--line); display: none; z-index: 4; }
+  .jump button { width: 100%; max-width: 828px; display: block; margin: 0 auto; font: inherit; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 12px; border: 0; background: var(--navy); color: #fff; cursor: pointer; }
+</style>
+</head>
+<body>
+<header><b>AmenityFit</b><span id="hdr">Agreement</span></header>
+<main id="main"><div class="loading">Loading your agreement…</div></main>
+<div class="jump" id="jump"><button type="button" onclick="document.getElementById('signcard').scrollIntoView({behavior:'smooth'})">Continue to sign</button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  var API = "https://us-central1-amenityfit-31276.cloudfunctions.net/contractSign";
+  var token = new URLSearchParams(location.search).get("t") || "";
+  var main = document.getElementById("main");
+  var info = null, mode = "draw", drawn = false;
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var pdfUrl = function () { return API + "?t=" + encodeURIComponent(token) + "&pdf=1"; };
+
+  function fail(msg) {
+    main.innerHTML = '<div class="card done"><h1>We could not open this agreement</h1><p class="sub" style="margin-top:8px">' + esc(msg) + '</p><p class="sub" style="margin-top:14px">Questions? Write to <a href="mailto:asenso@fitmakesenz.com">asenso@fitmakesenz.com</a>.</p></div>';
+  }
+
+  function doneView(title, text) {
+    main.innerHTML = '<div class="card done"><div class="tick">✓</div><h1>' + esc(title) + '</h1><p class="sub" style="margin-top:8px">' + text + '</p><a class="btn2" href="' + pdfUrl() + '" target="_blank" rel="noopener">View the agreement (PDF)</a></div>';
+    document.getElementById("jump").style.display = "none";
+  }
+
+  async function renderPdf(el) {
+    try {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      var doc = await pdfjsLib.getDocument({ url: pdfUrl() }).promise;
+      el.innerHTML = "";
+      var scale = Math.min(2.2, Math.max(1.3, (el.clientWidth * (window.devicePixelRatio || 1)) / 612));
+      for (var i = 1; i <= doc.numPages; i++) {
+        var page = await doc.getPage(i);
+        var vp = page.getViewport({ scale: scale });
+        var c = document.createElement("canvas");
+        c.width = vp.width; c.height = vp.height;
+        el.appendChild(c);
+        await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+      }
+    } catch (e) {
+      el.innerHTML = '<p class="sub">The preview could not load here. <a href="' + pdfUrl() + '" target="_blank" rel="noopener">Open the agreement as a PDF</a> to read it, then come back to sign.</p>';
+    }
+  }
+
+  function view() {
+    var client = info.role === "client";
+    document.getElementById("hdr").textContent = info.orderFormNo ? "Order Form " + info.orderFormNo : "Agreement";
+    var who = client
+      ? '<p class="who">Signing for <b>' + esc(info.company || info.docName) + '</b> as <b>' + esc(info.signer.email) + '</b>.</p>'
+      : '<p class="who">Countersigning for <b>Fitmakesenz LLC, d/b/a AmenityFit</b> as <b>' + esc(info.signer.name) + ', ' + esc(info.signer.title) + '</b>.</p>';
+    main.innerHTML =
+      '<div class="card"><h1>' + (client ? "Your AmenityFit agreement" : "Countersign the agreement") + '</h1>' +
+      '<p class="sub">' + esc(info.docName) + (info.company && info.company !== info.docName ? " · " + esc(info.company) : "") + '. Please read the whole agreement below, then sign at the bottom.</p>' +
+      (info.testMode ? '<div class="test">TEST contract: not binding and never billed.</div>' : "") + '</div>' +
+      '<div class="card"><div id="pages"><div class="loading">Loading the agreement…</div></div><p class="hint" style="margin-top:10px;text-align:center"><a href="' + pdfUrl() + '" target="_blank" rel="noopener">Open the agreement as a full-size PDF</a></p></div>' +
+      '<div class="card" id="signcard"><h1 style="font-size:19px">' + (client ? "Sign" : "Countersign") + '</h1>' + who +
+      (client
+        ? '<label for="nm">Full name</label><input type="text" id="nm" autocomplete="name" maxlength="80" value="' + esc(info.signer.name) + '" />' +
+          '<label for="tt">Title</label><input type="text" id="tt" autocomplete="organization-title" maxlength="80" placeholder="Property Manager" />' +
+          '<label for="na">Address for legal notices</label><input type="text" id="na" autocomplete="street-address" maxlength="160" placeholder="Street, suite, city, state, ZIP" /><p class="hint">Where official notices about this agreement should be sent.</p>'
+        : "") +
+      '<label>Signature</label><div class="tabs"><button type="button" id="tDraw" class="on">Draw</button><button type="button" id="tType">Type</button></div>' +
+      '<div class="pad" id="padWrap"><canvas id="pad"></canvas><div class="line"></div><div class="x">×</div><button type="button" class="clear" id="clr">Clear</button></div>' +
+      '<div class="pad" id="typeWrap" style="display:none"><div class="typed" id="typed"></div></div>' +
+      '<label class="consent"><input type="checkbox" id="ok" /><span>' + esc(info.consent) + '</span></label>' +
+      '<button type="button" class="go" id="go">' + (client ? "Sign the agreement" : "Countersign and complete") + '</button>' +
+      '<div class="err" id="err"></div>' +
+      (client ? '<button type="button" class="decline" id="dec">I do not want to sign this agreement</button>' : "") + '</div>';
+    renderPdf(document.getElementById("pages"));
+    setupPad();
+    var nameFor = function () { var el = document.getElementById("nm"); return (el ? el.value : info.signer.name).trim(); };
+    var typed = document.getElementById("typed");
+    var refreshTyped = function () { typed.textContent = nameFor() || "Your name"; };
+    document.getElementById("tDraw").onclick = function () { mode = "draw"; this.classList.add("on"); document.getElementById("tType").classList.remove("on"); document.getElementById("padWrap").style.display = ""; document.getElementById("typeWrap").style.display = "none"; };
+    document.getElementById("tType").onclick = function () { mode = "type"; this.classList.add("on"); document.getElementById("tDraw").classList.remove("on"); document.getElementById("padWrap").style.display = "none"; document.getElementById("typeWrap").style.display = ""; refreshTyped(); };
+    if (document.getElementById("nm")) document.getElementById("nm").addEventListener("input", refreshTyped);
+    document.getElementById("go").onclick = submit;
+    if (document.getElementById("dec")) document.getElementById("dec").onclick = decline;
+    var jump = document.getElementById("jump");
+    var sc = document.getElementById("signcard");
+    var onScroll = function () { var r = sc.getBoundingClientRect(); jump.style.display = r.top > window.innerHeight ? "block" : "none"; };
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  }
+
+  function setupPad() {
+    var c = document.getElementById("pad"), ctx = c.getContext("2d"), last = null;
+    var size = function () { var r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#14203c"; drawn = false; };
+    size();
+    window.addEventListener("orientationchange", function () { setTimeout(size, 300); });
+    var pt = function (e) { var r = c.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    c.addEventListener("pointerdown", function (e) { e.preventDefault(); c.setPointerCapture(e.pointerId); last = pt(e); ctx.beginPath(); ctx.arc(last.x, last.y, 1.2, 0, Math.PI * 2); ctx.fillStyle = "#14203c"; ctx.fill(); });
+    c.addEventListener("pointermove", function (e) { if (!last) return; e.preventDefault(); var p = pt(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); if (Math.abs(p.x - last.x) + Math.abs(p.y - last.y) > 0) drawn = true; last = p; });
+    var up = function () { last = null; };
+    c.addEventListener("pointerup", up); c.addEventListener("pointercancel", up); c.addEventListener("pointerleave", up);
+    document.getElementById("clr").onclick = function () { ctx.clearRect(0, 0, c.width, c.height); drawn = false; };
+  }
+
+  // The signature as a PNG, trimmed to the ink, transparent background.
+  async function signaturePng(name) {
+    var src;
+    if (mode === "type") {
+      if (!name) return null;
+      await document.fonts.load("600 120px Caveat");
+      src = document.createElement("canvas"); src.width = 1400; src.height = 300;
+      var g = src.getContext("2d"); g.font = "600 120px Caveat, \"Snell Roundhand\", \"Segoe Script\", cursive"; g.fillStyle = "#14203c"; g.textBaseline = "middle";
+      g.fillText(name, 20, 160, 1360);
+    } else {
+      if (!drawn) return null;
+      src = document.getElementById("pad");
+    }
+    var ctx = src.getContext("2d"), d = ctx.getImageData(0, 0, src.width, src.height).data, minX = src.width, minY = src.height, maxX = -1, maxY = -1;
+    for (var y = 0; y < src.height; y += 2) for (var x = 0; x < src.width; x += 2) if (d[(y * src.width + x) * 4 + 3] > 20) { if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
+    if (maxX < 0 || maxX - minX < 20) return null;
+    var pad = 8; minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad); maxX = Math.min(src.width, maxX + pad); maxY = Math.min(src.height, maxY + pad);
+    var out = document.createElement("canvas"), W = maxX - minX, H = maxY - minY, k = Math.min(1, 900 / W);
+    out.width = Math.max(60, Math.round(W * k)); out.height = Math.max(20, Math.round(H * k));
+    out.getContext("2d").drawImage(src, minX, minY, W, H, 0, 0, out.width, out.height);
+    return out.toDataURL("image/png");
+  }
+
+  async function submit() {
+    var err = document.getElementById("err"), go = document.getElementById("go");
+    err.textContent = "";
+    var client = info.role === "client";
+    var name = client ? document.getElementById("nm").value.trim() : info.signer.name;
+    var body = { t: token, action: "sign", consent: document.getElementById("ok").checked, method: mode === "type" ? "typed" : "drawn" };
+    if (client) {
+      body.name = name; body.title = document.getElementById("tt").value.trim(); body.noticeAddress = document.getElementById("na").value.trim();
+      if (name.length < 3) { err.textContent = "Please enter your full name."; return; }
+      if (body.title.length < 2) { err.textContent = "Please enter your title."; return; }
+      if (body.noticeAddress.length < 8) { err.textContent = "Please enter the address for legal notices."; return; }
+    }
+    body.signature = await signaturePng(name);
+    if (!body.signature) { err.textContent = mode === "type" ? "Please enter your name to type your signature." : "Please draw your signature in the box."; return; }
+    if (!body.consent) { err.textContent = "Please tick the box to agree to sign electronically."; return; }
+    go.disabled = true; go.textContent = "Signing…";
+    try {
+      var r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      var j = await r.json().catch(function () { return {}; });
+      if (!r.ok || !j.ok) throw new Error(j.reason || "Something went wrong. Nothing was signed. Please try again.");
+      window.scrollTo(0, 0);
+      if (j.role === "client") doneView("Thank you, you have signed", "AmenityFit will countersign shortly. You will receive the fully signed agreement by email.");
+      else doneView("The agreement is fully signed", "Both parties have signed. The signed copy, with its Signing Certificate, has been emailed to both of you." + (info.testMode ? " This was a TEST contract." : ""));
+    } catch (e) {
+      err.textContent = e.message; go.disabled = false; go.textContent = client ? "Sign the agreement" : "Countersign and complete";
+    }
+  }
+
+  async function decline() {
+    var reason = prompt("Optional: tell AmenityFit why, or what you would like changed.");
+    if (reason === null) return;
+    try {
+      var r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ t: token, action: "decline", reason: reason }) });
+      var j = await r.json().catch(function () { return {}; });
+      if (!j.ok) throw new Error(j.reason || "Please try again.");
+      main.innerHTML = '<div class="card done"><h1>You declined this agreement</h1><p class="sub" style="margin-top:8px">AmenityFit has been told and will be in touch.</p></div>';
+      document.getElementById("jump").style.display = "none";
+    } catch (e) { document.getElementById("err").textContent = e.message; }
+  }
+
+  (async function start() {
+    if (!token) return fail("This link is missing its code. Please use the link in your email.");
+    try {
+      var r = await fetch(API + "?t=" + encodeURIComponent(token));
+      var j = await r.json();
+      if (!j.ok) return fail(j.reason || "This signing link is not valid.");
+      info = j;
+      if (j.done) {
+        if (j.state === "completed") return doneView("This agreement is fully signed", "Both parties have signed. A copy was emailed to each signer.");
+        return doneView("You have signed", "AmenityFit will countersign shortly. You will receive the fully signed agreement by email.");
+      }
+      view();
+    } catch (e) { fail("Please check your connection and open the link again."); }
+  })();
+})();
+</script>
+</body>
+</html>
