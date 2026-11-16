@@ -115,7 +115,7 @@
           '<label for="na">Address for legal notices</label><input type="text" id="na" autocomplete="street-address" maxlength="160" placeholder="Street, suite, city, state, ZIP" /><p class="hint">Where official notices about this agreement should be sent.</p>'
         : "") +
       (!client && info.savedSignature ? '<div id="savedBox"><label>Your saved signature</label><div class="pad" style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px"><img src="' + info.savedSignature + '" alt="Saved signature" style="max-height:80px;max-width:70%" /><button type="button" class="clear" style="position:static" id="other">Sign differently</button></div></div>' : "") +
-      '<div id="drawBox"' + (!client && info.savedSignature ? ' style="display:none"' : "") + '><label>Signature</label><div class="tabs"><button type="button" id="tDraw" class="on">Draw</button><button type="button" id="tType">Type</button></div>' +
+      '<div id="drawBox"' + (!client && info.savedSignature ? ' style="display:none"' : "") + '>' + (!client && info.savedSignature ? '<button type="button" class="clear" style="position:static;float:right;margin-top:10px" id="back">Use my saved signature</button>' : "") + '<label>Signature</label><div class="tabs"><button type="button" id="tDraw" class="on">Draw</button><button type="button" id="tType">Type</button></div>' +
       '<div class="pad" id="padWrap"><canvas id="pad"></canvas><div class="line"></div><div class="x">×</div><button type="button" class="clear" id="clr">Clear</button></div>' +
       '<div class="pad" id="typeWrap" style="display:none"><div class="typed" id="typed"></div></div>' +
       (!client ? '<label class="consent" style="margin-top:12px"><input type="checkbox" id="save" checked /><span>Save this signature so next time I can countersign with one tap</span></label>' : "") + '</div>' +
@@ -127,6 +127,7 @@
     renderPdf(document.getElementById("pages"));
     useSaved = !client && !!info.savedSignature;
     if (document.getElementById("other")) document.getElementById("other").onclick = function () { useSaved = false; document.getElementById("savedBox").style.display = "none"; document.getElementById("drawBox").style.display = ""; if (window.__padResize) window.__padResize(); };
+    if (document.getElementById("back")) document.getElementById("back").onclick = function () { useSaved = true; document.getElementById("drawBox").style.display = "none"; document.getElementById("savedBox").style.display = ""; document.getElementById("err").textContent = ""; };
     if (info.documents && info.documents.length) {
       var docsCard = document.createElement("div"); docsCard.className = "card";
       docsCard.innerHTML = '<h1 style="font-size:17px">AmenityFit documents</h1><p class="sub" style="margin:4px 0 10px">For your records and vendor setup.</p>' + info.documents.map(function (d) { return '<p style="margin:8px 0"><a href="' + API + '?t=' + encodeURIComponent(token) + '&doc=' + encodeURIComponent(d.id) + '" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700;text-decoration:none">' + esc(d.name.replace(/\.pdf$/, "")) + ' (PDF)</a></p>'; }).join("");
