@@ -146,3 +146,14 @@ test("Nov 24 2026: every first message says plainly it is an app with no trainer
   for (const [k] of K.LIBRARY) assert.doesNotMatch(K.email(k, lead, { me: "Pat" }).subject, /personal trainer/i, k);
   assert.ok(K.TALK.find((x) => x[0] === "What it is")[1].includes("It's an app: no trainers on site, no staff time, nothing for your team to run."));
 });
+
+test("stage shows exact watched time, pressed play and video errors (Nov 24 2026)", () => {
+  const K = require("../affiliate-kit.js");
+  assert.deepEqual(K.stage({ state: "live", opens: 2, maxSeconds: 42 }), ["warm", "Watched 0:42"]);
+  assert.deepEqual(K.stage({ state: "live", opens: 1, maxSeconds: 135 }), ["warm", "Watched 2:15"]);
+  assert.deepEqual(K.stage({ state: "live", opens: 1, maxSeconds: 0, playedAtMs: 5 }), ["warm", "Pressed play"]);
+  assert.deepEqual(K.stage({ state: "live", opens: 1, maxSeconds: 0, playedAtMs: 5, videoErrorAtMs: 6 }), ["off", "Video didn't play"]);
+  assert.deepEqual(K.stage({ state: "live", opens: 8, maxSeconds: 0 }), ["cold", "Opened, didn't press play"]);
+  assert.deepEqual(K.stage({ state: "live", opens: 0 }), ["cold", "Not opened yet"]);
+  assert.deepEqual(K.stage({ state: "live", opens: 1, maxSeconds: 450 }), ["hot", "Watched it all"]);
+});

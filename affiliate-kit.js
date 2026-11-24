@@ -84,12 +84,15 @@
     return done("They have everything. Leave the next move to them, or call if you know them.");
   }
 
+  function mmss(s) { s = Math.floor(s || 0); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
   function stage(l) {
     if (l.state && l.state !== "live") return ["off", l.state === "off" ? "Switched off" : "Expired"];
     if (l.applyClickedAtMs) return ["hot", "Clicked Apply"];
     if (l.completedAtMs || l.maxSeconds >= 444) return ["hot", "Watched it all"];
-    if (l.maxSeconds >= 60) return ["warm", "Watched " + Math.floor(l.maxSeconds / 60) + " min"];
-    if (l.opens > 0) return ["warm", "Opened"];
+    if (l.maxSeconds > 0) return ["warm", "Watched " + mmss(l.maxSeconds)];
+    if (l.videoErrorAtMs) return ["off", "Video didn't play"];
+    if (l.playedAtMs) return ["warm", "Pressed play"];
+    if (l.opens > 0) return ["cold", "Opened, didn't press play"];
     return ["cold", "Not opened yet"];
   }
 
@@ -152,7 +155,7 @@
     ["Make it yours", "Before you send the first email, add one line at the top in your own words: how you know them, the building, or the area. A personal line is what gets a stranger to keep reading. Everything else can stay as it is."],
     ["The next step", "Send their private walkthrough. When they are interested, tell them to sign up with the Apply button on it: your referral code is already filled in, so the building is credited to you. Then tap Hand to Asenso with a short note on what you told them and what they need, so he knows it came from you."],
   ];
-  var api = { BUILDING: BUILDING, HOTEL: HOTEL, RATE: RATE, tierFor: tierFor, portfolioPct: portfolioPct, hotelBonus: hotelBonus, estimate: estimate, plan: plan, stage: stage, email: email, disclosure: disclosure, LIBRARY: LIBRARY, DAY: DAY, TALK: TALK };
+  var api = { BUILDING: BUILDING, HOTEL: HOTEL, RATE: RATE, tierFor: tierFor, portfolioPct: portfolioPct, hotelBonus: hotelBonus, estimate: estimate, plan: plan, stage: stage, mmss: mmss, email: email, disclosure: disclosure, LIBRARY: LIBRARY, DAY: DAY, TALK: TALK };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.AFKit = api;
 })(typeof window !== "undefined" ? window : globalThis);

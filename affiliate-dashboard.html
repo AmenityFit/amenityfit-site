@@ -942,7 +942,10 @@
       const tl = [['Link made', l.createdAtMs]];
       (l.touches || []).forEach((t) => tl.push([TOUCH_WORDS[t.kind] || t.kind, t.atMs]));
       if (l.firstOpenedAtMs) tl.push(['They opened it' + (l.opens > 1 ? ' (' + l.opens + ' times)' : ''), l.firstOpenedAtMs]);
-      if (l.maxSeconds >= 60) tl.push(['Watched ' + Math.floor(l.maxSeconds / 60) + ' of 7 min', l.lastOpenedAtMs || l.firstOpenedAtMs]);
+      if (l.playedAtMs) tl.push(['Pressed play', l.playedAtMs]);
+      if (l.maxSeconds > 0) tl.push(['Watched ' + K.mmss(l.maxSeconds) + ' of 7:00', l.lastOpenedAtMs || l.firstOpenedAtMs]);
+      else if (l.opens > 0 && !l.playedAtMs) tl.push(['Has not pressed play yet', l.lastOpenedAtMs || l.firstOpenedAtMs]);
+      if (l.videoErrorAtMs) tl.push(["The video didn't play on their device. AmenityFit has been told and is looking into it.", l.videoErrorAtMs]);
       if (l.questions) tl.push(['Asked ' + l.questions + ' question' + (l.questions > 1 ? 's' : '') + ' on the page', l.lastOpenedAtMs]);
       if (l.applyClickedAtMs) tl.push(['Clicked Apply', l.applyClickedAtMs]);
       tl.sort((a, b) => (a[1] || 0) - (b[1] || 0));
