@@ -157,3 +157,20 @@ test("stage shows exact watched time, pressed play and video errors (Nov 24 2026
   assert.deepEqual(K.stage({ state: "live", opens: 0 }), ["cold", "Not opened yet"]);
   assert.deepEqual(K.stage({ state: "live", opens: 1, maxSeconds: 450 }), ["hot", "Watched it all"]);
 });
+
+test("Nov 24 2026: a manager who thought it meant trainers gets the clear-it-up note, one last note 2 weeks later, then nothing", () => {
+  const D = 86400000, t0 = 1700000000000;
+  const l = { state: "live", firstName: "Paula", building: "Wedgewood Hall", url: "https://amenityfit.app/demo/?t=abc", createdAtMs: t0, opens: 1, outcome: "misunderstood", touches: [{ kind: "sent", atMs: t0 }, { kind: "replied", atMs: t0 + D }] };
+  const p1 = K.plan(l, t0 + 2 * D);
+  assert.equal(p1.kind, "clarify"); assert.equal(p1.due, true);
+  const c = K.email("clarify", l, { me: "Pat" });
+  assert.equal(c.subject, "Re: The gym at Wedgewood Hall");
+  assert.match(c.body, /^Hi Paula,\n\nI completely understand[\s\S]*no on-site trainers or staff involvement[\s\S]*demo\/\?t=abc\n\nBest,\nPat$/);
+  const l2 = { ...l, touches: [...l.touches, { kind: "clarified", atMs: t0 + 2 * D }] };
+  const p2 = K.plan(l2, t0 + 3 * D);
+  assert.equal(p2.kind, "finalnote"); assert.equal(p2.due, false); assert.equal(p2.dueAtMs, t0 + 16 * D);
+  assert.match(K.email("finalnote", l2, { me: "Pat" }).body, /Last note from me[\s\S]*If it ever makes sense for Wedgewood Hall, I'm a reply away\.\n\nBest,\nPat$/);
+  const l3 = { ...l2, touches: [...l2.touches, { kind: "followup", atMs: t0 + 16 * D }] };
+  assert.equal(K.plan(l3, t0 + 20 * D).done, true);
+  for (const k of ["clarify", "finalnote"]) { assert.doesNotMatch(K.email(k, l, {}).body, /[—–]/); assert.ok(K.LIBRARY.some((x) => x[0] === k)); }
+});

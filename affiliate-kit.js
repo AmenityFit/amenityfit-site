@@ -61,6 +61,15 @@
     if (l.state && l.state !== "live") return done("This link is no longer live.");
     if (l.outcome === "not_interested") return done("Not interested. No more emails. Thank them and move on.");
     if (l.outcome === "wrong_person") return done("Wrong person. Make a new link for the right manager.");
+    // Nov 24 2026 (Senz): a manager who replied "we don't need trainers" misunderstood it (as Paula did). Clear it up
+    // once, in Asenso's own words, then one last note two weeks later, then stop.
+    if (l.outcome === "misunderstood") {
+      var cl = touches.filter(function (t) { return t.kind === "clarified"; });
+      if (!cl.length) return step("clarify", now, "They thought it meant trainers on site. Send the short note that clears it up, then tap I sent it.");
+      var clAt = cl[cl.length - 1].atMs;
+      if (!emails.some(function (t) { return t.atMs > clAt; })) return step("finalnote", clAt + 14 * DAY, "Two weeks after clearing it up: one last short note, then stop.");
+      return done("You cleared it up and sent the last note. Leave the next move to them.");
+    }
     if (l.applyClickedAtMs) return done("They clicked Apply. AmenityFit takes it from here, and it shows under Your referrals once they apply.");
     if (l.handedOffAtMs || touches.some(function (t) { return t.kind === "handoff"; })) return done("Handed to Asenso. He has your note, and it shows under Your referrals once they sign up.");
     var replied = touches.some(function (t) { return t.kind === "replied" || t.kind === "met"; }) || l.outcome === "interested";
@@ -122,6 +131,8 @@
       // the app: the problem in one question, what residents and the team get, the walkthrough, how to apply with
       // the code already in, and the disclosure.
       case "intro": return { subject: subj, body: hi + "I wanted to share something for the gym at " + place + ". " + PITCH + "\n\nIt was built by Asenso Ampim, who played professional basketball for nearly a decade, then spent 7 years as a personal trainer before founding it.\n\nHere is a private 7-minute walkthrough, with pricing:\n" + l.url + "\n\nIf it's a fit, you can apply in about 2 minutes here" + (o.code ? " (my referral code, " + o.code + ", is already filled in)" : "") + ":\n" + apply + disc + sign };
+      case "clarify": return { subject: "Re: " + subj, body: hi + "I completely understand, and I should have been clearer. AmenityFit is a digital platform that requires no on-site trainers or staff involvement, so it works for private, residents-only gyms. It simply gives residents personalized workouts tailored to the exact equipment already in your gym.\n\nHere is the brief walkthrough if you're open to seeing how it works for residents:\n" + l.url + sign };
+      case "finalnote": return { subject: "Re: " + subj, body: hi + "Last note from me. When you mentioned you weren't looking for training, that's exactly why AmenityFit is an app: no trainers on site and nothing for your team to run. Residents get workouts built around the gym you already have, and your team gets a monthly report on how it's used.\n\nIf it ever makes sense for " + place + ", I'm a reply away." + sign };
       case "nudge": return { subject: "Re: " + subj, body: hi + "Following up in case the walkthrough got buried. It's 7 minutes and shows what residents get and what your team sees:\n" + l.url + "\n\nNo on-site trainers or staff involvement, nothing for your team to run. Happy to answer anything." + sign };
       case "last": return { subject: "Re: " + subj, body: hi + "Last note from me on this. If you haven't had a chance yet, this 7-minute walkthrough shows exactly what your residents and your team would get:\n" + l.url + "\n\nIf resident fitness isn't a priority right now, no problem at all. The link stays up for a while if it becomes one." + sign };
       case "thanks": return { subject: "Re: " + subj, body: hi + "Thanks for taking a look. If it's a fit for " + place + ", the application takes about 2 minutes here:\n" + apply + "\n\nThe agreement comes by e-signature after that. Any question, you can ask right on the walkthrough page or just reply here." + sign };
@@ -140,6 +151,8 @@
     ["thanks", "After they watch", "A day or two after they open it. How to apply."],
     ["checkin", "Check-in", "A week after that, once."],
     ["apply", "How to apply", "When they say they're interested."],
+    ["clarify", "If they think it means trainers", "When they reply \"we don't need trainers\" or \"residents only\". Set What they said to: Thought it meant trainers."],
+    ["finalnote", "Last note after clearing it up", "Two weeks after that note, once. Then stop."],
     ["text", "Text message", "For someone you already know."],
     ["linkedin", "LinkedIn message", "Short, for a first message there."],
     ["call", "Phone or in person", "What to say, in 20 seconds."],
