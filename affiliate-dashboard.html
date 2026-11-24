@@ -918,8 +918,8 @@
     return d.toLocaleDateString(undefined, { weekday: days > 0 && days < 7 ? 'long' : undefined, month: 'short', day: 'numeric' });
   };
   const when = (ms) => new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  const TOUCH_WORDS = { sent: 'You sent the first email', followup: 'You sent a follow-up', call: 'You called', text: 'You texted', replied: 'They replied', met: 'You met or spoke', clarified: 'You cleared up the trainers question' };
-  const EMAIL_NAMES = { intro: 'first email', nudge: 'follow-up', last: 'last note', thanks: 'next-step note', checkin: 'check-in', apply: 'how-to-apply note', clarify: 'note that clears it up', finalnote: 'last note' };
+  const TOUCH_WORDS = { sent: 'You sent the first email', followup: 'You sent a follow-up', call: 'You called', text: 'You texted', replied: 'They replied', met: 'You met or spoke' };
+  const EMAIL_NAMES = { intro: 'first email', nudge: 'follow-up', last: 'last note', thanks: 'next-step note', checkin: 'check-in', apply: 'how-to-apply note' };
   async function demoCall(method, body) {
     const t = await demoUser.getIdToken();
     const r = await fetch(DEMO_API, { method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t }, body: body ? JSON.stringify(body) : undefined });
@@ -951,7 +951,7 @@
       tl.sort((a, b) => (a[1] || 0) - (b[1] || 0));
       const notes = (l.notes || []).slice().reverse().map((n) => '<div>' + when(n.atMs) + ': ' + demoEsc(n.text) + '</div>').join('') || '<div>No notes yet.</div>';
       const isEmail = !p.done && EMAIL_NAMES[p.kind];
-      const sentKind = p.kind === 'intro' ? 'sent' : p.kind === 'clarify' ? 'clarified' : 'followup';
+      const sentKind = p.kind === 'intro' ? 'sent' : 'followup';
       const fu = l.nextFollowUpAtMs ? new Date(l.nextFollowUpAtMs) : null;
       const fuVal = fu ? fu.getFullYear() + '-' + String(fu.getMonth() + 1).padStart(2, '0') + '-' + String(fu.getDate()).padStart(2, '0') : '';
       body = '<div class="demo-open">' +
@@ -971,7 +971,7 @@
         '<div class="demo-h">Notes</div><div class="demo-timeline">' + notes + '</div>' +
         '<textarea id="dm-note-' + i + '" placeholder="e.g. Said to check back after the holidays"></textarea>' +
         '<div class="demo-tools"><label style="font-size:12.5px;color:var(--muted)">My follow-up date <input type="date" id="dm-fu-' + i + '" value="' + fuVal + '"></label>' +
-        '<select id="dm-out-' + i + '"><option value="">Still working on it</option><option value="interested"' + (l.outcome === 'interested' ? ' selected' : '') + '>Interested</option><option value="not_now"' + (l.outcome === 'not_now' ? ' selected' : '') + '>Not right now</option><option value="not_interested"' + (l.outcome === 'not_interested' ? ' selected' : '') + '>Not interested</option><option value="wrong_person"' + (l.outcome === 'wrong_person' ? ' selected' : '') + '>Wrong person</option><option value="misunderstood"' + (l.outcome === 'misunderstood' ? ' selected' : '') + '>Thought it meant trainers</option></select>' +
+        '<select id="dm-out-' + i + '"><option value="">Still working on it</option><option value="interested"' + (l.outcome === 'interested' ? ' selected' : '') + '>Interested</option><option value="not_now"' + (l.outcome === 'not_now' ? ' selected' : '') + '>Not right now</option><option value="not_interested"' + (l.outcome === 'not_interested' ? ' selected' : '') + '>Not interested</option><option value="wrong_person"' + (l.outcome === 'wrong_person' ? ' selected' : '') + '>Wrong person</option></select>' +
         '<button class="demo-btn" onclick="afDemoSave(' + i + ')">Save</button></div>' +
         '<div class="demo-h">Copy another email for ' + demoEsc(l.firstName) + '</div><div class="demo-tools">' +
         K.LIBRARY.map(([k, name]) => '<button class="demo-btn ghost" onclick="afDemoCopyMail(' + i + ',\'' + k + '\')">' + demoEsc(name) + '</button>').join('') + '</div>' +
