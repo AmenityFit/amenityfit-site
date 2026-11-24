@@ -113,7 +113,7 @@ test("the sample emails (Nov 14, from an affiliate's own): the first has the wal
   const intro = K.email("intro", link(), o);
   assert.equal(intro.subject, "The gym at The Brook");
   assert.match(intro.body, /demo\/\?t=abc[\s\S]*my referral code, ANA7, is already filled in[\s\S]*\?ref=ANA7#apply[\s\S]*Full disclosure/);
-  assert.match(K.email("nudge", link(), o).body, /brings neighbors together[\s\S]*demo\/\?t=abc/);
+  assert.match(K.email("nudge", link(), o).body, /got buried[\s\S]*demo\/\?t=abc[\s\S]*No on-site trainers or staff involvement/);
   for (const k of ["intro", "nudge", "last"]) { const b = K.email(k, link(), o).body; assert.doesNotMatch(b, /[—–]|\bAI\b|Senz|Lucille/); }
   assert.doesNotMatch(K.email("intro", link(), { ...o, code: "" }).body, /referral code/);
 });
@@ -129,22 +129,22 @@ test("next step: they sign up with Apply on their walkthrough (code filled in), 
   assert.ok(!html.includes("He reaches out himself"));
 });
 
-test("Nov 16 2026: the first email and the call open on the real pain point, from Asenso's 7 years in residential gyms; affiliates are told to add one personal line", () => {
+test("Nov 24 2026: the first email and the call are plain, in Asenso's own words (digital platform, no on-site trainers or staff); affiliates are told to add one personal line", () => {
   const b = K.email("intro", { firstName: "Maria", building: "The Brook", url: "https://amenityfit.app/demo/?t=abc" }, { me: "Pat", code: "ANA7" }).body;
-  assert.match(b, /^Hi Maria,\n\nI wanted to share something that could help residents at The Brook get more out of the gym\. The founder of AmenityFit, Asenso Ampim, spent 7 years as a personal trainer in buildings like yours and kept hearing the same thing: people wanted to use the gym but weren't sure what to do, and a trainer every week could get costly\. Without a plan, most stopped going consistently\.\n\nThat's why he built AmenityFit, so every resident gets workouts built around the exact equipment in your gym/);
+  assert.match(b, /^Hi Maria,\n\nI wanted to share something for the gym at The Brook\. AmenityFit is a digital platform that gives residents personalized workouts tailored to the exact equipment already in your gym\. It requires no on-site trainers or staff involvement, and your team gets a monthly report on how residents use it\. Residents never pay anything\.\n\nIt was built by Asenso Ampim, who was a personal trainer for 7 years before founding it\.\n\nHere is a private 7-minute walkthrough/);
   assert.doesNotMatch(b, /[—–]|\bAI\b/);
-  assert.match(K.email("call", { firstName: "Maria", building: "The Brook", url: "x" }, { me: "Pat" }).body, /aren't sure what to do, and a trainer every week can get costly/);
+  assert.match(K.email("call", { firstName: "Maria", building: "The Brook", url: "x" }, { me: "Pat" }).body, /do your residents use the gym at The Brook much\?[\s\S]*No on-site trainers or staff involvement[\s\S]*Can I send you a brief walkthrough\? It's a 7-minute video\./);
   assert.ok(K.TALK.some(([h, t]) => h === "Make it yours" && /one line at the top in your own words/.test(t)));
   assert.ok(K.TALK.some(([h]) => h === "The problem it solves"));
   assert.match(K.LIBRARY.find((l) => l[0] === "intro")[2], /Add one personal line at the top/);
 });
 
 test("Nov 24 2026: every first message says plainly it is an app with no trainers on site, and no subject says personal trainer", () => {
-  const L = "no trainers on site";
+  const L = "no on-site trainers or staff involvement";
   const lead = { firstName: "Maria", building: "The Brook", url: "https://amenityfit.app/demo/?t=x" };
   for (const k of ["intro", "linkedin", "call"]) assert.match(K.email(k, lead, { me: "Pat", code: "AB12" }).body, new RegExp(L, "i"), k);
   for (const [k] of K.LIBRARY) assert.doesNotMatch(K.email(k, lead, { me: "Pat" }).subject, /personal trainer/i, k);
-  assert.ok(K.TALK.find((x) => x[0] === "What it is")[1].includes("It's an app: no trainers on site, no staff time, nothing for your team to run."));
+  assert.ok(K.TALK.find((x) => x[0] === "What it is")[1].includes("No on-site trainers or staff involvement, nothing for the team to run"));
 });
 
 test("stage shows exact watched time, pressed play and video errors (Nov 24 2026)", () => {
