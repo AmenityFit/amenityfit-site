@@ -205,6 +205,19 @@
     if (maxT - lastSent >= 15) { lastSent = maxT; post("demoEvent", { t: t, type: "progress", seconds: maxT }); }
   });
   v.addEventListener("ended", function () { post("demoEvent", { t: t, type: "complete", seconds: Math.floor(v.duration || maxT) }); });
+  // Nov 24 2026: whether they pressed play, and whether the video failed to play for them (an error, or nothing
+  // playing 12 seconds after pressing play), so a broken video is never mistaken for someone not interested.
+  var played = false, failedSent = false;
+  function failed(msg) { if (failedSent) return; failedSent = true; post("demoEvent", { t: t, type: "error", seconds: maxT, message: msg }); }
+  v.addEventListener("play", function () {
+    if (played) return; played = true;
+    post("demoEvent", { t: t, type: "play", seconds: maxT });
+    setTimeout(function () { if (maxT < 1 && v.currentTime < 1 && !v.ended) failed(v.paused ? "stopped before it started (paused within 12 seconds)" : "nothing played 12 seconds after pressing play"); }, 12000);
+  });
+  v.addEventListener("error", function () {
+    var c = v.error && v.error.code; var names = { 1: "loading was stopped", 2: "a network error", 3: "the video could not be decoded", 4: "the video format or address was not accepted" };
+    failed("video error: " + (names[c] || "unknown") + (c ? " (code " + c + ")" : ""));
+  });
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && maxT > lastSent) { lastSent = maxT; post("demoEvent", { t: t, type: "progress", seconds: maxT }); } });
   v.addEventListener("contextmenu", function (e) { e.preventDefault(); });
   $("apply").addEventListener("click", function () { post("demoEvent", { t: t, type: "apply", seconds: maxT }); });

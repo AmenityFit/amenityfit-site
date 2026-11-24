@@ -111,7 +111,7 @@ test("a link to #apply lands on the top of Request Access once the page settles,
 test("the sample emails (Nov 14, from an affiliate's own): the first has the walkthrough, the apply link and their code; no dashes, no AI", () => {
   const o = { me: "Ana Diaz", applyUrl: "https://amenityfit.app/?ref=ANA7#apply", siteUrl: "https://amenityfit.app/?ref=ANA7", code: "ANA7" };
   const intro = K.email("intro", link(), o);
-  assert.equal(intro.subject, "A personal trainer for every resident at The Brook");
+  assert.equal(intro.subject, "The gym at The Brook");
   assert.match(intro.body, /demo\/\?t=abc[\s\S]*my referral code, ANA7, is already filled in[\s\S]*\?ref=ANA7#apply[\s\S]*Full disclosure/);
   assert.match(K.email("nudge", link(), o).body, /brings neighbors together[\s\S]*demo\/\?t=abc/);
   for (const k of ["intro", "nudge", "last"]) { const b = K.email(k, link(), o).body; assert.doesNotMatch(b, /[—–]|\bAI\b|Senz|Lucille/); }
@@ -137,4 +137,12 @@ test("Nov 16 2026: the first email and the call open on the real pain point, fro
   assert.ok(K.TALK.some(([h, t]) => h === "Make it yours" && /one line at the top in your own words/.test(t)));
   assert.ok(K.TALK.some(([h]) => h === "The problem it solves"));
   assert.match(K.LIBRARY.find((l) => l[0] === "intro")[2], /Add one personal line at the top/);
+});
+
+test("Nov 24 2026: every first message says plainly it is an app with no trainers on site, and no subject says personal trainer", () => {
+  const L = "no trainers on site";
+  const lead = { firstName: "Maria", building: "The Brook", url: "https://amenityfit.app/demo/?t=x" };
+  for (const k of ["intro", "linkedin", "call"]) assert.match(K.email(k, lead, { me: "Pat", code: "AB12" }).body, new RegExp(L, "i"), k);
+  for (const [k] of K.LIBRARY) assert.doesNotMatch(K.email(k, lead, { me: "Pat" }).subject, /personal trainer/i, k);
+  assert.ok(K.TALK.find((x) => x[0] === "What it is")[1].includes("It's an app: no trainers on site, no staff time, nothing for your team to run."));
 });
